@@ -69,7 +69,7 @@ const badges = (text) =>
   [...text.matchAll(/https:\/\/img.shields.io[^"\s]+/g)].map((m) => m[0]);
 assert.deepEqual(badges(contents[0]), badges(contents[1]));
 for (const text of contents) {
-  assert.ok(text.includes(`project-${version}-`));
+  assert.ok(text.includes("https://img.shields.io/npm/v/animatter?"));
   assert.equal((text.match(/^## /gm) ?? []).length, 16);
   for (const asset of ["logo.svg", "logo-light.svg", "logo-dark.svg"])
     assert.ok(text.includes(`docs/assets/branding/${asset}`));
@@ -87,7 +87,27 @@ for (const text of contents) {
     assert.ok(demo.includes("/docs/assets/branding/favicon.svg"));
   }
   assert.equal((text.match(/!\[/g) ?? []).length, 6);
-  assert.ok(!text.includes("img.shields.io/npm/"), "Unpublished npm badge");
+  const publication = JSON.parse(
+    await readFile(
+      "docs/testing/npm-publication/registry-results.json",
+      "utf8",
+    ),
+  );
+  assert.ok(
+    publication.checks.publicRegistryInstall &&
+      publication.checks.integrityMatchesReviewedTarballs &&
+      publication.checks.latestTags,
+  );
+  for (const name of ["animatter", "@animatter/react", "@animatter/vue"]) {
+    assert.ok(
+      publication.packages.some(
+        (p) =>
+          p.name === name &&
+          p.version === version &&
+          p.distTags.latest === version,
+      ),
+    );
+  }
 }
 const manifest = JSON.parse(
   await readFile("docs/assets/demos/manifest.json", "utf8"),

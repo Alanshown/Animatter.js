@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-10-31T07:00:58.797Z",
+  "browser": "141.0.7390.37",
+  "svgs": [
+    {
+      "name": "banner.svg",
+      "valid": true,
+      "viewBox": "0 0 1280 400",
+      "paths": 16,
+      "unsafe": false,
+      "external": false
+    },
+    {
+      "name": "favicon.svg",
+      "valid": true,
+      "viewBox": "0 0 64 64",
+      "paths": 2,
+      "unsafe": false,
+      "external": false
+    },
+    {
+      "name": "logo-dark.svg",
+      "valid": true,
+      "viewBox": "0 0 390 88",
+      "paths": 14,
+      "unsafe": false,
+      "external": false
+    },
+    {
+      "name": "logo-light.svg",
+      "valid": true,
+      "viewBox": "0 0 390 88",
+      "paths": 14,
+      "unsafe": false,
+      "external": false
+    },
+    {
+      "name": "logo.svg",
+      "valid": true,
+      "viewBox": "0 0 390 88",
+      "paths": 14,
+      "unsafe": false,
+      "external": false
+    },
+    {
+      "name": "symbol.svg",
+      "valid": true,
+      "viewBox": "0 0 64 64",
+      "paths": 2,
+      "unsafe": false,
+      "external": false
+    },
+    {
+      "name": "wordmark.svg",
+      "valid": true,
+      "viewBox": "0 0 300 64",
+      "paths": 12,
+      "unsafe": false,
+      "external": false
+    }
+  ],
+  "pngs": [
+    {
+      "size": 192,
+      "transparent": 30268,
+      "opaque": 5761,
+      "partial": 835
+    },
+    {
+      "size": 512,
+      "transparent": 216903,
+      "opaque": 43016,
+      "partial": 2225
+    }
+  ],
+  "symbolSizes": [
+    24,
+    32,
+    64
+  ]
+}

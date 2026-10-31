@@ -1,0 +1,93 @@
+{
+  "checkedAt": "2026-10-31T06:55:39.273Z",
+  "sourceCommit": "91f7c649eff039cc2401862b40b14a23bc559389",
+  "registry": "https://registry.npmjs.org/",
+  "authentication": "anonymous consumer config; no npm token",
+  "node": "v24.22.1",
+  "npm": "11.9.0",
+  "browser": "141.0.7390.37",
+  "packages": [
+    {
+      "name": "animatter",
+      "version": "0.1.0",
+      "tarball": "https://registry.npmjs.org/animatter/-/animatter-0.1.0.tgz",
+      "integrity": "sha512-JdULLzvQhr+ZUk9lzn60IpXraNmcvlYzQoGURFpworn4IGS2BZC7VGzYHUHvKDNOtXNjoCW4Ancvar34doqS5g==",
+      "peerDependencies": {},
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./materials.css": "./dist/materials.css",
+        "./browser": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/animatter.js"
+        }
+      },
+      "distTags": {
+        "latest": "0.1.0"
+      }
+    },
+    {
+      "name": "@animatter/react",
+      "version": "0.1.0",
+      "tarball": "https://registry.npmjs.org/@animatter/react/-/react-0.1.0.tgz",
+      "integrity": "sha512-nVHe0BgxAaXOd0lpFTQJH2vEJ3/ucvYEgfoaSl+GPUinFcTMBDRWxdtUW2w3BvthVcoU/wok/LIA+MLXCMKQUQ==",
+      "peerDependencies": {
+        "animatter": "^0.1.0",
+        "react": ">=18"
+      },
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        }
+      },
+      "distTags": {
+        "latest": "0.1.0"
+      }
+    },
+    {
+      "name": "@animatter/vue",
+      "version": "0.1.0",
+      "tarball": "https://registry.npmjs.org/@animatter/vue/-/vue-0.1.0.tgz",
+      "integrity": "sha512-hyfERT1GnqS0aBm6PqTEDxOKSB31WEtEbqybCP1qSSW5kkuB4+qCP5qrqvC+kwGMg3SX0BSj6o48xLIh82aOtw==",
+      "peerDependencies": {
+        "animatter": "^0.1.0",
+        "vue": ">=3.3"
+      },
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        }
+      },
+      "distTags": {
+        "latest": "0.1.0"
+      }
+    }
+  ],
+  "peers": {
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "vue": "3.5.44"
+  },
+  "checks": {
+    "publicRegistryInstall": true,
+    "registryResolvedLockfile": true,
+    "peerDependencyTree": true,
+    "strictTypeDeclarations": true,
+    "esm": true,
+    "browserSubpath": true,
+    "ssrSafeImport": true,
+    "cssResolution": true,
+    "cssBundling": true,
+    "browserNativeClick": true,
+    "browserSemanticEvents": true,
+    "effectsOffBusinessBehavior": true,
+    "browserTeardown": true,
+    "integrityMatchesReviewedTarballs": true,
+    "latestTags": true
+  },
+  "esmOutput": "Installed tarball ESM, browser subpath, CSS resolution and SSR-safe imports passed"
+}

@@ -1,5 +1,7 @@
 # Package compatibility
 
+Version 0.1.0 is published for all three packages. Anonymous public Registry installation, strict types, ESM/SSR-safe imports, CSS bundling and Chromium interaction checks are recorded in [release verification](NPM-RELEASE-0.1.0.md).
+
 ## Actual outputs and dependency direction
 
 | Package / entry | JavaScript | Types / assets | Dependencies |

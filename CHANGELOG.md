@@ -4,13 +4,16 @@ All changes follow Semantic Versioning. During 0.x, public APIs may change; docu
 
 ## Unreleased
 
-- Remove tracked release archives; keep generated packages under ignored artifacts/ for separate distribution.
+No additional package version has been published after 0.1.0. Documentation updates after publication do not overwrite immutable Registry artifacts.
 
-- Add original vector branding, transparent icons, bilingual README heroes and shared demo attribution.
-- Complete package metadata and public ESM/CSS/type export checks without changing package names or public APIs.
-- Add real local tarball installation/consumer tests, documentation/brand checks and maintainer release instructions.
-- Preserve the 0.1.0 version. These changes are npm publication preparation, not a registry release.
+## 0.1.0 — 2026-10-31
 
-## 0.1.0 — repository baseline, not an npm release
+First npm publication of `animatter`, `@animatter/react` and `@animatter/vue`, after explicit maintainer authorization and interactive npm authentication. No GitHub Release was created. Source baseline: `91f7c649eff039cc2401862b40b14a23bc559389`.
 
-Existing source baseline at commit `f9b0ee9cd3911bbabc5bec4510a793989b77c7f7`: shared TypeScript runtime, embodied/field modes, L0–L7 semantics, React/Vue adapters and six interaction studies. Historical local acceptance evidence is retained in docs/testing. Historical local-install archives have been removed from the source tree for separate distribution. This baseline does not establish a GitHub Release or npm publication.
+- Shared TypeScript runtime, embodied/field modes, L0–L7 semantics, React/Vue adapters and six interaction studies.
+- Original vector branding, bilingual README, transparent icons and shared demo attribution.
+- ESM/browser/CSS/type exports, required framework peers and controlled package contents.
+- Anonymous public Registry installation of all three exact versions; declaration, ESM/SSR, CSS, dependency and Chromium interaction verification.
+- Distribution archives remain outside the source tree; generated artifacts are ignored.
+
+See [npm release verification](docs/NPM-RELEASE-0.1.0.md) for actual package URLs, integrity values, checks and limitations. Historical initial implementation evidence remains under docs/testing.

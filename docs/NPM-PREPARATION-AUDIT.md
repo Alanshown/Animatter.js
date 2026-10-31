@@ -1,5 +1,7 @@
 # Branding and npm preparation audit
 
+> This is a historical pre-publication record. Current npm status and anonymous Registry-consumer verification are documented in [NPM-RELEASE-0.1.0.md](NPM-RELEASE-0.1.0.md).
+
 Baseline: `f9b0ee9cd3911bbabc5bec4510a793989b77c7f7` on main. Review: 2026-10-31, Asia/Shanghai. Version remains 0.1.0. This audit will record the actual validation outcomes before integration; preparation is not npm publication or a new framework acceptance claim.
 
 ## Findings and changes
