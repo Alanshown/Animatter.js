@@ -1,1 +1,50 @@
-{"name":"animatter","version":"0.1.0","description":"An optional physics-driven interaction runtime for the Web","type":"module","license":"MIT","repository":{"type":"git","url":"https://github.com/Alanshown/Animatter.js.git","directory":"packages/core"},"files":["dist"],"main":"./dist/index.js","module":"./dist/index.js","types":"./dist/index.d.ts","exports":{".":{"types":"./dist/index.d.ts","import":"./dist/index.js"},"./materials.css":"./dist/materials.css","./browser":"./dist/animatter.js"},"sideEffects":["**/*.css"]}
+{
+  "name": "animatter",
+  "version": "0.1.0",
+  "description": "An optional physics-driven interaction runtime for the Web",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alanshown/Animatter.js.git",
+    "directory": "packages/core"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./materials.css": "./dist/materials.css",
+    "./browser": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/animatter.js"
+    }
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "homepage": "https://github.com/Alanshown/Animatter.js#readme",
+  "bugs": {
+    "url": "https://github.com/Alanshown/Animatter.js/issues"
+  },
+  "author": "Alanshown",
+  "keywords": [
+    "physics",
+    "interaction",
+    "animation",
+    "typescript",
+    "web",
+    "dom"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

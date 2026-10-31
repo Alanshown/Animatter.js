@@ -19,8 +19,10 @@
     "check": "npm run typecheck && npm run lint && npm test && npm run build && npm run verify:package && npm run test:browser && npm run verify:docs",
     "test:core-browser": "node scripts/browser-test.mjs --core",
     "test:compat": "node scripts/browser-test.mjs --all",
-    "verify:docs": "node scripts/verify-docs.mjs",
-    "format": "prettier --write \"packages/*/src/**/*.{ts,css}\" \"tests/**/*.ts\" \"scripts/*.{mjs,ts}\" \"demos/**/*.{html,js,css}\" \"*.{json,js}\""
+    "verify:docs": "node scripts/verify-docs.mjs && npm run verify:branding",
+    "format": "prettier --write \"packages/*/src/**/*.{ts,css}\" \"tests/**/*.ts\" \"scripts/*.{mjs,ts}\" \"demos/**/*.{html,js,css}\" \"*.{json,js}\"",
+    "verify:branding": "node scripts/verify-branding.mjs",
+    "test:demos": "node scripts/demo-check.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
@@ -37,5 +39,12 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.2",
     "vue": "3.5.44"
+  },
+  "packageManager": "npm@11.9.0",
+  "description": "Animatter.js development workspace (not published)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alanshown/Animatter.js.git"
   }
 }

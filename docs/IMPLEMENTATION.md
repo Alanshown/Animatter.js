@@ -1,5 +1,7 @@
 # Implementation and acceptance ledger
 
+> Historical baseline record from the initial local development session. Statements about an empty repository, pending demo work or an untouched remote describe that session, not the current GitHub state. Current branding/package preparation evidence is in [NPM-PREPARATION-AUDIT.md](NPM-PREPARATION-AUDIT.md). Original test data under testing/ is retained.
+
 Audit date: 2026-10-31 (Asia/Shanghai). GitHub API reports an empty public repository, default branch main, no files or initial commit. Local clone confirmed empty. No source or AGENTS.md to inherit. Node 24.22.1, npm 11.9.0, git 2.51.1 available. Registry access verified. No remote writes during development.
 
 ## Dependency order

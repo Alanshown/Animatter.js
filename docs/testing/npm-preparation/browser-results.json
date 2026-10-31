@@ -1,0 +1,286 @@
+{
+  "date": "2026-10-31T01:59:30.351Z",
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux"
+  },
+  "cases": [
+    {
+      "browser": "chromium",
+      "name": "native-click-focus-input",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "field-force-and-mode-switch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "drag-cancel-and-release",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "actor-dynamic-target-and-interruption",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "presence-async-graph",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "layout-and-detached-surface",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "reduced-motion-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "lifecycle-listeners-plugins-and-style-restoration",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "react-vue-mount-and-unmount",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "composition-priority-cancellation-and-async",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "reentrant-graph-cycle-is-bounded",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "native-proximity-longpress-gesture-and-selection",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "viewport-scroll-refreshes-anchors",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "layout-transaction-preserves-position",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "regional-opt-in-and-opt-out",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "actor-drag-blend-and-contact",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "all-semantic-levels-async-abort-and-native-styles",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "custom-render-protocol-and-faulted-plugin-cleanup",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "disabled-actor-and-direct-impulses",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "drag-release-keeps-visual-continuity",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "moving-target-cannot-starve-actor-arrival",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "touch-tap-mobile",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-reduced-keyboard",
+      "status": "passed"
+    }
+  ],
+  "browsers": [
+    {
+      "name": "chromium",
+      "version": "141.0.7390.37"
+    }
+  ],
+  "performance": [
+    {
+      "browser": "chromium",
+      "surfaces": 100,
+      "samples": 120,
+      "stepMedianMs": 0.7000000001862645,
+      "stepP95Ms": 0.900000000372529,
+      "frameIntervalMedianMs": 16.699999999999818,
+      "frameIntervalP95Ms": 16.799999999999955
+    },
+    {
+      "browser": "chromium",
+      "surfaces": 300,
+      "samples": 120,
+      "stepMedianMs": 2,
+      "stepP95Ms": 2.7999999998137355,
+      "frameIntervalMedianMs": 16.699999999999818,
+      "frameIntervalP95Ms": 16.700000000000273
+    }
+  ],
+  "memory": {
+    "method": "Chromium CDP metrics after warmup and full GC; 30 additional mount/destroy cycles, one surface, draggable actor, devtools per cycle. Heap values are observations, not proof of zero leakage.",
+    "before": {
+      "Documents": 1,
+      "JSEventListeners": 14,
+      "Nodes": 25,
+      "JSHeapUsedSize": 1558044
+    },
+    "after": {
+      "Documents": 1,
+      "JSEventListeners": 14,
+      "Nodes": 25,
+      "JSHeapUsedSize": 1561964
+    },
+    "delta": {
+      "Documents": 0,
+      "JSEventListeners": 0,
+      "Nodes": 0,
+      "JSHeapUsedSize": 3920
+    }
+  }
+}

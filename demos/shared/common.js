@@ -11,7 +11,7 @@ export function scene(options = {}) {
   world.scan();
   const toolbar = document.createElement("footer");
   toolbar.className = "am-toolbar";
-  toolbar.innerHTML = `<span><a href="/demos/index.html">↖ All experiments</a> &nbsp; / &nbsp; ANIMATTER · INTERACTION STUDIES</span><div class="am-toolbar-controls"><label>Mode <select aria-label="Interaction mode"><option value="field">Field</option><option value="embodied">Embodied</option><option value="both">Both</option><option value="off">Off</option></select></label><button type="button" data-toggle-effects>Pause effects</button><button type="button" data-inspect>Inspect</button></div>`;
+  toolbar.innerHTML = `<span><a href="/demos/index.html">↖ All experiments</a> &nbsp; / &nbsp; <img src="/docs/assets/branding/symbol.svg" width="20" height="20" alt="" style="vertical-align:middle"> ANIMATTER · INTERACTION STUDIES</span><div class="am-toolbar-controls"><label>Mode <select aria-label="Interaction mode"><option value="field">Field</option><option value="embodied">Embodied</option><option value="both">Both</option><option value="off">Off</option></select></label><button type="button" data-toggle-effects>Pause effects</button><button type="button" data-inspect>Inspect</button></div>`;
   (
     document.querySelector("[data-footer]") ??
     document.querySelector(".shell") ??

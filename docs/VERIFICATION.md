@@ -1,5 +1,7 @@
 # Verification report · Animatter.js 0.1.0
 
+> Historical baseline record from the initial local development session. Statements about an empty repository, pending demo work or an untouched remote describe that session, not the current GitHub state. Current branding/package preparation evidence is in [NPM-PREPARATION-AUDIT.md](NPM-PREPARATION-AUDIT.md). Original test data under testing/ is retained.
+
 Review date: **2026-10-31, Asia/Shanghai**. Scope: local Work workspace, no GitHub Actions substituted for local verification. The repository was audited as empty. Core acceptance was completed before demo work resumed; final scenes exercise the same public runtime.
 
 ## Acceptance result

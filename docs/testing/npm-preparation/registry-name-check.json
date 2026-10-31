@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-10-31T01:54:55.708627+00:00",
+  "registry": "https://registry.npmjs.org",
+  "packages": [
+    {
+      "name": "animatter",
+      "url": "https://registry.npmjs.org/animatter",
+      "httpStatus": 404,
+      "status": "not publicly found; not reserved or owned",
+      "ownership": "not verified"
+    },
+    {
+      "name": "@animatter/core",
+      "url": "https://registry.npmjs.org/@animatter%2fcore",
+      "httpStatus": 404,
+      "status": "not publicly found; not reserved or owned",
+      "ownership": "not verified"
+    },
+    {
+      "name": "@animatter/react",
+      "url": "https://registry.npmjs.org/@animatter%2freact",
+      "httpStatus": 404,
+      "status": "not publicly found; not reserved or owned",
+      "ownership": "not verified"
+    },
+    {
+      "name": "@animatter/vue",
+      "url": "https://registry.npmjs.org/@animatter%2fvue",
+      "httpStatus": 404,
+      "status": "not publicly found; not reserved or owned",
+      "ownership": "not verified"
+    }
+  ],
+  "scopeOwnership": "not verified; GitHub ownership does not establish npm organization ownership"
+}

@@ -142,7 +142,7 @@ export async function scenario(page, name) {
   }
 }
 export async function testDemos(browser, report) {
-  await mkdir("docs/assets/demos", { recursive: true });
+  await mkdir("artifacts/demo-screenshots", { recursive: true });
   const record = async (name, variant, context, fn) => {
     const page = await context.newPage(),
       errors = [];
@@ -201,7 +201,7 @@ export async function testDemos(browser, report) {
       await page.evaluate(() => scrollTo(0, 0));
       await page.mouse.move(10, 10);
       await page.waitForTimeout(1400);
-      await page.screenshot({ path: `docs/assets/demos/${name}.png` });
+      await page.screenshot({ path: `artifacts/demo-screenshots/${name}.png` });
     });
   for (const name of demos)
     await record(name, "effects-off-business", desktop, async (page) => {
