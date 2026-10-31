@@ -1,38 +1,34 @@
-# npm publishing preparation
+# npm publishing and distribution
 
-**Preparation only. No publication is authorized by this document.** Current source version: 0.1.0. Core and full L0–L7 interaction acceptance must precede a maintainer's release decision. Brand/package checks alone cannot approve a framework release. Do not create a GitHub Release to imply npm availability.
+Version **0.1.0** is published on the public npm Registry for the core and both adapters. The maintainer explicitly authorized this publication and completed npm's interactive authentication. Anonymous Registry installation, reviewed-tarball integrity matching, strict types, ESM/SSR-safe imports, CSS bundling and Chromium behavior checks passed. See [the release record](NPM-RELEASE-0.1.0.md) and [raw consumer results](testing/npm-publication/registry-results.json).
 
-## Names, account and namespace
+This does not authorize another version or create a GitHub Release. Every future release still requires core architecture / L0–L7 acceptance and an explicit maintainer decision. Branding or packaging success alone cannot approve a framework release.
 
-| Candidate | Current repository role | Public Registry check, 2026-10-31 |
+## Published names and ownership
+
+| Package | Role | Published version |
 | --- | --- | --- |
-| `animatter` | Actual core package | HTTP 404; not publicly found |
-| `@animatter/core` | Alternative naming proposal only | HTTP 404; not publicly found |
-| `@animatter/react` | Actual React adapter | HTTP 404; not publicly found |
-| `@animatter/vue` | Actual Vue adapter | HTTP 404; not publicly found |
+| [animatter](https://www.npmjs.com/package/animatter) | Independent core, types and optional CSS | 0.1.0 |
+| [@animatter/react](https://www.npmjs.com/package/@animatter/react) | React lifecycle adapter | 0.1.0 |
+| [@animatter/vue](https://www.npmjs.com/package/@animatter/vue) | Vue lifecycle adapter | 0.1.0 |
 
-Raw timestamped responses: [registry-name-check.json](testing/npm-preparation/registry-name-check.json). A 404 is neither a reservation nor proof that npm will allow registration. Package-name policies, withheld names and namespace ownership can still prevent publication. GitHub account/repository ownership establishes no npm permissions. No `@animatter` organization or account ownership has been verified.
+The authenticated npm account was `shownalan`; `npm org ls animatter` confirmed its Owner role. GitHub ownership alone does not grant npm publishing rights. `@animatter/core` remains an unused naming proposal, not a fourth delivered package. Existing imports and adapter peers intentionally use `animatter`.
 
-Before release, the maintainer must sign in to the intended npm account, verify email and account access, enable 2FA, and establish ownership of the unscoped name and the `@animatter` namespace with permission to publish each adapter. Check `npm whoami`, organization membership in npm settings, and `npm owner ls <existing-package>` where applicable. If the scope is unavailable, stop and agree a coordinated naming/migration plan; do not silently rename the core to `@animatter/core` or adapters to a different scope. Current imports/peers intentionally retain `animatter`.
+The earlier [name check](testing/npm-preparation/registry-name-check.json) is a historical pre-publication record. Its 404 results are not the current status of the three published names. Recheck account, organization membership, package owners and Registry versions before every future release. A network/authentication failure is not evidence that a name is available.
 
-Repeat authoritative lookups immediately before a release:
+## Installation and source development
+
+Consumers install from npm:
 
 ```sh
-npm view animatter name version --registry=https://registry.npmjs.org
-npm view @animatter/core name version --registry=https://registry.npmjs.org
-npm view @animatter/react name version --registry=https://registry.npmjs.org
-npm view @animatter/vue name version --registry=https://registry.npmjs.org
+npm install animatter
+npm install animatter @animatter/react react react-dom
+npm install animatter @animatter/vue vue
 ```
 
-Treat network/auth failures as unverified, never as available. If a name exists, inspect owners and release history before acting.
+The latter two commands are optional integrations. Append `@0.1.0` to the Animatter package names to pin this release. The application owns its framework dependencies; see [compatibility](PACKAGE-COMPATIBILITY.md) for declared peer ranges and actually tested versions.
 
-## Version and changelog
-
-Use a small, manual SemVer process rather than adding a second release system. PATCH fixes remain compatible, MINOR adds compatible features, MAJOR changes public contracts. During 0.x, identify API changes explicitly and provide migrations; do not use the pre-1.0 label to hide breakage. Keep workspace/package versions and adapter core-peer ranges coordinated. Move reviewed entries from CHANGELOG.md's Unreleased section only when a real release is approved. Update package-lock.json and verify every package. No version change is performed by the preparation scripts.
-
-## Build and inspect locally
-
-Verified development environment: Node 24.22.1 / npm 11.9.0 on Linux x64. No `engines` floor is declared; see [compatibility](PACKAGE-COMPATIBILITY.md). From the checkout root:
+Contributors clone the source, use Node 24.22.1 / npm 11.9.0 for the verified local environment, and run:
 
 ```sh
 npm ci
@@ -47,31 +43,52 @@ npm run test:core-browser
 npm run test:demos
 ```
 
-`verify:package` runs `npm pack --dry-run` and real `npm pack` for every package, compares entries, validates all export targets, installs all three local archives into a fresh consumer with real peer dependencies, typechecks declarations, imports ESM without a DOM and verifies CSS survives bundling. Artifacts are regenerated in `artifacts/packages/`; release archives are distributed separately and must not be committed to the source tree. The report helper writes its distribution manifest and tarball copies under ignored `artifacts/releases/<version>/`. No tarball is uploaded automatically.
+No `engines` minimum is invented. Other browsers/platforms require their own evidence. `verify:package` checks local candidate tarballs; it does not prove Registry publication. It performs pack dry-runs and real packs, export/allowlist checks, real local npm installation, strict declarations, ESM/SSR imports, CSS retention and peer checks.
 
-Inspect the exact archive contents, integrity, dependencies, README and LICENSE in `test-results/package-results.json`. Only dist, package.json, README and LICENSE are allowed. CSS is explicitly side-effectful. Tests, demo images, credentials, node_modules, caches and source workspaces must not appear. Sourcemaps may refer to source paths not shipped in the package; source-level debugging is not a runtime support guarantee.
+## Distribution artifacts
 
-## Authentication and a future release
+Use npm for application dependency management and lockfiles. Keep generated tarballs outside the source tree in ignored `artifacts/packages/`; the report helper writes copies/manifests to `artifacts/releases/<version>/`. Do not commit binary release archives or create a source-tree releases directory.
 
-For local manual publishing use `npm login --registry=https://registry.npmjs.org` and the browser/2FA flow; never put login data or tokens in this repository, scripts, logs or documentation. Verify the intended identity and package ownership immediately before publishing. Do not disable 2FA to make automation convenient.
+An npm package contains built ESM JavaScript, `.d.ts` declarations, CSS where needed, package metadata, README and LICENSE. Source archives are a separate developer deliverable containing TypeScript, tests, demos, docs and build configuration. A future GitHub Release can offer source and distribution archives separately, with clear labels and checksums; no such Release is implied by npm publication.
 
-For future CI, prefer [npm Trusted Publishing / OIDC](https://docs.npmjs.com/trusted-publishers/), checked on 2026-10-31. The official requirements at that check are npm CLI >=11.5.1 and Node >=22.14.0, which are **authentication-tool requirements**, not this framework's runtime minimum. Configure a trusted publisher **per package**, bound to the exact GitHub owner `Alanshown`, repository `Animatter.js`, workflow filename and optional protected environment. GitHub-hosted runners and `permissions: {contents: read, id-token: write}` are required. Enable the intended allowed action in npm settings; current newly configured publishers permit staged publishing by default and direct `npm publish` permission is separate. First-package/account setup may require an authenticated maintainer bootstrap before package settings exist. Verify current npm guidance when enabling it.
+Inspect the exact candidate allowlist, exports, integrity and dependency tree before publication. Tests, screenshots, credentials, node_modules and caches must not be included. Published tarballs are immutable snapshots, including their package READMEs. Repository documentation updates after publication do not overwrite those snapshots; changed package content requires a separately approved new version.
 
-There is no publishing workflow in this repository, no CI build badge and no configured OIDC relationship. A future workflow must be added only after account/namespace setup and the release gate; it should require explicit maintainer approval and verify the same reviewed commit/artifacts. Do not add long-lived write tokens as a default fallback.
+## Version and authentication
 
-After separate release authorization, the maintainer may publish the **reviewed tarballs**, core first, adapters after the core is visible:
+PATCH fixes remain compatible, MINOR adds compatible functionality, MAJOR changes public contracts. During 0.x, state API changes and migrations explicitly. Coordinate all package versions, adapter core-peer ranges, lockfile and CHANGELOG. No preparation or verification script automatically bumps versions or publishes.
+
+For an authorized manual publication, use the official browser login flow:
 
 ```sh
-# Future manual operations only. DO NOT run for preparation.
-npm publish ./artifacts/packages/animatter-0.1.0.tgz --access public --registry=https://registry.npmjs.org
-npm publish ./artifacts/packages/animatter-react-0.1.0.tgz --access public --registry=https://registry.npmjs.org
-npm publish ./artifacts/packages/animatter-vue-0.1.0.tgz --access public --registry=https://registry.npmjs.org
+npm login --auth-type=web --registry=https://registry.npmjs.org
+npm whoami --registry=https://registry.npmjs.org
+npm org ls animatter --json --registry=https://registry.npmjs.org
 ```
 
-Replace archive names with the genuinely approved version; check `npm view <name>@<version> dist.integrity` against the reviewed artifact. Never retry an immutable version by changing its contents. Local login and OIDC are alternative authentication paths, not reasons to keep a token in a workflow.
+The maintainer completes login and any operation-specific 2FA on npm's official pages. Never place passwords, tokens, OTPs, login-state files or recovery codes in the repository or evidence logs. Do not disable 2FA to simplify automation.
 
-## Post-publication verification and incidents
+After separately approving a new version, replace `X.Y.Z` below with that exact version, rebuild/review the artifacts and publish core first, then adapters:
 
-In a fresh external directory install exact released versions from the public Registry, install React/Vue peers explicitly, repeat ESM, browser CSS/bundler and TypeScript consumption tests, and check a real browser. Confirm npm ownership, dist-tags, README and tarball contents before enabling npm-version/download badges. Log actual URLs and integrity values; a successful Git push is not proof of npm publication.
+```sh
+# Future approved versions only; 0.1.0 already exists and cannot be overwritten.
+RELEASE_VERSION=X.Y.Z
+npm publish "./artifacts/packages/animatter-${RELEASE_VERSION}.tgz" --access public --registry=https://registry.npmjs.org
+npm publish "./artifacts/packages/animatter-react-${RELEASE_VERSION}.tgz" --access public --registry=https://registry.npmjs.org
+npm publish "./artifacts/packages/animatter-vue-${RELEASE_VERSION}.tgz" --access public --registry=https://registry.npmjs.org
+```
 
-For a defective release, stop downstream automation, document affected versions and publish a reviewed fix under a **new** version after re-running acceptance. Deprecate an affected version with a clear reason and replacement, for example `npm deprecate 'animatter@<affected-version>' 'Use <fixed-version>; see repository advisory'`. Coordinate adapter peer ranges and deprecation messages. If compromise is suspected, revoke exposed credentials in npm settings, review publisher access, rotate affected secrets and notify maintainers. Use npm's current [unpublish policy](https://docs.npmjs.com/policies/unpublish) and support process; do not assume deleting a GitHub tag removes an npm package or that a version can be reused. Do not perform deprecation, unpublishing or credential changes during preparation.
+A publish command reporting acceptance or processing is not yet proof of public installation. Wait for Registry metadata, compare `dist.integrity` with the reviewed archive, install exact versions anonymously into a fresh external consumer, verify lockfile Registry URLs, types, imports, CSS, peers and browser behavior. Do not repeatedly republish an accepted version while waiting for visibility. Confirm the intended `latest` dist-tag before updating consumer documentation or npm badges.
+
+## Future Trusted Publishing / OIDC
+
+Prefer [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) for a future CI workflow. At the 2026-10-31 documentation check, publishing requires npm CLI >=11.5.1 and Node >=22.14.0; these are authentication-tool prerequisites, not the framework's runtime minimum.
+
+Configure each existing package's trusted publisher with GitHub owner `Alanshown`, repository `Animatter.js`, the exact workflow filename and any protected environment. The workflow must exist, use supported GitHub-hosted runners, and grant `contents: read` / `id-token: write`. Select the intended allowed action in npm settings; direct `npm publish` permission is separate from staged publishing. Recheck npm's current setup and expiry rules before enabling it.
+
+No publishing workflow or OIDC relationship was configured for this first manual publication. Do not display a CI success badge or assume account linking enabled publication. A future workflow needs reviewed permissions, an explicit release action and the same artifact/acceptance checks; do not add long-lived write tokens as a default fallback.
+
+## Incidents and fix-forward
+
+For a defective release, stop further publishing, identify affected versions and issue a reviewed fix under a new version. Deprecate affected versions with a concrete reason/replacement, for example `npm deprecate 'animatter@<affected-version>' 'Use <fixed-version>; see repository advisory'`, only after explicit authorization. Coordinate adapter peers and notices.
+
+For suspected compromise, review publisher access, revoke exposed credentials and rotate affected secrets through npm's official account settings. Follow the current [unpublish policy](https://docs.npmjs.com/policies/unpublish) and support process when needed. Deleting a GitHub tag does not remove an npm package, and an unpublished name/version cannot be reused. No deprecation, unpublishing or account changes are part of this release documentation update.

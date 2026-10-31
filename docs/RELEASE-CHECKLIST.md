@@ -1,6 +1,6 @@
 # Release checklist
 
-This is a future maintainer checklist, not evidence of completion. An unchecked item is not a pass. This preparation keeps version 0.1.0 and performs no npm publish or GitHub Release creation.
+This is a template for future releases, not evidence of completion. An unchecked item is not a pass. The first 0.1.0 npm publication is recorded separately in [NPM-RELEASE-0.1.0.md](NPM-RELEASE-0.1.0.md); no GitHub Release was created.
 
 ## Core gate comes first
 

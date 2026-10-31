@@ -9,7 +9,7 @@
 
 统一语义协议，统一物理空间，两种交互体验。
 
-<img alt="Project version 0.1.0" src="https://img.shields.io/badge/project-0.1.0-087f83?style=flat-square">
+<a href="https://www.npmjs.com/package/animatter"><img alt="npm version" src="https://img.shields.io/npm/v/animatter?style=flat-square&amp;color=087f83"></a>
 <img alt="TypeScript 5.9.3" src="https://img.shields.io/badge/TypeScript-5.9.3-3178c6?style=flat-square">
 <img alt="Development Node.js 24.22.1" src="https://img.shields.io/badge/dev_Node.js-24.22.1-43853d?style=flat-square">
 <img alt="Development npm 11.9.0" src="https://img.shields.io/badge/dev_npm-11.9.0-cb3837?style=flat-square">
@@ -97,51 +97,49 @@
 
 ## 安装与运行
 
-**本项目不声称已发布 npm。** 当前 tarball 由本地构建生成于 `artifacts/packages/`。发行归档不存放在源码目录中，下载区将另行提供。2026-10-31 官方公共 Registry 对四个候选名返回 404，但命名空间所有权仍未验证；这不代表已预留名称或已发布。
+从 npm 安装即可使用，无需克隆或构建本仓库。核心包及两个适配器均已发布 **0.1.0**，并完成公共 Registry 匿名安装验证。
+
+| 包 | 用途 |
+| --- | --- |
+| [animatter](https://www.npmjs.com/package/animatter) | 独立核心、类型声明与可选 CSS |
+| [@animatter/react](https://www.npmjs.com/package/@animatter/react) | React 生命周期适配器 |
+| [@animatter/vue](https://www.npmjs.com/package/@animatter/vue) | Vue 生命周期适配器 |
 
 ```sh
-git clone https://github.com/Alanshown/Animatter.js.git
-cd Animatter.js
-npm ci
-npm run build
-npm run dev
+npm install animatter
+# Optional React integration:
+npm install animatter @animatter/react react react-dom
+# Optional Vue integration:
+npm install animatter @animatter/vue vue
 ```
 
-打开[本地案例集](http://localhost:4173)。HTML 入口需要通过此 HTTP 服务访问，不支持 file:// 模块加载。不需要 Docker 或外部素材服务。
-
-在其他项目中使用生成的包：
-
-```sh
-npm run build
-npm run verify:package
-# In your consuming project, use the actual absolute path to this checkout:
-npm install /path/to/Animatter.js/artifacts/packages/animatter-0.1.0.tgz
-# Optional adapters, with the corresponding React/Vue peer installed:
-npm install /path/to/Animatter.js/artifacts/packages/animatter-react-0.1.0.tgz
-npm install /path/to/Animatter.js/artifacts/packages/animatter-vue-0.1.0.tgz
-```
+需要锁定首次发布版本时，为包名追加 `@0.1.0`。适配器使用同一个 `animatter` 核心；React/Vue 仍由应用管理。此后通过 `package.json`、锁文件及 npm 管理依赖。源码构建和本地 Demo 步骤见[API 与文档](#api-与文档)，公开下载校验记录见[首次 npm 发布报告](docs/NPM-RELEASE-0.1.0.md)。
 
 ## 快速开始
 
-以下页面位于仓库根目录，通过本地服务访问：
+在已有的 ESM 构建项目中，安装 `animatter` 后添加以下页面元素和入口文件：
 
 ```html
-<link rel="stylesheet" href="/packages/core/dist/materials.css">
 <button id="save" data-am="save" class="am-surface">Save</button>
 <p id="status" role="status"></p>
-<script type="module">
-  import { createWorld } from '/packages/core/dist/animatter.js';
-  const world = createWorld({ mode: 'field' });
-  world.scan();
-  document.querySelector('#save').addEventListener('click', () => {
-    document.querySelector('#status').textContent = 'Saved';
-    world.emit('success', 'save');
-  });
-  // On teardown: world.destroy();
-</script>
+<script type="module" src="./main.js"></script>
 ```
 
-使用构建工具时，从 `animatter` 导入，并按需导入 `animatter/materials.css`。请在客户端挂载后创建世界；单独导入包不依赖 DOM。
+```js
+// main.js
+import { createWorld } from 'animatter';
+import 'animatter/materials.css';
+
+const world = createWorld({ mode: 'field' });
+world.scan();
+document.querySelector('#save').addEventListener('click', () => {
+  document.querySelector('#status').textContent = 'Saved';
+  world.emit('success', 'save');
+});
+// On client teardown: world.destroy();
+```
+
+`animatter/materials.css` 是可选视觉层。包可以在 SSR 环境安全导入，但应在客户端 DOM 就绪或组件挂载后调用 `createWorld()`。原生 HTML Demo 的源码运行方法见下方开发说明。
 
 ## 框架集成
 
@@ -209,6 +207,18 @@ const removeField = world.addField(orbitalField('orbit', 180, 340));
 
 [API 与扩展协议](docs/API.md) · [架构](docs/ARCHITECTURE.md) · [核心验收门禁](docs/CORE-ACCEPTANCE.md) · [验收报告](docs/VERIFICATION.md) · [实测证据](docs/testing/) · [路线图](ROADMAP.md)
 
+开发框架或运行六个原生 HTML Demo 时，克隆源码并在仓库中运行：
+
+```sh
+git clone https://github.com/Alanshown/Animatter.js.git
+cd Animatter.js
+npm ci
+npm run build
+npm run dev
+```
+
+打开[本地案例集](http://localhost:4173)。Demo 通过 HTTP 服务运行，不支持直接以 file:// 加载模块；无需 Docker。以下为开发者检查命令：
+
 ```sh
 npm run typecheck
 npm run lint
@@ -243,7 +253,7 @@ npm run check               # Full required local verification
 
 0.1.0 提供共享运行时、两种模式、适配器、扩展协议和六个案例。后续重点是更完整的浏览器/设备验证、渲染器示例、Worker / 碰撞广相位实验和稳定的 1.0 API，详见 [ROADMAP.md](ROADMAP.md)。
 
-**发布门禁：先完成核心架构与 L0–L7 全层级交互验收，再讨论发布。打包和品牌完成不代表框架全部验收通过。此次不执行 npm publish、不创建 Release、不提高版本号。0.x API 仍可能调整。**
+**后续版本仍须先完成核心架构与 L0–L7 全层级交互验收，再发布。首次 npm 发布仅覆盖文档声明的验证范围；打包成功不等于跨浏览器、实机或全部功能均已验收。0.x API 仍可能调整。**
 
 ## 参与贡献
 

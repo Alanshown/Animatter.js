@@ -9,7 +9,7 @@
 
 One semantic protocol. One spatial world. Two ways to feel it.
 
-<img alt="Project version 0.1.0" src="https://img.shields.io/badge/project-0.1.0-087f83?style=flat-square">
+<a href="https://www.npmjs.com/package/animatter"><img alt="npm version" src="https://img.shields.io/npm/v/animatter?style=flat-square&amp;color=087f83"></a>
 <img alt="TypeScript 5.9.3" src="https://img.shields.io/badge/TypeScript-5.9.3-3178c6?style=flat-square">
 <img alt="Development Node.js 24.22.1" src="https://img.shields.io/badge/dev_Node.js-24.22.1-43853d?style=flat-square">
 <img alt="Development npm 11.9.0" src="https://img.shields.io/badge/dev_npm-11.9.0-cb3837?style=flat-square">
@@ -97,51 +97,49 @@ Native browser APIs include Pointer Events, ResizeObserver, MutationObserver, ma
 
 ## Installation
 
-**No npm publication is claimed.** Build and generate current tarballs under `artifacts/packages/`. Distribution archives are kept outside the source tree; release downloads will be added separately. Package-name checks returned public Registry 404 responses on 2026-10-31; namespace ownership is still unverified. This is not a reservation or a release.
+Install from npm without cloning or building this repository. The core and both adapters are published at **0.1.0** and verified through anonymous public Registry installation.
+
+| Package | Purpose |
+| --- | --- |
+| [animatter](https://www.npmjs.com/package/animatter) | Independent core, declarations and optional CSS |
+| [@animatter/react](https://www.npmjs.com/package/@animatter/react) | React lifecycle adapter |
+| [@animatter/vue](https://www.npmjs.com/package/@animatter/vue) | Vue lifecycle adapter |
 
 ```sh
-git clone https://github.com/Alanshown/Animatter.js.git
-cd Animatter.js
-npm ci
-npm run build
-npm run dev
+npm install animatter
+# Optional React integration:
+npm install animatter @animatter/react react react-dom
+# Optional Vue integration:
+npm install animatter @animatter/vue vue
 ```
 
-Open [the local gallery](http://localhost:4173). HTML entries need this HTTP server; file:// module loading is not supported. No Docker or external asset service is required.
-
-To use the packages in another project:
-
-```sh
-npm run build
-npm run verify:package
-# In your consuming project, use the actual absolute path to this checkout:
-npm install /path/to/Animatter.js/artifacts/packages/animatter-0.1.0.tgz
-# Optional adapters, with the corresponding React/Vue peer installed:
-npm install /path/to/Animatter.js/artifacts/packages/animatter-react-0.1.0.tgz
-npm install /path/to/Animatter.js/artifacts/packages/animatter-vue-0.1.0.tgz
-```
+Append `@0.1.0` to pin the first release. Adapters share the same `animatter` core; the application owns its React/Vue dependencies. Manage updates through package.json, your lockfile and npm. Source development and local demos are covered under [API and Documentation](#api-and-documentation); see the [npm release verification](docs/NPM-RELEASE-0.1.0.md).
 
 ## Quick Start
 
-A page at the checkout root, served by the local server:
+In an existing project with an ESM bundler, install `animatter` and add these page elements and entry module:
 
 ```html
-<link rel="stylesheet" href="/packages/core/dist/materials.css">
 <button id="save" data-am="save" class="am-surface">Save</button>
 <p id="status" role="status"></p>
-<script type="module">
-  import { createWorld } from '/packages/core/dist/animatter.js';
-  const world = createWorld({ mode: 'field' });
-  world.scan();
-  document.querySelector('#save').addEventListener('click', () => {
-    document.querySelector('#status').textContent = 'Saved';
-    world.emit('success', 'save');
-  });
-  // On teardown: world.destroy();
-</script>
+<script type="module" src="./main.js"></script>
 ```
 
-For bundlers, import from `animatter` and optionally `animatter/materials.css`. Create worlds after client mount; importing the package itself is safe without a DOM.
+```js
+// main.js
+import { createWorld } from 'animatter';
+import 'animatter/materials.css';
+
+const world = createWorld({ mode: 'field' });
+world.scan();
+document.querySelector('#save').addEventListener('click', () => {
+  document.querySelector('#status').textContent = 'Saved';
+  world.emit('success', 'save');
+});
+// On client teardown: world.destroy();
+```
+
+`animatter/materials.css` is optional. Package imports are SSR-safe, but call `createWorld()` after the client DOM is ready or a component mounts. For the native HTML source demos, follow the development instructions below.
 
 ## Framework Integrations
 
@@ -209,6 +207,18 @@ Presets: **elastic, liquid, heavy, magnetic**. CSS values are read at registrati
 
 [API and extension protocols](docs/API.md) · [Architecture](docs/ARCHITECTURE.md) · [Core acceptance gate](docs/CORE-ACCEPTANCE.md) · [Verification report](docs/VERIFICATION.md) · [Measured evidence](docs/testing/) · [Roadmap](ROADMAP.md)
 
+To develop the framework or run the six native HTML demos, clone the source and run:
+
+```sh
+git clone https://github.com/Alanshown/Animatter.js.git
+cd Animatter.js
+npm ci
+npm run build
+npm run dev
+```
+
+Open the [local gallery](http://localhost:4173). Demos require the HTTP server rather than file:// module loading; no Docker is needed. Developer verification commands:
+
 ```sh
 npm run typecheck
 npm run lint
@@ -243,7 +253,7 @@ This is a lightweight UI solver: rectangular contacts, finite-depth planes, proc
 
 0.1.0 provides the shared runtime, both modes, adapters, extension protocols and six studies. Next: broader browser/device validation, richer renderer examples, worker/broadphase experiments and a stable 1.0 API. See [ROADMAP.md](ROADMAP.md).
 
-**Publication gate: complete core architecture and L0–L7 interaction acceptance before publishing. Passing branding and packaging checks does not establish complete framework acceptance. This work does not publish npm packages, create a Release or increase versions. APIs may change during 0.x.**
+**Future releases must pass core architecture and L0–L7 interaction acceptance before publication. The first npm release covers only the documented verification scope; packaging success does not establish cross-browser, physical-device or complete feature acceptance. APIs may change during 0.x.**
 
 ## Contributing
 

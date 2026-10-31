@@ -1,6 +1,6 @@
 # Public API · 0.1.0
 
-The source of truth is `packages/core/src/index.ts` and generated declaration files. All distances are CSS pixels; time passed to simulation/tasks is seconds. `Interaction.time` is monotonic milliseconds. This version is ESM-only and has not been published to npm.
+The source of truth is `packages/core/src/index.ts` and generated declaration files. All distances are CSS pixels; time passed to simulation/tasks is seconds. `Interaction.time` is monotonic milliseconds. This version is ESM-only. Version 0.1.0 is available from npm; see [release verification](NPM-RELEASE-0.1.0.md).
 
 ## Create, register and destroy
 

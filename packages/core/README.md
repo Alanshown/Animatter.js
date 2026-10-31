@@ -1,6 +1,6 @@
 # animatter
 
-An optional, framework-agnostic physics-driven interaction runtime. Version 0.1.0 is built and packed from the Animatter.js monorepo; no npm registry publication is claimed.
+An optional, framework-agnostic physics-driven interaction runtime. Version 0.1.0 is available on npm and built from the Animatter.js monorepo.
 
 ```ts
 import {createWorld} from 'animatter';
