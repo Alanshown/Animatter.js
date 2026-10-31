@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-10-31T07:28:23.431671+00:00",
+  "sourceCommit": "042c479d2fc2a65887caceffdf756d2a448d2974",
+  "sourceTree": "3f096c1424a5596e1aff89bbf8cdeb3172057c2b",
+  "workflowRun": 41180358429,
+  "workflowJob": 124476323325,
+  "workflowUrl": "https://github.com/Alanshown/Animatter.js/actions/runs/41180358429",
+  "conclusion": "success",
+  "packages": [
+    {
+      "name": "@alanshown/animatter",
+      "version": "0.1.0",
+      "filename": "alanshown-animatter-0.1.0.tgz",
+      "integrity": "sha512-wuleqjsvb4mkV9iDfPQRrcOVSPJWx/1KUfFllJr59xAiJATZSYFAvD9TxtfrEA7m8Z3GJ5MxxfeVnDxiLzuJIA==",
+      "page": "https://github.com/Alanshown/Animatter.js/pkgs/npm/animatter",
+      "visibility": "public",
+      "visibilityEvidence": "Package settings: This package is currently public."
+    },
+    {
+      "name": "@alanshown/animatter-react",
+      "version": "0.1.0",
+      "filename": "alanshown-animatter-react-0.1.0.tgz",
+      "integrity": "sha512-bqGBTkhH+Jrdij5OhXyQCpjATzdME5sl17D/PauaUTLKiHd/ZfUTWuMvJPKC8lNu6kJqOBoZVhafmTPfuYNm4g==",
+      "page": "https://github.com/Alanshown/Animatter.js/pkgs/npm/animatter-react",
+      "visibility": "public",
+      "visibilityEvidence": "Package settings: This package is currently public."
+    },
+    {
+      "name": "@alanshown/animatter-vue",
+      "version": "0.1.0",
+      "filename": "alanshown-animatter-vue-0.1.0.tgz",
+      "integrity": "sha512-0UD/Vz101FPkn9OMG330EBw1LDP53oAPWg5FIdPNNiV5LUmVFfQ+tW9cBk92IFswWj0Rd/6KLGO+wRjhhtGuhw==",
+      "page": "https://github.com/Alanshown/Animatter.js/pkgs/npm/animatter-vue",
+      "visibility": "public",
+      "visibilityEvidence": "Package settings: This package is currently public."
+    }
+  ],
+  "checks": {
+    "unitTestsPassed": 23,
+    "chromiumCoreAndDemoCasesPassed": 46,
+    "typecheck": true,
+    "lint": true,
+    "build": true,
+    "docsAndBranding": true,
+    "packDryRunAndRealPack": true,
+    "stagedTarballInstallation": true,
+    "authenticatedRegistryInstall": true,
+    "registryIntegrityMatchesStagedTarballs": true,
+    "esmAndSsrSafeImports": true,
+    "strictTypes": true,
+    "cssRetention": true,
+    "coreFrameworkIsolation": true,
+    "peerDependencies": true,
+    "allPackageSettingsPublic": true,
+    "repositoryPackageCount": 3,
+    "githubReleaseCreated": false,
+    "versionBumped": false,
+    "npmRepublished": false
+  },
+  "registryEvidence": "Workflow publish step asserts dist.integrity for each version, then installs exact versions into a fresh consumer and checks lockfile integrity and npm.pkg.github.com download URLs. No credentials are retained here.",
+  "limitations": [
+    "GitHub npm Registry installation requires authentication even for public packages.",
+    "Cross-browser and physical-device coverage remains limited as documented in PACKAGE-COMPATIBILITY.md.",
+    "Browser tests exercise the framework before registry staging; staged and downloaded variants separately pass ESM, type, CSS and peer consumer checks."
+  ]
+}
