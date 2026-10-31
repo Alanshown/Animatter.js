@@ -1,0 +1,41 @@
+{
+  "name": "animatter-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b && node scripts/build.mjs",
+    "typecheck": "tsc -b --pretty false && tsc -p tsconfig.tools.json --pretty false",
+    "lint": "eslint packages tests demos scripts",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "dev": "node scripts/serve.mjs",
+    "test:browser": "node scripts/browser-test.mjs",
+    "capture": "node scripts/capture.mjs",
+    "benchmark": "node --import tsx scripts/benchmark.ts",
+    "verify:package": "node scripts/verify-package.mjs",
+    "check": "npm run typecheck && npm run lint && npm test && npm run build && npm run verify:package && npm run test:browser && npm run verify:docs",
+    "test:core-browser": "node scripts/browser-test.mjs --core",
+    "test:compat": "node scripts/browser-test.mjs --all",
+    "verify:docs": "node scripts/verify-docs.mjs",
+    "format": "prettier --write \"packages/*/src/**/*.{ts,css}\" \"tests/**/*.ts\" \"scripts/*.{mjs,ts}\" \"demos/**/*.{html,js,css}\" \"*.{json,js}\""
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@playwright/test": "1.56.1",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "esbuild": "0.25.12",
+    "eslint": "9.39.1",
+    "prettier": "3.6.2",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2",
+    "vue": "3.5.44"
+  }
+}

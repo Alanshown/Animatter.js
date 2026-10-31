@@ -1,0 +1,374 @@
+:root {
+  --paper: #f6f3eb;
+  --ink: #32362d;
+  --muted: #8c8b7e;
+  --line: #dfded1;
+  --accent: #c47a50;
+}
+.wordmark {
+  font-size: 39px;
+  font-weight: 800;
+  letter-spacing: -3px;
+  position: relative;
+}
+.wordmark > span {
+  font-size: 10px;
+  position: absolute;
+  top: 4px;
+  right: -11px;
+  letter-spacing: 0;
+}
+.topnav {
+  font-size: 11px;
+}
+.topnav sup {
+  font-size: 8px;
+  color: #9e9c8f;
+}
+.hero {
+  padding: 45px 0 47px;
+  border-bottom: 1px solid var(--line);
+}
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+}
+.hero-top .eyebrow {
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+.local-time {
+  text-align: right;
+  font-size: 7px;
+  line-height: 1.8;
+  color: #91917d;
+}
+.local-time #clock {
+  color: #b0865c;
+}
+.hero h1 {
+  font-size: clamp(65px, 8.3vw, 120px);
+  line-height: 1.08;
+  letter-spacing: -5.7px;
+  margin: 39px 0 35px;
+}
+.hero h1 .serif {
+  font-style: italic;
+  color: #a99b79;
+}
+.touch-word {
+  display: inline-block;
+  position: relative;
+  cursor: default;
+}
+.touch-word svg {
+  position: absolute;
+  bottom: -6px;
+  width: 100%;
+  height: 20px;
+  color: #c67c52;
+}
+.hero h1 .period {
+  color: #c67c52;
+}
+.hero-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 32px;
+}
+.asterisk {
+  font-size: 64px;
+  line-height: 1;
+  color: #ba774e;
+  display: inline-block;
+  margin-right: 17px;
+}
+.hero-bottom p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #8d8c7d;
+}
+.scroll-link {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  font:
+    8px "Courier New",
+    monospace;
+  letter-spacing: 1px;
+}
+.scroll-link span {
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+.work {
+  padding-top: 40px;
+  scroll-margin-top: 25px;
+}
+.work h2 {
+  font-size: 25px;
+  letter-spacing: -0.7px;
+}
+.work h2 .serif {
+  font-style: italic;
+  color: #9b947b;
+  margin-left: 5px;
+}
+.work > .section-label > .mono {
+  font-size: 7px;
+  color: #999782;
+  letter-spacing: 1px;
+}
+.work-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 27px;
+}
+.project {
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  min-width: 0;
+}
+.project-art {
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 3px;
+}
+.project-art svg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+}
+.forma-art {
+  background: #e8d9c4;
+}
+.earth-art {
+  background: #dfe3ca;
+}
+.art-logo {
+  font-size: 29px;
+  letter-spacing: -2px;
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  color: #8e583e;
+}
+.art-logo > span {
+  font-size: 9px;
+  position: absolute;
+  top: 3px;
+}
+.earth-title {
+  font-size: 30px;
+  position: absolute;
+  top: 21px;
+  left: 24px;
+  color: #687a4b;
+  font-style: italic;
+}
+.art-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 20px;
+  font-size: 5px;
+  letter-spacing: 2px;
+  color: #8d785d;
+}
+.earth-art .art-caption {
+  color: #7f8a60;
+}
+.project-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17px 0;
+}
+.project-meta h3 {
+  font-size: 14px;
+  letter-spacing: -0.3px;
+}
+.project-meta p {
+  font-size: 8px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.project-arrow {
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  color: #817e69;
+}
+.third-project {
+  width: 100%;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  margin-top: 12px;
+}
+.third-project .mono {
+  font-size: 7px;
+  color: #96947e;
+}
+.third-project .serif {
+  font-size: 27px;
+}
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  padding: 70px 0;
+  gap: 60px;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 40px;
+}
+.about > .eyebrow {
+  align-items: flex-start;
+  font-size: 8px;
+  padding-top: 8px;
+}
+.about h2 {
+  font-size: 45px;
+  line-height: 1.12;
+}
+.about h2 em {
+  color: #b09870;
+}
+.about p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #8d8c7d;
+  margin: 25px 0;
+  max-width: 440px;
+}
+.about .tag {
+  font-size: 7px;
+  color: #918a72;
+}
+.contact-section {
+  padding: 65px 0 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.contact-section > .mono {
+  font-size: 8px;
+  color: #9d927a;
+}
+.contact-section button {
+  background: transparent;
+  font-size: clamp(29px, 4vw, 55px);
+  letter-spacing: -1px;
+}
+.contact-section button em {
+  color: #bb8b60;
+}
+.contact-section > .small {
+  font-size: 8px;
+}
+.dialog .project-notes {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0 30px;
+}
+#contact-form label {
+  font-size: 11px;
+  display: block;
+}
+#contact-form input,
+#contact-form textarea {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+  background: transparent;
+  color: var(--ink);
+  display: block;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+#contact-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+#contact-status {
+  font-size: 10px;
+  margin: 15px 0 0;
+}
+@media (max-width: 800px) {
+  .hero h1 {
+    font-size: 61px;
+    letter-spacing: -3px;
+    margin-top: 35px;
+  }
+  .hero-top .eyebrow {
+    font-size: 6px;
+  }
+  .local-time {
+    display: none;
+  }
+  .hero-bottom .row {
+    gap: 5px;
+  }
+  .asterisk {
+    font-size: 45px;
+    margin-right: 10px;
+  }
+  .hero-bottom p {
+    font-size: 9px;
+  }
+  .scroll-link {
+    font-size: 6px;
+    gap: 10px;
+  }
+  .work-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .project-art {
+    height: 290px;
+  }
+  .work > .section-label > .mono {
+    display: none;
+  }
+  .third-project .mono {
+    font-size: 6px;
+    max-width: 90px;
+  }
+  .third-project .serif {
+    font-size: 23px;
+  }
+  .about {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 45px 0;
+  }
+  .about h2 {
+    font-size: 38px;
+  }
+  .topnav {
+    gap: 12px;
+    font-size: 8px;
+  }
+  .topnav .pill {
+    padding: 7px 10px;
+    font-size: 8px;
+  }
+}

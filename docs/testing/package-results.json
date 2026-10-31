@@ -1,0 +1,56 @@
+[
+  {
+    "name": "animatter",
+    "version": "0.1.0",
+    "tarball": "animatter-0.1.0.tgz",
+    "bytes": 106134,
+    "unpackedBytes": 451578,
+    "files": 82,
+    "exports": [
+      "ActorRuntime",
+      "AnimatterWorld",
+      "BehaviorPlanner",
+      "CanvasActorRenderer",
+      "FieldRenderer",
+      "InteractionArbiter",
+      "InteractionGraph",
+      "MotionMixer",
+      "PhysicsEngine",
+      "SVGActorRenderer",
+      "SpatialRegistry",
+      "createWorld",
+      "devtools",
+      "materials",
+      "orbitalField",
+      "radialField",
+      "resolveMaterial",
+      "sequence",
+      "taxonomy",
+      "vec"
+    ]
+  },
+  {
+    "name": "@animatter/react",
+    "version": "0.1.0",
+    "tarball": "animatter-react-0.1.0.tgz",
+    "bytes": 2365,
+    "unpackedBytes": 5084,
+    "files": 7,
+    "exports": [
+      "useAnimatter",
+      "useSurface"
+    ]
+  },
+  {
+    "name": "@animatter/vue",
+    "version": "0.1.0",
+    "tarball": "animatter-vue-0.1.0.tgz",
+    "bytes": 2276,
+    "unpackedBytes": 4777,
+    "files": 7,
+    "exports": [
+      "useAnimatter",
+      "useSurface"
+    ]
+  }
+]

@@ -1,0 +1,377 @@
+:root {
+  --paper: #eeefe8;
+  --ink: #1c3732;
+  --muted: #7f9086;
+  --line: #cfd9cb;
+  --accent: #a55c42;
+}
+.polarity-mark {
+  display: inline-flex;
+  font-size: 35px;
+  font-weight: 900;
+  border-bottom: 6px solid #a45f47;
+  color: #1c3732;
+  width: 25px;
+  height: 33px;
+  line-height: 22px;
+  justify-content: center;
+}
+.brand .label {
+  font-size: 10px;
+  margin-left: 0;
+  color: #9ba392;
+}
+#connections {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 40px;
+  padding: 66px 0 46px;
+}
+.hero .eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.4px;
+}
+.hero h1 {
+  font-size: clamp(70px, 7.5vw, 106px);
+  margin: 27px 0 25px;
+}
+.hero h1 .serif {
+  font-style: italic;
+  color: #a2674f;
+}
+.intro {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+  margin-bottom: 30px;
+}
+.mode-buttons {
+  display: flex;
+  gap: 8px;
+}
+.mode-buttons button {
+  background: transparent;
+  border: 1px solid #bdcdbd;
+  padding: 10px 18px;
+  border-radius: 7px;
+  font-size: 10px;
+}
+.mode-buttons .active {
+  color: #f4f5eb;
+  background: #264239;
+  border-color: #264239;
+}
+.field-readout {
+  border-top: 1px solid var(--line);
+  margin-top: 30px;
+  padding-top: 17px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.field-readout .mono {
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  color: #8f9f90;
+}
+.field-readout strong {
+  font: italic 17px Georgia;
+  flex: 1;
+  font-weight: 400;
+}
+.field-readout #field-value {
+  color: #a2674f;
+}
+.playground {
+  position: relative;
+  min-height: 440px;
+  background-image: radial-gradient(#bdcdb97a 0.9px, transparent 0.9px);
+  background-size: 17px 17px;
+  overflow: visible;
+}
+.field-ring {
+  border: 1px solid #c3d0bf88;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.r1 {
+  width: 170px;
+  height: 170px;
+}
+.r2 {
+  width: 310px;
+  height: 310px;
+}
+.r3 {
+  width: 440px;
+  height: 440px;
+}
+.crosshair {
+  position: absolute;
+  opacity: 0.5;
+  pointer-events: none;
+}
+.horizontal {
+  width: 100%;
+  height: 1px;
+  border-top: 1px dashed #b2c0b0;
+  top: 50%;
+}
+.vertical {
+  height: 100%;
+  width: 1px;
+  border-left: 1px dashed #b2c0b0;
+  left: 50%;
+}
+.coordinate {
+  position: absolute;
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: #8b9e89;
+}
+.top-left {
+  left: 12px;
+  top: 12px;
+}
+.bottom-right {
+  right: 12px;
+  bottom: 12px;
+}
+.node {
+  width: 103px;
+  height: 103px;
+  border-radius: 24px;
+  position: absolute;
+  display: grid;
+  place-items: center;
+  box-shadow:
+    inset 1px 1px 1px #fff5,
+    5px 15px 30px #3c573013;
+}
+.node-symbol {
+  font: 46px/1 Georgia;
+  pointer-events: none;
+}
+.node-label {
+  position: absolute;
+  bottom: -24px;
+  white-space: nowrap;
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  color: #83957d;
+  pointer-events: none;
+}
+.node-a {
+  background: #c6cfad;
+  color: #4a603b;
+  left: 19%;
+  top: 14%;
+  rotate: -12deg;
+}
+.node-b {
+  background: #244539;
+  color: #d3ddc8;
+  right: 13%;
+  top: 25%;
+  rotate: 12deg;
+}
+.node-c {
+  background: #b16c4e;
+  color: #eddec9;
+  left: 14%;
+  bottom: 14%;
+  rotate: -7deg;
+}
+.node-d {
+  background: #d8dfce;
+  color: #4b6243;
+  right: 24%;
+  bottom: 10%;
+  rotate: 10deg;
+}
+.node.selected {
+  outline: 2px dashed #a2674f;
+  outline-offset: 6px;
+}
+.center-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: grid;
+  text-align: center;
+  pointer-events: none;
+  gap: 10px;
+  color: #879d7f;
+}
+.center-label > span:first-child {
+  font-size: 28px;
+  font-weight: 200;
+  line-height: 1;
+}
+.center-label .mono {
+  font-size: 6px;
+}
+.control-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 28px 0;
+  gap: 38px;
+}
+.field-control {
+  padding-right: 30px;
+  border-right: 1px solid var(--line);
+}
+.field-control .mono,
+.connection-control .mono {
+  font-size: 8px;
+  letter-spacing: 0.7px;
+}
+.field-control output {
+  font:
+    10px "Courier New",
+    monospace;
+  color: #a46f53;
+}
+.field-control input {
+  width: 100%;
+  accent-color: #526b46;
+  height: 3px;
+  margin: 24px 0 12px;
+  cursor: pointer;
+}
+.field-control > .row:last-child {
+  font-size: 6px;
+  color: #99a78f;
+}
+.connection-control p {
+  font: 11px/1.6 Georgia;
+  color: #8c9b84;
+  margin: 10px 0;
+}
+.connection-control button {
+  padding: 0;
+  background: transparent;
+  border-bottom: 1px solid #adbca4;
+  font-size: 9px;
+}
+.magnetic-nav {
+  padding-top: 33px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.magnetic-nav > .mono {
+  font-size: 9px;
+  color: #8b9b83;
+}
+.nav-disc {
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 94px;
+  height: 94px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font: 14px Georgia;
+  line-height: 1.5;
+}
+.nav-disc span {
+  color: #a2674f;
+}
+@media (max-width: 900px) {
+  .hero {
+    gap: 15px;
+  }
+  .node {
+    width: 85px;
+    height: 85px;
+  }
+  .r3 {
+    width: 360px;
+    height: 360px;
+  }
+  .hero h1 {
+    font-size: 76px;
+  }
+  .hero .eyebrow {
+    font-size: 6px;
+  }
+  .control-strip {
+    gap: 22px;
+  }
+  .mode-buttons button {
+    padding: 9px 13px;
+  }
+}
+@media (max-width: 800px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 36px;
+    gap: 30px;
+  }
+  .hero h1 {
+    font-size: 80px;
+  }
+  .playground {
+    min-height: 380px;
+  }
+  .r3 {
+    width: 320px;
+    height: 320px;
+  }
+  .r2 {
+    width: 230px;
+    height: 230px;
+  }
+  .r1 {
+    width: 120px;
+    height: 120px;
+  }
+  .node {
+    width: 83px;
+    height: 83px;
+  }
+  .node-a {
+    left: 15%;
+    top: 10%;
+  }
+  .node-b {
+    right: 10%;
+  }
+  .node-c {
+    left: 10%;
+  }
+  .node-d {
+    right: 20%;
+  }
+  .control-strip {
+    grid-template-columns: 1fr;
+  }
+  .field-control {
+    border-right: 0;
+    padding-right: 0;
+  }
+  .magnetic-nav {
+    display: block;
+  }
+  .magnetic-nav .row {
+    margin-top: 20px;
+    justify-content: space-between;
+  }
+}

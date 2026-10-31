@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Magnetic Interface — Polarity</title>
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <link rel="stylesheet" href="scene.css" />
+  </head>
+  <body>
+    <canvas id="connections" aria-hidden="true"></canvas>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/demos/index.html"
+          ><span class="polarity-mark">∩</span>polarity<span class="label"
+            >®</span
+          ></a
+        >
+        <nav class="topnav">
+          <a href="#playground">The playground</a
+          ><a href="#controls">Field settings</a
+          ><span class="pill hide-mobile">EXPERIMENT NO. 004</span>
+        </nav>
+      </header>
+      <main>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">
+              <span class="dot"></span>AN EXPLORATION OF INVISIBLE CONNECTIONS
+            </p>
+            <h1>Opposites<br /><span class="serif">interact.</span></h1>
+            <p class="intro">
+              You are the center of the field.<br />Bring things closer. Push
+              them away.<br />See what happens in between.
+            </p>
+            <div class="mode-buttons" role="group" aria-label="Field behavior">
+              <button
+                class="active am-surface"
+                data-field="attract"
+                data-am="attract"
+                aria-pressed="true"
+              >
+                + Attract</button
+              ><button
+                class="am-surface"
+                data-field="repel"
+                data-am="repel"
+                aria-pressed="false"
+              >
+                − Repel</button
+              ><button
+                class="am-surface"
+                data-field="orbit"
+                data-am="orbit"
+                aria-pressed="false"
+              >
+                ⟳ Orbit
+              </button>
+            </div>
+            <div class="field-readout">
+              <span class="mono">CURRENT FIELD</span
+              ><strong id="readout">Attraction</strong
+              ><span class="mono" id="field-value">+ 100 mT</span>
+            </div>
+          </div>
+          <div class="playground" id="playground">
+            <div class="crosshair horizontal"></div>
+            <div class="crosshair vertical"></div>
+            <div class="field-ring r1"></div>
+            <div class="field-ring r2"></div>
+            <div class="field-ring r3"></div>
+            <span class="coordinate top-left mono">N 45° / E 12°</span
+            ><span class="coordinate bottom-right mono"
+              >MOVE YOUR CURSOR HERE</span
+            ><button
+              class="node node-a am-surface"
+              data-am="node-a"
+              aria-label="Connect node Alpha"
+            >
+              <span class="node-symbol">+</span
+              ><span class="node-label mono">ALPHA / 01</span></button
+            ><button
+              class="node node-b am-surface"
+              data-am="node-b"
+              aria-label="Connect node Beta"
+            >
+              <span class="node-symbol">−</span
+              ><span class="node-label mono">BETA / 02</span></button
+            ><button
+              class="node node-c am-surface"
+              data-am="node-c"
+              aria-label="Connect node Gamma"
+            >
+              <span class="node-symbol">↗</span
+              ><span class="node-label mono">GAMMA / 03</span></button
+            ><button
+              class="node node-d am-surface"
+              data-am="node-d"
+              aria-label="Connect node Delta"
+            >
+              <span class="node-symbol">∗</span
+              ><span class="node-label mono">DELTA / 04</span>
+            </button>
+            <div class="center-label">
+              <span>×</span><span class="mono">YOUR FIELD</span>
+            </div>
+          </div>
+        </section>
+        <section class="control-strip" id="controls">
+          <div class="field-control">
+            <div class="row spread">
+              <label for="strength" class="mono">FIELD STRENGTH</label
+              ><output id="strength-value" for="strength">100 mT</output>
+            </div>
+            <input type="range" id="strength" min="0" max="200" value="100" />
+            <div class="row spread mono muted">
+              <span>GENTLE</span><span>INTENSE</span>
+            </div>
+          </div>
+          <div class="field-control">
+            <div class="row spread">
+              <label for="radius" class="mono">RADIUS OF INFLUENCE</label
+              ><output id="radius-value" for="radius">300 px</output>
+            </div>
+            <input type="range" id="radius" min="100" max="600" value="300" />
+            <div class="row spread mono muted">
+              <span>LOCAL</span><span>EVERYWHERE</span>
+            </div>
+          </div>
+          <div class="connection-control">
+            <span class="mono">A LITTLE EXPERIMENT</span>
+            <p>
+              Click two nodes to connect them.<br />They'll remember the
+              distance between them.
+            </p>
+            <button id="clear-connections">Clear connections ↗</button
+            ><span
+              class="screen-reader"
+              id="connection-status"
+              role="status"
+            ></span>
+          </div>
+        </section>
+        <section class="magnetic-nav">
+          <span class="mono">FOLLOW YOUR CURIOSITY</span>
+          <div class="row">
+            <a
+              class="nav-disc am-surface"
+              data-am="explore"
+              href="/demos/liquid-world/index.html"
+              >Explore<br /><span>↗</span></a
+            ><a
+              class="nav-disc am-surface"
+              data-am="discover"
+              href="/demos/skeleton-pet/index.html"
+              >Discover<br /><span>↗</span></a
+            ><a
+              class="nav-disc am-surface"
+              data-am="connect"
+              href="/demos/living-workspace/index.html"
+              >Connect<br /><span>↗</span></a
+            >
+          </div>
+        </section>
+      </main>
+      <div data-footer></div>
+    </div>
+    <script type="module" src="scene.js"></script>
+  </body>
+</html>

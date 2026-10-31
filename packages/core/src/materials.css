@@ -1,0 +1,64 @@
+/* Optional visual tokens. All motion is calculated by the runtime, not CSS keyframes. */
+[data-am-material="elastic"] {
+  --am-mass: 1;
+  --am-stiffness: 150;
+  --am-damping: 16;
+  --am-softness: 0.2;
+}
+[data-am-material="liquid"] {
+  --am-mass: 1.4;
+  --am-stiffness: 85;
+  --am-damping: 11;
+  --am-softness: 0.85;
+  --am-magnetism: 48;
+  --am-radius: 280;
+}
+[data-am-material="heavy"] {
+  --am-mass: 3;
+  --am-stiffness: 190;
+  --am-damping: 34;
+  --am-gravity: 90;
+  --am-softness: 0.08;
+}
+[data-am-material="magnetic"] {
+  --am-mass: 0.8;
+  --am-stiffness: 130;
+  --am-damping: 14;
+  --am-magnetism: 100;
+  --am-radius: 300;
+}
+[data-am] {
+  --am-energy: 0;
+  --am-ripple: 0;
+  --am-ripple-x: 50%;
+  --am-ripple-y: 50%;
+}
+.am-surface {
+  position: relative;
+  isolation: isolate;
+}
+.am-surface::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    circle at var(--am-ripple-x) var(--am-ripple-y),
+    rgb(255 255 255 / calc(var(--am-ripple) * 0.32)),
+    transparent 65%
+  );
+  box-shadow: inset 0 0 calc(var(--am-energy) * 28px) rgb(255 255 255 / 0.12);
+}
+.am-liquid {
+  border-radius: calc(24px + var(--am-energy) * 18px)
+    calc(24px - var(--am-energy) * 8px) calc(24px + var(--am-energy) * 12px)
+    24px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .am-surface::after {
+    background: none;
+    box-shadow: none;
+  }
+}

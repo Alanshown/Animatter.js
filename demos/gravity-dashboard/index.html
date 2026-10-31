@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gravity Dashboard — Orbital</title>
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <link rel="stylesheet" href="scene.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside>
+        <a class="brand" href="/demos/index.html"
+          ><span class="orbital-mark">◒</span>orbital<span class="label"
+            >/</span
+          ></a
+        ><span class="label group-label">WORKSPACE</span>
+        <nav>
+          <a class="selected" href="#overview"
+            ><span>▦</span> Overview <i>01</i></a
+          ><a href="#analytics"><span>◷</span> Analytics</a
+          ><a href="#missions"><span>⌁</span> Missions</a
+          ><button id="settings"><span>⚙</span> View settings</button>
+        </nav>
+        <div class="aside-note">
+          <span class="dot"></span><span class="mono">ALL SYSTEMS NOMINAL</span>
+          <p>Your data.<br />A little more grounded.</p>
+        </div>
+        <div class="avatar">
+          <span>AL</span>
+          <div>Alan's workspace<small>Personal mission control</small></div>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="dash-header">
+          <span class="mono">WORKSPACE / OVERVIEW</span>
+          <div class="row">
+            <span class="live"><span class="dot"></span>Local simulation</span
+            ><button class="pill" id="refresh" data-am="refresh">
+              ↻ &nbsp; Refresh data
+            </button>
+          </div>
+        </header>
+        <main id="overview">
+          <div class="heading">
+            <div>
+              <span class="eyebrow">MONDAY, OCTOBER 26</span>
+              <h1>Good orbit, Alan<span>.</span></h1>
+              <p class="muted">
+                A clear view of what's moving. And what matters.
+              </p>
+            </div>
+            <button class="primary" id="add-widget" data-am="add-widget">
+              + Add a widget
+            </button>
+          </div>
+          <div class="section-label">
+            <span class="mono"
+              >YOUR INSTRUMENTS
+              <span class="muted">/ DRAG TO REARRANGE</span></span
+            ><span class="tag">EARTH GRAVITY · 1.0 g</span>
+          </div>
+          <div
+            class="widgets"
+            id="widgets"
+            role="list"
+            aria-label="Dashboard widgets"
+          >
+            <article
+              class="widget am-surface"
+              data-am="revenue"
+              data-am-drag
+              role="listitem"
+            >
+              <div class="widget-top">
+                <span>Revenue</span
+                ><span class="drag-handle" aria-hidden="true">⠿</span>
+              </div>
+              <div class="metric">
+                $24,680<span class="positive">↗ 12.8%</span>
+              </div>
+              <p class="small muted">vs. $21,879 previous period</p>
+              <svg
+                class="spark"
+                viewBox="0 0 280 75"
+                aria-label="Revenue trend increasing"
+              >
+                <path
+                  d="M0 70 20 57 45 59 65 41 90 48 110 30 130 37 152 12 175 24 194 17 215 27 238 8 260 15 280 2"
+                  fill="none"
+                  stroke="#c96d45"
+                  stroke-width="2"
+                />
+                <path
+                  d="M0 70 20 57 45 59 65 41 90 48 110 30 130 37 152 12 175 24 194 17 215 27 238 8 260 15 280 2V75H0"
+                  fill="#c96d4510"
+                />
+              </svg>
+              <div class="widget-foot">
+                <span class="mono">LAST 30 DAYS</span>
+                <div class="reorder">
+                  <button data-up aria-label="Move revenue up">↑</button
+                  ><button data-down aria-label="Move revenue down">↓</button>
+                </div>
+              </div>
+            </article>
+            <article
+              class="widget am-surface"
+              data-am="users"
+              data-am-drag
+              role="listitem"
+            >
+              <div class="widget-top">
+                <span>Active users</span
+                ><span class="drag-handle" aria-hidden="true">⠿</span>
+              </div>
+              <div class="metric">
+                8,942<span class="positive">↗ 6.4%</span>
+              </div>
+              <p class="small muted">People finding their way here</p>
+              <div class="bar-chart" aria-label="Weekly active users bar chart">
+                <i style="--h: 44%"></i><i style="--h: 65%"></i
+                ><i style="--h: 56%"></i><i style="--h: 80%"></i
+                ><i style="--h: 70%"></i><i style="--h: 90%"></i
+                ><i style="--h: 100%"></i><i style="--h: 85%"></i
+                ><i style="--h: 95%"></i><i style="--h: 78%"></i
+                ><i style="--h: 90%"></i><i style="--h: 100%"></i>
+              </div>
+              <div class="widget-foot">
+                <span class="mono">THIS MONTH</span>
+                <div class="reorder">
+                  <button data-up aria-label="Move users up">↑</button
+                  ><button data-down aria-label="Move users down">↓</button>
+                </div>
+              </div>
+            </article>
+            <article
+              class="widget am-surface dark-widget"
+              data-am="focus"
+              data-am-drag
+              role="listitem"
+            >
+              <div class="widget-top">
+                <span>Focus time</span
+                ><span class="drag-handle" aria-hidden="true">⠿</span>
+              </div>
+              <div class="focus-circle">
+                <svg viewBox="0 0 140 140">
+                  <circle
+                    cx="70"
+                    cy="70"
+                    r="60"
+                    fill="none"
+                    stroke="#465046"
+                    stroke-width="8"
+                  />
+                  <circle
+                    cx="70"
+                    cy="70"
+                    r="60"
+                    fill="none"
+                    stroke="#d6d9a8"
+                    stroke-width="8"
+                    stroke-dasharray="285 377"
+                    transform="rotate(-90 70 70)"
+                  />
+                </svg>
+                <div>24.5<small>HOURS THIS WEEK</small></div>
+              </div>
+              <div class="widget-foot">
+                <span class="mono">76% OF YOUR GOAL</span>
+                <div class="reorder">
+                  <button data-up aria-label="Move focus up">↑</button
+                  ><button data-down aria-label="Move focus down">↓</button>
+                </div>
+              </div>
+            </article>
+          </div>
+          <section class="activity" id="analytics">
+            <div class="section-label">
+              <div>
+                <span class="mono">ACTIVITY OVERVIEW</span>
+                <p class="muted small">A little momentum, every day.</p>
+              </div>
+              <div class="period" aria-label="Period">
+                <button class="active" data-period="week">Week</button
+                ><button data-period="month">Month</button>
+              </div>
+            </div>
+            <div class="activity-chart">
+              <div class="chart-labels">
+                <span>120</span><span>80</span><span>40</span><span>0</span>
+              </div>
+              <svg
+                viewBox="0 0 900 150"
+                preserveAspectRatio="none"
+                aria-label="Activity chart"
+              >
+                <defs>
+                  <linearGradient
+                    id="activity-fill"
+                    x1="0"
+                    x2="0"
+                    y1="0"
+                    y2="1"
+                  >
+                    <stop stop-color="#c4c7ad" stop-opacity=".45" />
+                    <stop offset="1" stop-color="#c4c7ad" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0 145H900M0 100H900M0 55H900M0 10H900"
+                  stroke="#e6e6dc"
+                  stroke-dasharray="3 5"
+                />
+                <path
+                  id="activity-line"
+                  d="M0 126Q65 133 130 85T260 93 390 46 520 66 650 27 780 39 900 9"
+                  fill="none"
+                  stroke="#7b8d6b"
+                  stroke-width="2.5"
+                />
+                <path
+                  id="activity-area" d="M0 126Q65 133 130 85T260 93 390 46 520 66 650 27 780 39 900 9V150H0"
+                  fill="url(#activity-fill)"
+                />
+              </svg>
+            </div>
+            <div class="chart-days mono">
+              <span>MON</span><span>TUE</span><span>WED</span><span>THU</span
+              ><span>FRI</span><span>SAT</span><span>SUN</span>
+            </div>
+          </section>
+          <section class="missions" id="missions">
+            <div class="section-label">
+              <h3>Recent missions</h3>
+              <span class="tag">3 IN YOUR ORBIT</span>
+            </div>
+            <details data-am="mission-detail" class="am-surface">
+              <summary>
+                <span class="status-dot"></span>Launch the autumn collection
+                <span class="muted small">Design · In progress ⌄</span>
+              </summary>
+              <p>
+                Finish the visual review, confirm the six experiments, then
+                launch when everything is ready.
+              </p>
+            </details>
+            <details>
+              <summary>
+                <span class="status-dot done"></span>Update component guidelines
+                <span class="muted small">System · Complete ⌄</span>
+              </summary>
+              <p>Component guidelines have been reviewed and approved.</p>
+            </details>
+          </section>
+          <p role="status" id="dashboard-status" class="small muted">
+            Everything is up to date. Drag cards or use their arrow buttons to
+            reorder.
+          </p>
+        </main>
+        <div data-footer></div>
+      </div>
+    </div>
+    <dialog id="settings-dialog" class="dialog">
+      <button class="close" data-close aria-label="Close">×</button
+      ><span class="eyebrow">VIEW SETTINGS</span>
+      <h2 class="serif">A different gravity.</h2>
+      <label
+        >Gravity <input id="gravity" type="range" min="0" max="300" value="90"
+      /></label>
+      <p class="muted">Let your cards float, or give them a little weight.</p>
+      <button class="primary" data-close>Save view</button>
+    </dialog>
+    <script type="module" src="scene.js"></script>
+  </body>
+</html>

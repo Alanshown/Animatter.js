@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Liquid World — Tidal</title>
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <link rel="stylesheet" href="scene.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/demos/index.html"
+          ><svg width="26" height="32" viewBox="0 0 26 32" aria-hidden="true">
+            <path
+              d="M13 1C10 8 1 16 1 21a12 10 0 0 0 24 0C25 16 16 8 13 1Z"
+              fill="currentColor"
+            /></svg
+          >tidal</a
+        >
+        <nav class="topnav">
+          <a href="#collection">Collection</a
+          ><button class="pill am-surface" data-am="about" id="about">
+            A little about us ↗
+          </button>
+        </nav>
+      </header>
+      <main>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">
+              <span class="dot"></span>STUDY 02 / INVISIBLE FORCES
+            </p>
+            <h1>
+              Nothing rigid.<br /><span class="serif">Everything felt.</span>
+            </h1>
+            <p class="intro">
+              An interface that moves like a thought.<br />Soft edges. Slow
+              returns. Room to flow.
+            </p>
+            <div class="row">
+              <button
+                class="primary am-surface am-liquid"
+                data-am="breathe"
+                id="breathe"
+              >
+                Make a little ripple <span>↗</span></button
+              ><button
+                id="flow-info"
+                data-am="flow-info"
+                class="round am-surface"
+                aria-label="About this material"
+              >
+                i
+              </button>
+            </div>
+            <p class="hint mono">Move gently. Click anywhere. Let go.</p>
+          </div>
+          <div class="orb-stage">
+            <div class="orbit-line"></div>
+            <button
+              class="orb am-surface am-liquid"
+              data-am="orb"
+              data-am-drag
+              aria-label="Drag the liquid orb"
+            >
+              <svg viewBox="0 0 420 400" aria-hidden="true">
+                <defs>
+                  <radialGradient id="orb" cx="30%" cy="25%" r="80%">
+                    <stop stop-color="#f4e2ff" />
+                    <stop offset=".35" stop-color="#bb9de1" />
+                    <stop offset=".75" stop-color="#695080" />
+                    <stop offset="1" stop-color="#3b2a4d" />
+                  </radialGradient>
+                  <radialGradient id="glint">
+                    <stop stop-color="#fff" stop-opacity=".8" />
+                    <stop offset="1" stop-color="#fff" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <path
+                  d="M205 18C302-5 354 72 386 155S376 315 291 356 92 402 43 312-17 168 49 92 126 42 205 18Z"
+                  fill="url(#orb)"
+                />
+                <ellipse
+                  cx="150"
+                  cy="98"
+                  rx="92"
+                  ry="62"
+                  fill="url(#glint)"
+                  transform="rotate(-30 150 98)"
+                />
+                <path
+                  d="M49 211C42 313 157 358 240 342"
+                  fill="none"
+                  stroke="#e5ceff"
+                  stroke-opacity=".2"
+                  stroke-width="2"
+                />
+              </svg></button
+            ><span class="orb-caption mono"
+              >LIQUID NO. 001<br /><span>MOVE ME AROUND</span></span
+            ><span class="orb-coordinate mono">37.6° N<br />122.4° W</span>
+          </div>
+        </section>
+        <section class="collection" id="collection">
+          <div class="section-label">
+            <div class="tabbar" role="tablist" aria-label="Collection">
+              <button
+                class="tab active am-surface"
+                role="tab"
+                aria-selected="true"
+                aria-controls="objects"
+                data-am="objects-tab"
+                id="objects-tab"
+              >
+                Objects</button
+              ><button
+                class="tab am-surface"
+                role="tab"
+                aria-selected="false"
+                aria-controls="notes"
+                data-am="notes-tab"
+                id="notes-tab"
+                tabindex="-1"
+              >
+                Little notes
+              </button>
+            </div>
+            <div class="filter-wrap">
+              <button
+                class="pill am-surface"
+                data-am="filter"
+                id="filter"
+                aria-expanded="false"
+                aria-controls="filter-menu"
+              >
+                Material: <span id="material-name">Liquid</span> ⌄
+              </button>
+              <div
+                class="filter-menu am-surface"
+                data-am="filter-menu"
+                id="filter-menu"
+                hidden
+              >
+                <button data-material="liquid">Liquid / soft and slow</button
+                ><button data-material="elastic">
+                  Elastic / light and lively</button
+                ><button data-material="heavy">
+                  Heavy / quiet and grounded
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid3 panel"
+            role="tabpanel"
+            id="objects"
+            aria-labelledby="objects-tab"
+            data-am="objects"
+          >
+            <button
+              class="object-card am-surface am-liquid"
+              data-am="soft-form"
+              data-am-drag
+            >
+              <div class="mini-art">
+                <svg viewBox="0 0 240 180">
+                  <defs>
+                    <linearGradient id="f">
+                      <stop stop-color="#e6d0de" />
+                      <stop offset="1" stop-color="#8f738d" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M67 27Q147-6 185 57T169 149Q90 188 48 131T67 27Z"
+                    fill="url(#f)"
+                  />
+                </svg>
+              </div>
+              <div class="row spread">
+                <div>
+                  <span class="label">01 / OBJECT</span>
+                  <h3>Soft form</h3>
+                </div>
+                <span class="arrow">↗</span>
+              </div></button
+            ><button
+              class="object-card am-surface am-liquid"
+              data-am="still-water"
+              data-am-drag
+            >
+              <div class="mini-art">
+                <svg viewBox="0 0 240 180">
+                  <defs>
+                    <linearGradient id="w" x2="0" y2="1">
+                      <stop stop-color="#b5c9b1" />
+                      <stop offset="1" stop-color="#51665b" />
+                    </linearGradient>
+                  </defs>
+                  <ellipse cx="120" cy="101" rx="71" ry="53" fill="url(#w)" />
+                  <ellipse
+                    cx="120"
+                    cy="85"
+                    rx="57"
+                    ry="32"
+                    fill="none"
+                    stroke="#e1e9ce"
+                    stroke-opacity=".6"
+                    stroke-width="8"
+                  />
+                  <ellipse cx="120" cy="79" rx="28" ry="15" fill="#79917d" />
+                </svg>
+              </div>
+              <div class="row spread">
+                <div>
+                  <span class="label">02 / OBJECT</span>
+                  <h3>Still water</h3>
+                </div>
+                <span class="arrow">↗</span>
+              </div></button
+            ><button
+              class="object-card am-surface am-liquid"
+              data-am="slow-orbit"
+              data-am-drag
+            >
+              <div class="mini-art">
+                <svg viewBox="0 0 240 180">
+                  <defs>
+                    <linearGradient id="r">
+                      <stop stop-color="#f2cd9c" />
+                      <stop offset="1" stop-color="#916148" />
+                    </linearGradient>
+                  </defs>
+                  <ellipse
+                    cx="120"
+                    cy="90"
+                    rx="76"
+                    ry="49"
+                    fill="url(#r)"
+                    transform="rotate(-25 120 90)"
+                  />
+                  <ellipse
+                    cx="120"
+                    cy="90"
+                    rx="49"
+                    ry="23"
+                    fill="#231e29"
+                    transform="rotate(-25 120 90)"
+                  />
+                  <path
+                    d="M50 109Q119 152 185 65"
+                    stroke="#f5d2af"
+                    stroke-width="2"
+                    fill="none"
+                    opacity=".5"
+                  />
+                </svg>
+              </div>
+              <div class="row spread">
+                <div>
+                  <span class="label">03 / OBJECT</span>
+                  <h3>Slow orbit</h3>
+                </div>
+                <span class="arrow">↗</span>
+              </div>
+            </button>
+          </div>
+          <div
+            class="notes-panel am-surface am-liquid panel"
+            role="tabpanel"
+            id="notes"
+            aria-labelledby="notes-tab"
+            data-am="notes"
+            hidden
+          >
+            <span class="eyebrow">A SMALL REMINDER</span>
+            <p class="serif">
+              You don't have to hold<br />everything together.<br /><em
+                >Some things can just flow.</em
+              >
+            </p>
+            <span class="mono">A NOTE FROM TIDAL · NO. 008</span>
+          </div>
+        </section>
+      </main>
+      <div data-footer></div>
+    </div>
+    <dialog
+      class="dialog am-surface am-liquid"
+      data-am="about-dialog"
+      id="about-dialog"
+    >
+      <button class="close" data-close aria-label="Close">×</button
+      ><span class="eyebrow">ABOUT TIDAL</span>
+      <h2 class="serif">A softer way<br />to be online.</h2>
+      <p>
+        Pick up an object, change its material, make a ripple. The same spring
+        and damping model carries every movement, from a tiny tooltip to this
+        conversation.
+      </p>
+      <button class="primary" data-close>Back to the flow</button>
+    </dialog>
+    <script type="module" src="scene.js"></script>
+  </body>
+</html>

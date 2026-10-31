@@ -1,0 +1,8 @@
+node_modules/
+packages/*/dist/
+*.tsbuildinfo
+test-results/
+artifacts/
+*.tgz
+
+!releases/**/*.tgz

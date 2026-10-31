@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-30T18:05:26.510Z",
+  "environment": {
+    "node": "v24.22.1",
+    "platform": "linux",
+    "arch": "x64",
+    "cpu": "Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz"
+  },
+  "method": "120 warmup steps, 1200 measured fixed 1/120s steps, collision sweep enabled, one impulse per measured step; headless CI CPU, not a device guarantee",
+  "physics": [
+    {
+      "bodies": 100,
+      "substeps": 1200,
+      "medianMs": 0.07428399999997737,
+      "p95Ms": 0.23593099999999367,
+      "maxMs": 1.0957099999999969
+    },
+    {
+      "bodies": 300,
+      "substeps": 1200,
+      "medianMs": 0.3355909999999085,
+      "p95Ms": 0.711221999999907,
+      "maxMs": 1.3684070000000474
+    },
+    {
+      "bodies": 1000,
+      "substeps": 1200,
+      "medianMs": 2.2491379999999026,
+      "p95Ms": 3.923045000000002,
+      "maxMs": 51.47717799999964
+    }
+  ],
+  "browserBundle": {
+    "rawBytes": 47078,
+    "gzipBytes": 15207
+  }
+}

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Living Workspace — Little Office</title>
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <link rel="stylesheet" href="scene.css" />
+  </head>
+  <body>
+    <div class="office">
+      <aside>
+        <a class="brand" href="/demos/index.html"
+          ><span class="office-mark">✺</span>little office</a
+        >
+        <div class="space-switch">Alan's space<span>⌄</span></div>
+        <nav>
+          <a class="selected" href="#desk">▦ <span>My desk</span><i>4</i></a
+          ><a href="#notes">▤ <span>Notes</span></a
+          ><button id="inbox">
+            ◌ <span>Activity</span><i id="activity-count">0</i>
+          </button>
+        </nav>
+        <div class="aside-label mono">YOUR PROJECTS</div>
+        <a class="project-link" href="#board"
+          ><span class="project-dot green"></span>Animatter.js</a
+        ><a class="project-link" href="#board"
+          ><span class="project-dot orange"></span>Small things studio</a
+        >
+        <div class="friend-note">
+          <span class="label">A LITTLE COMPANY</span>
+          <p>Your desk has a<br /><em>curious resident.</em></p>
+          <span class="mono" id="pip-state">PIP IS LOOKING AROUND</span>
+        </div>
+        <div class="user">
+          <span>A</span>
+          <div>Alan<small>Taking things one step at a time</small></div>
+        </div>
+      </aside>
+      <div class="office-main">
+        <header class="office-header">
+          <div class="row">
+            <span class="mono">YOUR SPACE / MY DESK</span
+            ><span class="pill">☀ A good day to make things</span>
+          </div>
+          <button class="pill" id="new-note">+ Quick note</button>
+        </header>
+        <main id="desk">
+          <section class="greeting">
+            <div>
+              <p class="eyebrow">
+                <span class="dot"></span>WELCOME BACK TO YOUR LITTLE CORNER
+              </p>
+              <h1>
+                A little room<br />for <span class="serif">good work.</span>
+              </h1>
+              <p class="muted">
+                Your thoughts, your tasks, and a small friend to keep you
+                company.
+              </p>
+            </div>
+            <div class="today-card am-surface" data-am="today">
+              <span class="mono">TODAY'S INTENTION</span>
+              <p class="serif">
+                Make something<br /><em>worth caring about.</em>
+              </p>
+              <span class="muted small">One meaningful thing is enough.</span
+              ><span class="intention-star">✳</span>
+            </div>
+          </section>
+          <section class="board-section" id="board">
+            <div class="section-label">
+              <div class="row">
+                <h2>Your small steps</h2>
+                <span class="tag" id="task-count">4 TASKS</span>
+              </div>
+              <div class="row board-controls">
+                <button id="quiet" class="pill" aria-pressed="false">
+                  ☾ Quiet mode</button
+                ><button id="add-task" class="pill">+ New task</button>
+              </div>
+            </div>
+            <div class="board">
+              <section class="column">
+                <div class="column-title">
+                  <span><i class="status-dot todo"></i>To explore</span
+                  ><span class="mono" id="todo-count">02</span>
+                </div>
+                <div id="todo-tasks" class="task-list">
+                  <article
+                    class="task am-surface"
+                    data-am="task-motion"
+                    data-task="motion"
+                  >
+                    <div class="row spread">
+                      <span class="task-tag design">DESIGN</span
+                      ><button
+                        class="task-menu"
+                        aria-label="Move motion task forward"
+                        data-next
+                      >
+                        →
+                      </button>
+                    </div>
+                    <h3>Give the buttons<br />a little personality</h3>
+                    <p>Something softer than just a hover.</p>
+                    <div class="task-foot">
+                      <span>↳ Interaction study</span
+                      ><button class="task-action" data-run>
+                        Start task ↗
+                      </button>
+                    </div>
+                  </article>
+                  <article
+                    class="task am-surface"
+                    data-am="task-notes"
+                    data-task="notes"
+                  >
+                    <div class="row spread">
+                      <span class="task-tag research">RESEARCH</span
+                      ><button
+                        class="task-menu"
+                        aria-label="Move research task forward"
+                        data-next
+                      >
+                        →
+                      </button>
+                    </div>
+                    <h3>Collect the little things</h3>
+                    <p>Save references that feel alive.</p>
+                    <div class="task-foot">
+                      <span>↳ A little inspiration</span
+                      ><button class="task-action" data-run>
+                        Start task ↗
+                      </button>
+                    </div>
+                  </article>
+                </div>
+              </section>
+              <section class="column">
+                <div class="column-title">
+                  <span><i class="status-dot progress"></i>In the making</span
+                  ><span class="mono" id="doing-count">01</span>
+                </div>
+                <div id="doing-tasks" class="task-list">
+                  <article
+                    class="task am-surface"
+                    data-am="task-framework"
+                    data-task="framework"
+                  >
+                    <div class="row spread">
+                      <span class="task-tag build">BUILD</span
+                      ><button
+                        class="task-menu"
+                        aria-label="Move framework task forward"
+                        data-next
+                      >
+                        →
+                      </button>
+                    </div>
+                    <h3>A world that<br />responds to you</h3>
+                    <p>Making the invisible feel tangible.</p>
+                    <div class="task-progress"><span></span></div>
+                    <div class="task-foot">
+                      <span>↳ Animatter.js</span
+                      ><button class="task-action" data-run>
+                        Finish task ↗
+                      </button>
+                    </div>
+                  </article>
+                  <button class="add-small" id="add-doing">
+                    + Add a small step
+                  </button>
+                </div>
+              </section>
+              <section class="column">
+                <div class="column-title">
+                  <span
+                    ><i class="status-dot finished"></i>A little further</span
+                  ><span class="mono" id="done-count">01</span>
+                </div>
+                <div id="done-tasks" class="task-list">
+                  <article
+                    class="task completed am-surface"
+                    data-am="task-start"
+                    data-task="start"
+                  >
+                    <div class="row spread">
+                      <span class="task-tag done-tag">A GOOD START</span
+                      ><span class="done-check">✓</span>
+                    </div>
+                    <h3>Make room for an idea</h3>
+                    <p>Every good thing starts somewhere.</p>
+                    <div class="task-foot">
+                      <span>↳ Done, and that's enough.</span>
+                    </div>
+                  </article>
+                </div>
+              </section>
+            </div>
+          </section>
+          <section class="desk-bottom" id="notes">
+            <article class="note-card am-surface" data-am="note-card">
+              <span class="eyebrow">A NOTE TO MYSELF</span
+              ><textarea
+                id="personal-note"
+                aria-label="Personal note"
+                spellcheck="false"
+              >
+You don't need to finish everything today.
+Just the next little thing.</textarea
+              >
+              <div class="row spread">
+                <span class="mono" id="note-status">JUST NOW</span
+                ><span class="note-doodle">〰</span>
+              </div>
+            </article>
+            <article class="companion-card am-surface" data-am="companion">
+              <div>
+                <span class="eyebrow">MEET YOUR DESKMATE</span>
+                <h3 class="serif">Small paws.<br />Big curiosity.</h3>
+                <p>
+                  Pip explores when you're thinking.<br />Your next move always
+                  comes first.
+                </p>
+                <button id="call-pip">Come say hello ↗</button>
+              </div>
+              <svg viewBox="0 0 130 125" aria-hidden="true">
+                <path
+                  d="M33 94q-30-29 2-50L39 20l20 15q14-4 25 2l20-14-2 29q23 37-13 51Z"
+                  fill="#cabfe4"
+                  stroke="#7c6f97"
+                  stroke-width="1.2"
+                />
+                <ellipse cx="54" cy="67" rx="3" ry="5" fill="#51465f" />
+                <ellipse cx="84" cy="67" rx="3" ry="5" fill="#51465f" />
+                <path
+                  d="M63 80q7 5 13-1"
+                  stroke="#51465f"
+                  stroke-width="1.5"
+                  fill="none"
+                />
+                <path
+                  d="m98 94 13 6m-72 1-11 5"
+                  stroke="#7c6f97"
+                  stroke-width="2"
+                />
+              </svg>
+            </article>
+          </section>
+          <div class="work-status">
+            <span class="dot"></span
+            ><span id="work-status" role="status"
+              >Pip is exploring. Start a task to give him something to
+              celebrate.</span
+            ><button id="simulate-error">Try a failed task</button>
+          </div>
+        </main>
+        <div data-footer></div>
+      </div>
+    </div>
+    <div
+      id="notification"
+      class="notification am-surface"
+      data-am="notification"
+      role="status"
+      hidden
+    >
+      <span class="notification-icon">✳</span>
+      <div>
+        <strong id="notification-title">One small step, done.</strong>
+        <p id="notification-text">Pip thinks that's worth celebrating.</p>
+      </div>
+      <button id="dismiss-notification" aria-label="Dismiss notification">
+        ×
+      </button>
+    </div>
+    <dialog class="dialog" id="task-dialog">
+      <button class="close" data-close aria-label="Close new task">×</button
+      ><span class="eyebrow">MAKE A LITTLE ROOM</span>
+      <h2 class="serif">What's the next<br />small step?</h2>
+      <form id="task-form">
+        <label
+          >Task name<input
+            id="task-name"
+            required
+            maxlength="70"
+            placeholder="Something worth caring about" /></label
+        ><button class="primary" type="submit">Add to my desk ↗</button>
+      </form>
+    </dialog>
+    <dialog class="dialog" id="activity-dialog">
+      <button class="close" data-close aria-label="Close activity">×</button
+      ><span class="eyebrow">ACTIVITY</span>
+      <h2 class="serif">A few good things.</h2>
+      <ol id="activity-list">
+        <li>Your little office is ready.</li>
+      </ol>
+    </dialog>
+    <script type="module" src="scene.js"></script>
+  </body>
+</html>

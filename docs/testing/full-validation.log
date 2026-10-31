@@ -1,0 +1,139 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 check
+> npm run typecheck && npm run lint && npm test && npm run build && npm run verify:package && npm run test:browser && npm run verify:docs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 typecheck
+> tsc -b --pretty false && tsc -p tsconfig.tools.json --pretty false
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 lint
+> eslint packages tests demos scripts
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ higher priority preempts and paused behavior resumes without losing progress (3.40781ms)
+✔ equal priority FIFO, independent channels, queued cancellation and abort (0.587842ms)
+✔ clear resolves all tasks, duplicate IDs rejected, exceptions cancel failed tasks (0.769284ms)
+✔ graph composes semantic levels, filters capabilities and removes stale edges (0.630483ms)
+✔ taxonomy covers all eight levels with unambiguous names (0.437478ms)
+✔ planner endpoints, arc clearance, and responsive motion duration (0.833806ms)
+✔ clearing never resumes queued behaviors and releases channel metadata (0.428677ms)
+✔ throwing resume/pause/cancel hooks do not retain broken entries (0.539706ms)
+✔ bulk cancellation cannot reinsert orphaned tasks (0.510733ms)
+✔ motion blend stays normalized across real-time interrupts (1.748886ms)
+✔ cooperative sequences preserve async completion, respect cancellation and propagate failure (0.770974ms)
+✔ 2.5D depth-separated bodies do not collide in screen space (0.762217ms)
+✔ field factories return finite bounded forces and no force when inactive (0.669312ms)
+✔ climb follows target side geometry and slide has inertial timing (5.804248ms)
+✔ viewport jump constraint uses depth instead of leaving the screen (1.748054ms)
+✔ spring impulse converges and simulation is deterministic (14.361399ms)
+✔ target displacement and 2.5D depth remain bounded (5.935919ms)
+✔ collision separates overlapping bodies, with pinned obstacle (0.504094ms)
+✔ distance constraints respect inverse mass and pinned endpoints (0.437932ms)
+✔ viewport boundaries and removal clean up state (0.306965ms)
+✔ reject invalid materials and ignore invalid timesteps (0.65747ms)
+✔ gravity balances at spring equilibrium (5.921458ms)
+✔ disabled physics ignores direct impulses and rejects non-finite active impulses (0.321509ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 513.298638
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 build
+> tsc -b && node scripts/build.mjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:package
+> node scripts/verify-package.mjs
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+[
+  {
+    "name": "animatter",
+    "bytes": 106134,
+    "files": 82
+  },
+  {
+    "name": "@animatter/react",
+    "bytes": 2365,
+    "files": 7
+  },
+  {
+    "name": "@animatter/vue",
+    "bytes": 2276,
+    "files": 7
+  }
+]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 test:browser
+> node scripts/browser-test.mjs
+
+PASS chromium native-click-focus-input
+PASS chromium field-force-and-mode-switch
+PASS chromium drag-cancel-and-release
+PASS chromium actor-dynamic-target-and-interruption
+PASS chromium presence-async-graph
+PASS chromium layout-and-detached-surface
+PASS chromium reduced-motion-keyboard
+PASS chromium lifecycle-listeners-plugins-and-style-restoration
+PASS chromium react-vue-mount-and-unmount
+PASS chromium composition-priority-cancellation-and-async
+PASS chromium reentrant-graph-cycle-is-bounded
+PASS chromium native-proximity-longpress-gesture-and-selection
+PASS chromium viewport-scroll-refreshes-anchors
+PASS chromium layout-transaction-preserves-position
+PASS chromium regional-opt-in-and-opt-out
+PASS chromium actor-drag-blend-and-contact
+PASS chromium all-semantic-levels-async-abort-and-native-styles
+PASS chromium custom-render-protocol-and-faulted-plugin-cleanup
+PASS chromium disabled-actor-and-direct-impulses
+PASS chromium drag-release-keeps-visual-continuity
+PASS chromium moving-target-cannot-starve-actor-arrival
+MEASURE chromium {"surfaces":100,"samples":120,"stepMedianMs":1.099999999627471,"stepP95Ms":2.2000000001862645,"frameIntervalMedianMs":16.699999999999818,"frameIntervalP95Ms":16.700000000000273}
+MEASURE chromium {"surfaces":300,"samples":120,"stepMedianMs":2.7999999998137355,"stepP95Ms":4.7999999998137355,"frameIntervalMedianMs":16.699999999999818,"frameIntervalP95Ms":16.799999999999272}
+PASS skeleton-pet desktop
+PASS liquid-world desktop
+PASS gravity-dashboard desktop
+PASS magnetic-interface desktop
+PASS physics-portfolio desktop
+PASS living-workspace desktop
+PASS skeleton-pet effects-off-business
+PASS liquid-world effects-off-business
+PASS gravity-dashboard effects-off-business
+PASS magnetic-interface effects-off-business
+PASS physics-portfolio effects-off-business
+PASS living-workspace effects-off-business
+PASS skeleton-pet touch
+PASS liquid-world touch
+PASS gravity-dashboard touch
+PASS magnetic-interface touch
+PASS physics-portfolio touch
+PASS living-workspace touch
+PASS skeleton-pet reduced-keyboard
+PASS liquid-world reduced-keyboard
+PASS gravity-dashboard reduced-keyboard
+PASS magnetic-interface reduced-keyboard
+PASS physics-portfolio reduced-keyboard
+PASS living-workspace reduced-keyboard
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:docs
+> node scripts/verify-docs.mjs
+
+Verified 62 local documentation links, bilingual README structure, 6 PNGs and 6 looping GIFs (16717872 bytes).

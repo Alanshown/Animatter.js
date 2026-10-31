@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Interaction Studies</title>
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      h1 {
+        font-size: clamp(64px, 9vw, 140px);
+        margin: 70px 0 30px;
+      }
+      main > p {
+        max-width: 520px;
+        margin-bottom: 60px;
+      }
+      .experiment {
+        border-top: 1px solid #cdd0c3;
+        padding: 28px 0;
+        display: grid;
+        grid-template-columns: 50px 1fr 1fr 30px;
+        gap: 20px;
+        align-items: center;
+      }
+      .experiment h2 {
+        font-size: 32px;
+      }
+      .experiment p {
+        font-size: 12px;
+        color: #747c6b;
+      }
+      .experiment:hover {
+        color: #687e3d;
+      }
+      .logo {
+        margin: 40px 0;
+      }
+      .serif {
+        font-style: italic;
+      }
+      @media (max-width: 650px) {
+        .experiment {
+          grid-template-columns: 30px 1fr 20px;
+        }
+        .experiment p {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/demos/index.html"
+          ><span class="mark"></span>animatter</a
+        ><span class="mono">Independent HTML · Shared physics</span>
+      </header>
+      <main>
+        <h1>The web,<br /><span class="serif">with a pulse.</span></h1>
+        <p class="muted">
+          Six interaction studies. One optional physics runtime.<br />Move the
+          cursor, pick things up, interrupt a creature. Everything here responds
+          to you.
+        </p>
+        <a class="experiment" href="skeleton-pet/index.html"
+          ><span class="mono">01</span>
+          <h2>Skeleton Pet</h2>
+          <p>A curious little companion wakes a sleeping journal.</p>
+          <span class="arrow">↗</span></a
+        ><a class="experiment" href="liquid-world/index.html"
+          ><span class="mono">02</span>
+          <h2>Liquid World</h2>
+          <p>A quiet interface with the softness of water.</p>
+          <span class="arrow">↗</span></a
+        ><a class="experiment" href="gravity-dashboard/index.html"
+          ><span class="mono">03</span>
+          <h2>Gravity Dashboard</h2>
+          <p>Mission control, with weight and momentum.</p>
+          <span class="arrow">↗</span></a
+        ><a class="experiment" href="magnetic-interface/index.html"
+          ><span class="mono">04</span>
+          <h2>Magnetic Interface</h2>
+          <p>A playground of invisible connections.</p>
+          <span class="arrow">↗</span></a
+        ><a class="experiment" href="physics-portfolio/index.html"
+          ><span class="mono">05</span>
+          <h2>Physics Portfolio</h2>
+          <p>An independent designer's tactile corner of the web.</p>
+          <span class="arrow">↗</span></a
+        ><a class="experiment" href="living-workspace/index.html"
+          ><span class="mono">06</span>
+          <h2>Living Workspace</h2>
+          <p>A working space that has a life of its own.</p>
+          <span class="arrow">↗</span></a
+        >
+      </main>
+      <footer class="am-toolbar">
+        <span>ANIMATTER.JS · 0.1.0</span
+        ><a href="https://github.com/Alanshown/Animatter.js">Source ↗</a>
+      </footer>
+    </div>
+  </body>
+</html>
