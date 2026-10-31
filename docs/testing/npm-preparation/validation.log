@@ -1,0 +1,130 @@
+
+$ npm ci
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+npm warn deprecated eslint@9.39.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 162 packages in 2s
+
+exitCode: 0
+
+$ npm run typecheck
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 typecheck
+> tsc -b --pretty false && tsc -p tsconfig.tools.json --pretty false
+
+
+exitCode: 0
+
+$ npm run lint
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 lint
+> eslint packages tests demos scripts
+
+
+exitCode: 0
+
+$ npm test
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 test
+> node --import tsx --test tests/*.test.ts
+
+✔ higher priority preempts and paused behavior resumes without losing progress (1.575183ms)
+✔ equal priority FIFO, independent channels, queued cancellation and abort (0.287795ms)
+✔ clear resolves all tasks, duplicate IDs rejected, exceptions cancel failed tasks (0.375784ms)
+✔ graph composes semantic levels, filters capabilities and removes stale edges (0.37918ms)
+✔ taxonomy covers all eight levels with unambiguous names (0.143751ms)
+✔ planner endpoints, arc clearance, and responsive motion duration (0.454691ms)
+✔ clearing never resumes queued behaviors and releases channel metadata (0.380852ms)
+✔ throwing resume/pause/cancel hooks do not retain broken entries (0.286883ms)
+✔ bulk cancellation cannot reinsert orphaned tasks (0.302176ms)
+✔ motion blend stays normalized across real-time interrupts (1.822607ms)
+✔ cooperative sequences preserve async completion, respect cancellation and propagate failure (0.523512ms)
+✔ 2.5D depth-separated bodies do not collide in screen space (0.960106ms)
+✔ field factories return finite bounded forces and no force when inactive (0.405107ms)
+✔ climb follows target side geometry and slide has inertial timing (3.686635ms)
+✔ viewport jump constraint uses depth instead of leaving the screen (0.662217ms)
+✔ spring impulse converges and simulation is deterministic (7.580968ms)
+✔ target displacement and 2.5D depth remain bounded (2.436142ms)
+✔ collision separates overlapping bodies, with pinned obstacle (0.750497ms)
+✔ distance constraints respect inverse mass and pinned endpoints (2.620133ms)
+✔ viewport boundaries and removal clean up state (0.16243ms)
+✔ reject invalid materials and ignore invalid timesteps (0.378048ms)
+✔ gravity balances at spring equilibrium (6.333078ms)
+✔ disabled physics ignores direct impulses and rejects non-finite active impulses (0.220195ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 238.634258
+
+exitCode: 0
+
+$ npm run build
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 build
+> tsc -b && node scripts/build.mjs
+
+
+exitCode: 0
+
+$ npm run verify:package
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:package
+> node scripts/verify-package.mjs
+
+Installed tarball ESM, browser subpath, CSS resolution and SSR-safe imports passed
+[
+  {
+    "name": "animatter",
+    "bytes": 106300,
+    "files": 82
+  },
+  {
+    "name": "@animatter/react",
+    "bytes": 2584,
+    "files": 7
+  },
+  {
+    "name": "@animatter/vue",
+    "bytes": 2506,
+    "files": 7
+  }
+]
+
+exitCode: 0
+
+$ npm run verify:docs
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:docs
+> node scripts/verify-docs.mjs && npm run verify:branding
+
+Verified 109 local documentation links, bilingual README structure, 6 PNGs and 6 looping GIFs (16717872 bytes).
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:branding
+> node scripts/verify-branding.mjs
+
+Validated 7 path-based SVGs, 24/32/64 previews, and transparent 192/512 PNGs.
+
+exitCode: 0
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:docs
+> node scripts/verify-docs.mjs && npm run verify:branding
+
+Verified 112 local documentation links, bilingual README structure, 6 PNGs and 6 looping GIFs (16717872 bytes).
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 verify:branding
+> node scripts/verify-branding.mjs
+
+Validated 7 path-based SVGs, 24/32/64 previews, and transparent 192/512 PNGs.

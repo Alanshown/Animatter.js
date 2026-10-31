@@ -4,4 +4,4 @@ Optional Vue 3 composition functions for the shared Animatter runtime. Peer depe
 
 useAnimatter(rootRef,options) returns a shallow world ref. useSurface(worldRef,elementRef,options) registers and cleans up with component ownership. Use configure/setMode for live changes.
 
-[Usage and tests](https://github.com/Alanshown/Animatter.js/blob/main/README.md#react-and-vue). MIT.
+[Usage and tests](https://github.com/Alanshown/Animatter.js/blob/main/README.md#framework-integrations). MIT.

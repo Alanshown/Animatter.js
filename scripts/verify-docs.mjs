@@ -1,32 +1,78 @@
-import { readFile, stat, writeFile, mkdir } from "node:fs/promises";
+import { readFile, stat, writeFile, mkdir, readdir } from "node:fs/promises";
 import { resolve, dirname, sep } from "node:path";
 import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 const root = resolve("."),
   readmes = ["README.md", "README.zh-CN.md"];
 let links = 0;
+const walk = async (dir) => {
+  const result = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const path = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) result.push(...(await walk(path)));
+    else if (entry.name.endsWith(".md")) result.push(path);
+  }
+  return result;
+};
+const slug = (text) =>
+  text
+    .toLowerCase()
+    .replace(/[`*]/g, "")
+    .replace(/[^\p{L}\p{N}_\s-]/gu, "")
+    .replace(/ /g, "-");
+const headings = (text) =>
+  [...text.matchAll(/^#{1,6} (.+)$/gm)].map((m) => slug(m[1]));
 for (const name of [
   ...readmes,
-  "docs/API.md",
-  "docs/ARCHITECTURE.md",
-  "docs/CORE-ACCEPTANCE.md",
-  "docs/VERIFICATION.md",
   "CONTRIBUTING.md",
   "ROADMAP.md",
+  "CHANGELOG.md",
+  ...(await walk("docs")),
+  ...(await walk("packages")),
 ]) {
-  const text = await readFile(name, "utf8");
-  for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
-    const target = match[1];
-    if (/^(https?:|#)/.test(target)) continue;
-    const file = resolve(dirname(name), target.split("#")[0]);
+  const text = (await readFile(name, "utf8")).replace(
+    /```[^\n]*\n[\s\S]*?```/g,
+    "",
+  );
+  const references = [
+    ...[...text.matchAll(/\]\(([^)]+)\)/g)].map((m) => m[1]),
+    ...[...text.matchAll(/(?:src|srcset|href)="([^"]+)"/g)].map((m) => m[1]),
+  ];
+  for (const target of references) {
+    if (/^(https?:|data:)/.test(target)) continue;
+    const [relative, anchor] = target.split("#");
+    const file = relative ? resolve(dirname(name), relative) : resolve(name);
     assert.ok(file === root || file.startsWith(root + sep));
     await stat(file);
+    if (anchor && file.endsWith(".md")) {
+      const body = await readFile(file, "utf8");
+      assert.ok(
+        headings(body).includes(decodeURIComponent(anchor)),
+        `Missing anchor ${target} in ${name}`,
+      );
+    }
     links++;
   }
 }
-for (const name of readmes) {
-  const text = await readFile(name, "utf8");
-  assert.equal((text.match(/!\[/g) ?? []).length, 6);
+const contents = await Promise.all(
+  readmes.map((name) => readFile(name, "utf8")),
+);
+const version = JSON.parse(await readFile("package.json", "utf8")).version;
+const codes = (text) =>
+  [...text.matchAll(/```[^\n]*\n([\s\S]*?)```/g)].map((m) => m[1]);
+assert.deepEqual(
+  codes(contents[0]),
+  codes(contents[1]),
+  "Bilingual code examples diverge",
+);
+const badges = (text) =>
+  [...text.matchAll(/https:\/\/img.shields.io[^"\s]+/g)].map((m) => m[0]);
+assert.deepEqual(badges(contents[0]), badges(contents[1]));
+for (const text of contents) {
+  assert.ok(text.includes(`project-${version}-`));
+  assert.equal((text.match(/^## /gm) ?? []).length, 16);
+  for (const asset of ["logo.svg", "logo-light.svg", "logo-dark.svg"])
+    assert.ok(text.includes(`docs/assets/branding/${asset}`));
   for (const slug of [
     "skeleton-pet",
     "liquid-world",
@@ -37,8 +83,11 @@ for (const name of readmes) {
   ]) {
     assert.ok(text.includes(`docs/assets/demos/${slug}.gif`));
     assert.ok(text.includes(`demos/${slug}/index.html`));
+    const demo = await readFile(`demos/${slug}/index.html`, "utf8");
+    assert.ok(demo.includes("/docs/assets/branding/favicon.svg"));
   }
-  assert.equal((text.match(/^## /gm) ?? []).length, 11);
+  assert.equal((text.match(/!\[/g) ?? []).length, 6);
+  assert.ok(!text.includes("img.shields.io/npm/"), "Unpublished npm badge");
 }
 const manifest = JSON.parse(
   await readFile("docs/assets/demos/manifest.json", "utf8"),

@@ -1,5 +1,7 @@
 # Core acceptance gate
 
+> Historical baseline record from the initial local development session. Statements about an empty repository, pending demo work or an untouched remote describe that session, not the current GitHub state. Current branding/package preparation evidence is in [NPM-PREPARATION-AUDIT.md](NPM-PREPARATION-AUDIT.md). Original test data under testing/ is retained.
+
 Status: PASSED for the declared Chromium / ES2022 scope on 2026-10-31. Demo work may resume. No npm publication or untested browser/device support is claimed. Existing demo drafts were not used as core acceptance evidence.
 
 The first fixture run verified basic physics, native input, modes, scheduling, adapters and teardown. That was insufficient to declare the framework complete. The following gate must pass before resuming demo development:

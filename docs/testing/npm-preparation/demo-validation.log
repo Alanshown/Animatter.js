@@ -1,0 +1,29 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> animatter-workspace@0.1.0 test:demos
+> node scripts/demo-check.mjs
+
+PASS skeleton-pet desktop
+PASS liquid-world desktop
+PASS gravity-dashboard desktop
+PASS magnetic-interface desktop
+PASS physics-portfolio desktop
+PASS living-workspace desktop
+PASS skeleton-pet effects-off-business
+PASS liquid-world effects-off-business
+PASS gravity-dashboard effects-off-business
+PASS magnetic-interface effects-off-business
+PASS physics-portfolio effects-off-business
+PASS living-workspace effects-off-business
+PASS skeleton-pet touch
+PASS liquid-world touch
+PASS gravity-dashboard touch
+PASS magnetic-interface touch
+PASS physics-portfolio touch
+PASS living-workspace touch
+PASS skeleton-pet reduced-keyboard
+PASS liquid-world reduced-keyboard
+PASS gravity-dashboard reduced-keyboard
+PASS magnetic-interface reduced-keyboard
+PASS physics-portfolio reduced-keyboard
+PASS living-workspace reduced-keyboard

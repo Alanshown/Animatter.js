@@ -1,0 +1,124 @@
+{
+  "cases": [
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-desktop",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-effects-off-business",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-touch",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-skeleton-pet-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-liquid-world-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-gravity-dashboard-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-magnetic-interface-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-physics-portfolio-reduced-keyboard",
+      "status": "passed"
+    },
+    {
+      "browser": "chromium",
+      "name": "demo-living-workspace-reduced-keyboard",
+      "status": "passed"
+    }
+  ]
+}

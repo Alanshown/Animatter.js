@@ -1,1 +1,47 @@
-{"name":"@animatter/vue","version":"0.1.0","type":"module","license":"MIT","files":["dist"],"main":"./dist/index.js","types":"./dist/index.d.ts","exports":{".":{"types":"./dist/index.d.ts","import":"./dist/index.js"}},"peerDependencies":{"animatter":"^0.1.0","vue":">=3.3"}}
+{
+  "name": "@animatter/vue",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "animatter": "^0.1.0",
+    "vue": ">=3.3"
+  },
+  "description": "Vue composition functions for the shared Animatter.js physics interaction runtime",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alanshown/Animatter.js.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://github.com/Alanshown/Animatter.js#readme",
+  "bugs": {
+    "url": "https://github.com/Alanshown/Animatter.js/issues"
+  },
+  "author": "Alanshown",
+  "keywords": [
+    "physics",
+    "interaction",
+    "animation",
+    "typescript",
+    "web",
+    "vue"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

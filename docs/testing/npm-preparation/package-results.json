@@ -1,0 +1,183 @@
+{
+  "checkedAt": "2026-10-31T02:02:47.103Z",
+  "node": "v24.22.1",
+  "npm": "11.9.0",
+  "packages": [
+    {
+      "name": "animatter",
+      "version": "0.1.0",
+      "tarball": "animatter-0.1.0.tgz",
+      "bytes": 106300,
+      "unpackedBytes": 452144,
+      "integrity": "sha512-JdULLzvQhr+ZUk9lzn60IpXraNmcvlYzQoGURFpworn4IGS2BZC7VGzYHUHvKDNOtXNjoCW4Ancvar34doqS5g==",
+      "files": 82,
+      "contents": [
+        "LICENSE",
+        "README.md",
+        "dist/actor/motion.d.ts",
+        "dist/actor/motion.d.ts.map",
+        "dist/actor/motion.js",
+        "dist/actor/motion.js.map",
+        "dist/actor/planner.d.ts",
+        "dist/actor/planner.d.ts.map",
+        "dist/actor/planner.js",
+        "dist/actor/planner.js.map",
+        "dist/actor/runtime.d.ts",
+        "dist/actor/runtime.d.ts.map",
+        "dist/actor/runtime.js",
+        "dist/actor/runtime.js.map",
+        "dist/animatter.js",
+        "dist/animatter.js.map",
+        "dist/devtools/index.d.ts",
+        "dist/devtools/index.d.ts.map",
+        "dist/devtools/index.js",
+        "dist/devtools/index.js.map",
+        "dist/index.d.ts",
+        "dist/index.d.ts.map",
+        "dist/index.js",
+        "dist/index.js.map",
+        "dist/input/router.d.ts",
+        "dist/input/router.d.ts.map",
+        "dist/input/router.js",
+        "dist/input/router.js.map",
+        "dist/interaction/arbiter.d.ts",
+        "dist/interaction/arbiter.d.ts.map",
+        "dist/interaction/arbiter.js",
+        "dist/interaction/arbiter.js.map",
+        "dist/interaction/composition.d.ts",
+        "dist/interaction/composition.d.ts.map",
+        "dist/interaction/composition.js",
+        "dist/interaction/composition.js.map",
+        "dist/interaction/graph.d.ts",
+        "dist/interaction/graph.d.ts.map",
+        "dist/interaction/graph.js",
+        "dist/interaction/graph.js.map",
+        "dist/materials.css",
+        "dist/materials.d.ts",
+        "dist/materials.d.ts.map",
+        "dist/materials.js",
+        "dist/materials.js.map",
+        "dist/physics/engine.d.ts",
+        "dist/physics/engine.d.ts.map",
+        "dist/physics/engine.js",
+        "dist/physics/engine.js.map",
+        "dist/physics/fields.d.ts",
+        "dist/physics/fields.d.ts.map",
+        "dist/physics/fields.js",
+        "dist/physics/fields.js.map",
+        "dist/renderers/actor-canvas.d.ts",
+        "dist/renderers/actor-canvas.d.ts.map",
+        "dist/renderers/actor-canvas.js",
+        "dist/renderers/actor-canvas.js.map",
+        "dist/renderers/actor-svg.d.ts",
+        "dist/renderers/actor-svg.d.ts.map",
+        "dist/renderers/actor-svg.js",
+        "dist/renderers/actor-svg.js.map",
+        "dist/renderers/field.d.ts",
+        "dist/renderers/field.d.ts.map",
+        "dist/renderers/field.js",
+        "dist/renderers/field.js.map",
+        "dist/renderers/protocol.d.ts",
+        "dist/renderers/protocol.d.ts.map",
+        "dist/renderers/protocol.js",
+        "dist/renderers/protocol.js.map",
+        "dist/spatial/registry.d.ts",
+        "dist/spatial/registry.d.ts.map",
+        "dist/spatial/registry.js",
+        "dist/spatial/registry.js.map",
+        "dist/types.d.ts",
+        "dist/types.d.ts.map",
+        "dist/types.js",
+        "dist/types.js.map",
+        "dist/world.d.ts",
+        "dist/world.d.ts.map",
+        "dist/world.js",
+        "dist/world.js.map",
+        "package.json"
+      ],
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        },
+        "./materials.css": "./dist/materials.css",
+        "./browser": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/animatter.js"
+        }
+      },
+      "dryRunMatches": true
+    },
+    {
+      "name": "@animatter/react",
+      "version": "0.1.0",
+      "tarball": "animatter-react-0.1.0.tgz",
+      "bytes": 2584,
+      "unpackedBytes": 5852,
+      "integrity": "sha512-nVHe0BgxAaXOd0lpFTQJH2vEJ3/ucvYEgfoaSl+GPUinFcTMBDRWxdtUW2w3BvthVcoU/wok/LIA+MLXCMKQUQ==",
+      "files": 7,
+      "contents": [
+        "LICENSE",
+        "README.md",
+        "dist/index.d.ts",
+        "dist/index.d.ts.map",
+        "dist/index.js",
+        "dist/index.js.map",
+        "package.json"
+      ],
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        }
+      },
+      "dryRunMatches": true
+    },
+    {
+      "name": "@animatter/vue",
+      "version": "0.1.0",
+      "tarball": "animatter-vue-0.1.0.tgz",
+      "bytes": 2506,
+      "unpackedBytes": 5545,
+      "integrity": "sha512-hyfERT1GnqS0aBm6PqTEDxOKSB31WEtEbqybCP1qSSW5kkuB4+qCP5qrqvC+kwGMg3SX0BSj6o48xLIh82aOtw==",
+      "files": 7,
+      "contents": [
+        "LICENSE",
+        "README.md",
+        "dist/index.d.ts",
+        "dist/index.d.ts.map",
+        "dist/index.js",
+        "dist/index.js.map",
+        "package.json"
+      ],
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.js"
+        }
+      },
+      "dryRunMatches": true
+    }
+  ],
+  "installedPeers": {
+    "@animatter/react": "0.1.0",
+    "@animatter/vue": "0.1.0",
+    "@types/react-dom": "19.2.2",
+    "@types/react": "19.2.2",
+    "animatter": "0.1.0",
+    "react-dom": "19.2.0",
+    "react": "19.2.0",
+    "vue": "3.5.44"
+  },
+  "checks": {
+    "realTarballInstall": true,
+    "esm": true,
+    "browserSubpath": true,
+    "ssrSafeImport": true,
+    "types": true,
+    "cssResolution": true,
+    "cssTreeShaking": true,
+    "coreFrameworkIsolation": true,
+    "peerDependencyTree": true
+  }
+}
