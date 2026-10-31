@@ -1,0 +1,52 @@
+name: Publish GitHub Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact reviewed version (no automatic version bump)
+        required: true
+        default: "0.1.0"
+        type: string
+
+concurrency:
+  group: github-packages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && github.repository == 'Alanshown/Animatter.js'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24.22.1"
+      - run: npm install --global npm@11.9.0
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check
+      - name: Stage and test GitHub registry variants
+        run: node scripts/github-packages.mjs
+      - name: Configure GitHub Packages authentication
+        run: |
+          cat > "$RUNNER_TEMP/github-packages.npmrc" <<'NPMRC'
+          registry=https://registry.npmjs.org/
+          @alanshown:registry=https://npm.pkg.github.com
+          //npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+          NPMRC
+      - name: Publish reviewed packages and verify fresh Registry installation
+        run: node scripts/github-packages.mjs --publish
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/github-packages.npmrc
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXPECTED_VERSION: ${{ inputs.version }}
