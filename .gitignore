@@ -5,4 +5,4 @@ test-results/
 artifacts/
 *.tgz
 
-!releases/**/*.tgz
+/releases/

@@ -47,7 +47,7 @@ npm run test:core-browser
 npm run test:demos
 ```
 
-`verify:package` runs `npm pack --dry-run` and real `npm pack` for every package, compares entries, validates all export targets, installs all three local archives into a fresh consumer with real peer dependencies, typechecks declarations, imports ESM without a DOM and verifies CSS survives bundling. Artifacts are regenerated in `artifacts/packages/`; `releases/0.1.0/` contains historical archives and is not a current build output. No tarball is uploaded automatically.
+`verify:package` runs `npm pack --dry-run` and real `npm pack` for every package, compares entries, validates all export targets, installs all three local archives into a fresh consumer with real peer dependencies, typechecks declarations, imports ESM without a DOM and verifies CSS survives bundling. Artifacts are regenerated in `artifacts/packages/`; release archives are distributed separately and must not be committed to the source tree. The report helper writes its distribution manifest and tarball copies under ignored `artifacts/releases/<version>/`. No tarball is uploaded automatically.
 
 Inspect the exact archive contents, integrity, dependencies, README and LICENSE in `test-results/package-results.json`. Only dist, package.json, README and LICENSE are allowed. CSS is explicitly side-effectful. Tests, demo images, credentials, node_modules, caches and source workspaces must not appear. Sourcemaps may refer to source paths not shipped in the package; source-level debugging is not a runtime support guarantee.
 
