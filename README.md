@@ -5,8 +5,6 @@
   <img alt="Animatter.js" src="docs/assets/branding/logo.svg" width="390" height="88">
 </picture>
 
-# Animatter.js
-
 **A Physics-Driven Interaction Framework for the Web**
 
 One semantic protocol. One spatial world. Two ways to feel it.
@@ -26,6 +24,21 @@ One semantic protocol. One spatial world. Two ways to feel it.
 ## Introduction
 
 Make existing interfaces respond with weight, curiosity and a little life. Animatter is an **independent, optional, framework-agnostic interaction runtime**. Keep your HTML, React or Vue application. Enhance a button, a region or a whole page; switch modes or remove the runtime without replacing your UI framework.
+
+## Six Interactive Demos
+
+Every scene is an independent HTML entry using the same core. These are **actual Chromium recordings**, converted to looping GIFs; full-resolution PNG captures and provenance are in [docs/assets/demos](docs/assets/demos). Links below are source entries to run locally, not deployed online demos.
+
+| Skeleton Pet · Moss & Morning | Liquid World · Tidal |
+| --- | --- |
+| [![Skeleton Pet browser recording](docs/assets/demos/skeleton-pet.gif)](demos/skeleton-pet/index.html) | [![Liquid World browser recording](docs/assets/demos/liquid-world.gif)](demos/liquid-world/index.html) |
+| **Embodied + Field.** Pip wakes a sleeping journal, follows component anchors and can be picked up. Validates trajectory planning, contact feedback and interruption. [Open locally](http://localhost:4173/demos/skeleton-pet/index.html). | **Field.** Soft objects, drag release, ripples, material changes, tooltips and modal transitions. Validates spring-based softness and shared physical materials. [Open locally](http://localhost:4173/demos/liquid-world/index.html). |
+| **Gravity Dashboard · Orbital** | **Magnetic Interface · Polarity** |
+| [![Gravity Dashboard browser recording](docs/assets/demos/gravity-dashboard.gif)](demos/gravity-dashboard/index.html) | [![Magnetic Interface browser recording](docs/assets/demos/magnetic-interface.gif)](demos/magnetic-interface/index.html) |
+| **Field.** Reorder instruments by dragging or keyboard-accessible buttons, refresh data and adjust gravity. Validates mass, collisions, constraints and continuous DOM layout. [Open locally](http://localhost:4173/demos/gravity-dashboard/index.html). | **Field.** Attraction, repulsion, orbital forces and connectable nodes. Validates pointer distance/speed, custom forces, distance constraints and cross-component effects. [Open locally](http://localhost:4173/demos/magnetic-interface/index.html). |
+| **Physics Portfolio · KAI** | **Living Workspace · Little Office** |
+| [![Physics Portfolio browser recording](docs/assets/demos/physics-portfolio.gif)](demos/physics-portfolio/index.html) | [![Living Workspace browser recording](docs/assets/demos/living-workspace.gif)](demos/living-workspace/index.html) |
+| **Field.** A complete concept portfolio with tactile project cards, annotations, navigation, dialogs and a local-only contact form. Validates L0–L7 orchestration across a real page. [Open locally](http://localhost:4173/demos/physics-portfolio/index.html). | **Embodied + Field.** A usable task board, notes, success/error states and an autonomous companion. User actions preempt exploration; paused work resumes. Validates planning, scheduling and asynchronous results. [Open locally](http://localhost:4173/demos/living-workspace/index.html). |
 
 ## Why Animatter?
 
@@ -63,21 +76,6 @@ Use `mode: 'field' | 'embodied' | 'both' | 'off'`. Combine global, regional and 
 | L7 | Loading, success, error, notifications and asynchronous state |
 
 Native inputs are collected automatically inside the root. Application-specific state is explicitly bridged through `emit`, `track`, `transition` and `bind`; taxonomy names do not imply magical inference of arbitrary business logic. Combinations, priorities, FIFO queues, preemption, cancellation, resumption and latest-result-wins synchronization are implemented. See the [complete protocol and API](docs/API.md).
-
-## Six Interactive Demos
-
-Every scene is an independent HTML entry using the same core. These are **actual Chromium recordings**, converted to looping GIFs; full-resolution PNG captures and provenance are in [docs/assets/demos](docs/assets/demos). Links below are source entries to run locally, not deployed online demos.
-
-| Skeleton Pet · Moss & Morning | Liquid World · Tidal |
-| --- | --- |
-| [![Skeleton Pet browser recording](docs/assets/demos/skeleton-pet.gif)](demos/skeleton-pet/index.html) | [![Liquid World browser recording](docs/assets/demos/liquid-world.gif)](demos/liquid-world/index.html) |
-| **Embodied + Field.** Pip wakes a sleeping journal, follows component anchors and can be picked up. Validates trajectory planning, contact feedback and interruption. [Open locally](http://localhost:4173/demos/skeleton-pet/index.html). | **Field.** Soft objects, drag release, ripples, material changes, tooltips and modal transitions. Validates spring-based softness and shared physical materials. [Open locally](http://localhost:4173/demos/liquid-world/index.html). |
-| **Gravity Dashboard · Orbital** | **Magnetic Interface · Polarity** |
-| [![Gravity Dashboard browser recording](docs/assets/demos/gravity-dashboard.gif)](demos/gravity-dashboard/index.html) | [![Magnetic Interface browser recording](docs/assets/demos/magnetic-interface.gif)](demos/magnetic-interface/index.html) |
-| **Field.** Reorder instruments by dragging or keyboard-accessible buttons, refresh data and adjust gravity. Validates mass, collisions, constraints and continuous DOM layout. [Open locally](http://localhost:4173/demos/gravity-dashboard/index.html). | **Field.** Attraction, repulsion, orbital forces and connectable nodes. Validates pointer distance/speed, custom forces, distance constraints and cross-component effects. [Open locally](http://localhost:4173/demos/magnetic-interface/index.html). |
-| **Physics Portfolio · KAI** | **Living Workspace · Little Office** |
-| [![Physics Portfolio browser recording](docs/assets/demos/physics-portfolio.gif)](demos/physics-portfolio/index.html) | [![Living Workspace browser recording](docs/assets/demos/living-workspace.gif)](demos/living-workspace/index.html) |
-| **Field.** A complete concept portfolio with tactile project cards, annotations, navigation, dialogs and a local-only contact form. Validates L0–L7 orchestration across a real page. [Open locally](http://localhost:4173/demos/physics-portfolio/index.html). | **Embodied + Field.** A usable task board, notes, success/error states and an autonomous companion. User actions preempt exploration; paused work resumes. Validates planning, scheduling and asynchronous results. [Open locally](http://localhost:4173/demos/living-workspace/index.html). |
 
 ## Development Environment
 
