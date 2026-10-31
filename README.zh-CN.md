@@ -97,7 +97,7 @@
 
 ## 安装与运行
 
-**本项目不声称已发布 npm。** 当前 tarball 由本地构建生成于 `artifacts/packages/`。[releases/0.1.0](releases/0.1.0/) 内为历史归档，不含此次改造。2026-10-31 官方公共 Registry 对四个候选名返回 404，但命名空间所有权仍未验证；这不代表已预留名称或已发布。
+**本项目不声称已发布 npm。** 当前 tarball 由本地构建生成于 `artifacts/packages/`。发行归档不存放在源码目录中，下载区将另行提供。2026-10-31 官方公共 Registry 对四个候选名返回 404，但命名空间所有权仍未验证；这不代表已预留名称或已发布。
 
 ```sh
 git clone https://github.com/Alanshown/Animatter.js.git

@@ -4,11 +4,15 @@ import assert from "node:assert/strict";
 const json = async (p) => JSON.parse(await readFile(p, "utf8"));
 const browser = await json("test-results/browser-results.json"),
   physics = await json("test-results/performance-results.json"),
-  packages = await json("test-results/package-results.json"),
+  packageReport = await json("test-results/package-results.json"),
   audit = await json("test-results/dependency-audit.json"),
   assets = await json("docs/assets/demos/manifest.json"),
   pkg = await json("package.json"),
   log = await readFile("test-results/full-validation.log", "utf8");
+const packages = Array.isArray(packageReport)
+  ? packageReport
+  : packageReport.packages;
+const releaseDir = `artifacts/releases/${pkg.version}`;
 const tests = Number(log.match(/ℹ pass (\d+)/)?.[1]);
 assert.ok(tests > 0);
 assert.ok(browser.cases.every((c) => c.status === "passed"));
@@ -30,11 +34,11 @@ try {
 } catch (e) {
   if (e.code !== "ENOENT") throw e;
 }
-await mkdir("releases/0.1.0", { recursive: true });
+await mkdir(releaseDir, { recursive: true });
 const release = [];
 for (const p of packages) {
   const source = `artifacts/packages/${p.tarball}`,
-    target = `releases/0.1.0/${p.tarball}`;
+    target = `${releaseDir}/${p.tarball}`;
   await copyFile(source, target);
   release.push({
     name: p.name,
@@ -46,7 +50,7 @@ for (const p of packages) {
   });
 }
 await writeFile(
-  "releases/0.1.0/manifest.json",
+  `${releaseDir}/manifest.json`,
   JSON.stringify(release, null, 2),
 );
 const matrix = browser.performance
@@ -78,7 +82,7 @@ Review date: **2026-10-31, Asia/Shanghai**. Scope: local Work workspace, no GitH
 | Six demos | 24 cases: desktop interaction, effects-off business behavior, 390 px touch, 1280 px reduced-motion/keyboard |
 | Desktop layout | 1440 × 1000 scenarios; captures also generated at 1280 × 900 |
 | Resource lifecycle | 25 instrumented teardown cycles; additional Chromium CDP measurements after warmup/full GC |
-| Build/package exports | 3 packed packages, ESM/CSS/types verified from extracted consumer directory; packed outputs included under releases/0.1.0 |
+| Build/package exports | 3 packed packages, ESM/CSS/types verified from extracted consumer directory; local tarballs generated under artifacts/packages for separate distribution |
 | README/assets | Matching English/Chinese structure; six real GIFs and PNGs; local links, hashes, dimensions and infinite GIF loops checked by verify:docs |
 | Dependency audit | npm audit reports 0 advisories for the locked dependency set at this run; this is not a security certification |
 
@@ -120,7 +124,7 @@ The solver uses finite-depth screen-space AABBs and springs; liquid is a soft-bo
 
 ## Reproduce
 
-npm ci; npm run build; npx playwright install chromium; npm run check. For the measurements: npm run benchmark. For the actual recordings: npm run capture (requires ffmpeg and ffprobe). No Docker or external design assets are required. Build outputs are also provided as local-install tarballs under releases/0.1.0.
+npm ci; npm run build; npx playwright install chromium; npm run check. For the measurements: npm run benchmark. For the actual recordings: npm run capture (requires ffmpeg and ffprobe). No Docker or external design assets are required. Generate local-install tarballs under artifacts/packages; release archives are distributed separately from the source tree.
 
 ## Publication boundary
 

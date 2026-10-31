@@ -97,7 +97,7 @@ Native browser APIs include Pointer Events, ResizeObserver, MutationObserver, ma
 
 ## Installation
 
-**No npm publication is claimed.** Build and generate current tarballs under `artifacts/packages/`. Archives in [releases/0.1.0](releases/0.1.0/) are historical and do not include this preparation work. Package-name checks returned public Registry 404 responses on 2026-10-31; namespace ownership is still unverified. This is not a reservation or a release.
+**No npm publication is claimed.** Build and generate current tarballs under `artifacts/packages/`. Distribution archives are kept outside the source tree; release downloads will be added separately. Package-name checks returned public Registry 404 responses on 2026-10-31; namespace ownership is still unverified. This is not a reservation or a release.
 
 ```sh
 git clone https://github.com/Alanshown/Animatter.js.git
