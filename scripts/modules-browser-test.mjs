@@ -513,6 +513,28 @@ try {
     assert.ok(reduced < 0.001, `reduced motion ${reduced}`);
   });
 
+
+  await check("metaball GL: the fragment shader runs every frame without GL errors", async (page) => {
+    await page.goto(`${base}/demos/soft-body/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.evaluate(() => window.__soft.setView(true));
+    await sleep(300);
+    await page.evaluate(() => window.__soft.setRenderer("webgl2"));
+    await sleep(800);
+    const r = await page.evaluate(() => {
+      const m = window.__soft.meta;
+      const gl = m.canvas.getContext("webgl2");
+      return { gl: !!gl, ms: m.averageFrameMs(), error: gl ? gl.getError() : -1, size: [m.canvas.width, m.canvas.height] };
+    });
+    if (!r.gl) {
+      console.log("  (no WebGL2 in this browser: GL metaball not exercised)");
+      return;
+    }
+    assert.ok(r.ms > 0, `frames ran, avg ${r.ms} ms`);
+    assert.equal(r.error, 0, "no GL error after frames");
+    assert.ok(r.size[0] > 0 && r.size[1] > 0);
+  });
+
 } finally {
   await browser.close();
   stop();

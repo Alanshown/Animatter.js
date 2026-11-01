@@ -24,6 +24,7 @@ No additional package version has been published after 0.1.0. Documentation upda
 - Rope: `createRope(world, options)` is a Verlet / position-based rope with fixed substeps. Ends attach to points or to DOM elements (`elementAnchor`), break when stretch exceeds `breakStretch` (a stretch ratio, not a force), reconnect explicitly, and resize with `setLength` / `setBreakStretch`. `mountRopeSvg` draws it. A broken end stays free until `reconnect` or `attachX`.
 - Soft body: `createSoftBody(world, options)` is a point-mass ring with edge springs, centre spokes for shape recovery, an area-pressure term, optional `outline` rest shape, grab / drag / release and impulses. `linkSoftBodyContacts` adds particle contacts between bodies. This is a constraint model. It is not a fluid or finite-element solver.
 - Metaball: `createMetaballCanvas(world, host, options)` draws the iso-surface of a scalar field on a low-resolution Canvas2D grid. It is visual fusion only.
+- Metaball WebGL2: `createMetaballGL(world, host, options)` evaluates the same field in a fragment shader at device resolution (up to 128 blobs), same API as `createMetaballCanvas`. GPU timing uses a 1x1 readPixels every 30th frame, because `finish()` does not guarantee completion. Canvas2D cell rendering stays the default.
 - Demos: `demos/rope-editor`, `demos/jelly-card`, `demos/soft-body`.
 - Tests: `tests/v04-modules.test.ts` (node, with a world double) and new browser cases in `npm run test:modules`.
 

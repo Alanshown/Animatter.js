@@ -91,6 +91,7 @@
       <a href="/demos/index.html">animatter · soft collision playground</a>
       <div class="controls" role="group" aria-label="Soft body controls">
         <button type="button" id="view" aria-pressed="false">Metaball view</button>
+        <button type="button" id="metarenderer" aria-pressed="false">Metaball renderer: canvas2d</button>
         <label>Pressure <input id="pressure" type="range" min="0" max="2" step="0.05" value="0.8" /></label>
         <label>Shape recovery <input id="shape" type="range" min="0" max="1" step="0.05" value="0.35" /></label>
         <label>Stiffness <input id="stiff" type="range" min="0.2" max="1" step="0.05" value="0.7" /></label>
@@ -112,6 +113,7 @@
         createSoftBody,
         linkSoftBodyContacts,
         createMetaballCanvas,
+        createMetaballGL,
       } from "/packages/core/dist/animatter.js";
 
       const stage = document.querySelector("#stage");
@@ -217,13 +219,30 @@
         },
       });
 
+      let metaRenderer = "canvas2d";
+      function makeMeta() {
+        const options = { cell: 3, threshold: 1, color: [43, 122, 140] };
+        const m = metaRenderer === "webgl2" ? createMetaballGL(world, stage, options) : createMetaballCanvas(world, stage, options);
+        m.canvas.classList.add("meta");
+        return m;
+      }
+      document.querySelector("#metarenderer").addEventListener("click", (event) => {
+        metaRenderer = metaRenderer === "canvas2d" ? "webgl2" : "canvas2d";
+        event.target.textContent = `Metaball renderer: ${metaRenderer}`;
+        event.target.setAttribute("aria-pressed", String(metaRenderer === "webgl2"));
+        if (meta) {
+          meta.destroy();
+          meta = makeMeta();
+        }
+      });
+
       function setView(metaball) {
         metaView = metaball;
         viewButton.setAttribute("aria-pressed", String(metaball));
         viewButton.textContent = metaball ? "Outline view" : "Metaball view";
         outline.style.display = metaball ? "none" : "block";
         if (metaball && !meta) {
-          meta = createMetaballCanvas(world, stage, { cell: 3, threshold: 1, color: [43, 122, 140] });
+          meta = makeMeta();
           meta.canvas.classList.add("meta");
         } else if (!metaball && meta) {
           meta.destroy();
@@ -282,7 +301,7 @@
         metrics.textContent = `bodies ${bodies.length} × 18 particles · contacts linked · frames/s ${fps} · last frame ${s.lastFrameMs.toFixed(2)} ms · metaball ${meta_ms} ms/frame over 60 frames (${cells} cells) · energy ${lastEnergy.toFixed(1)} · reduced motion ${reduced}`;
       }, 1000);
 
-      window.__soft = { world, get bodies() { return bodies; }, setView, build, get meta() { return meta; } };
+      window.__soft = { world, get bodies() { return bodies; }, setView, build, get meta() { return meta; }, setRenderer(r) { if (metaRenderer !== r) document.querySelector("#metarenderer").click(); } };
       window.ready = true;
     </script>
   </body>

@@ -87,6 +87,12 @@ try {
   const meta = await page.evaluate(() => ({ ms: window.__soft.meta.averageFrameMs(), cells: window.__soft.meta.cellCount() }));
   results.browser["metaball soft-body playground (5 bodies, cell 3)"] = { frameMs: Number(meta.ms.toFixed(3)), cells: meta.cells };
   console.log("metaball soft-body playground".padEnd(44), "field+draw", meta.ms.toFixed(3), "ms/frame,", meta.cells, "cells");
+  // Same scene on the WebGL2 fragment-shader renderer (full device resolution).
+  await page.evaluate(() => window.__soft.setRenderer("webgl2"));
+  await new Promise((r) => setTimeout(r, 2500));
+  const gl = await page.evaluate(() => ({ ms: window.__soft.meta.averageFrameMs(), px: window.__soft.meta.cellCount() }));
+  results.browser["metaball GL soft-body playground (5 bodies, full res, synced)"] = { frameMs: Number(gl.ms.toFixed(3)), pixels: gl.px };
+  console.log("metaball GL soft-body playground".padEnd(44), "shader draw, GPU-synced sample (every 30th frame)", gl.ms.toFixed(3), "ms/frame,", gl.px, "device px");
 } finally {
   await browser.close();
   stop();
