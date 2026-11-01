@@ -113,3 +113,14 @@ stop(); // destroys only the handles this scan created
 - Presets change physics material and event-driven state only. Visual effects that depend on FieldRenderer formulas (tilt angle, click ripple shape) cannot be changed by presets.
 - The material baseline is captured at first enhancement. If an application calls `world.configure` with a material patch while a preset is active, the next preset change recomputes from the captured baseline and overwrites that patch.
 - `world.destroy()` releases all Enhance state without calling into the world.
+
+## Kinetic text: controller API, not a preset (decision)
+
+`createKineticText(world, element, options)` is the final form. It is a controller, not a preset, and there is no `presets.kineticType`. Reason: presets install through `world.enhance` and must not write DOM transforms, while kinetic text owns the `transform` of its letters (claimed through `claimStyle`). Keeping it a controller avoids two writers on the same property.
+
+```ts
+const text = createKineticText(world, heroTitle, { mode: "elastic", strength: 0.8 });
+text.setText("New title"); text.setMode("wave"); text.scatter(); text.reform(); text.remeasure(); text.destroy();
+```
+
+The DOM letter renderer is the default. `renderer: "canvas"` draws the same text on a canvas (see the Kinetic section of CHANGELOG.md when that renderer ships).
