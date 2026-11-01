@@ -34,7 +34,9 @@ No additional package version has been published after 0.1.0. Documentation upda
 - Particles: `addParticleSystem(world, host, options)` from the optional `particles` entry (`dist/particles.js`), so the core bundle has no GPU code. Fixed-capacity typed-array simulation (flow field, attract / repel / vortex fields in 4 slots, viewport reflection with restitution, deterministic seed). Emit recycles the oldest slots.
 - Renderers: WebGL2 (one POINTS draw, `webglcontextlost` / `restored` handled, GPU objects released on destroy) with a Canvas2D fallback that supports trails. `rendererKind` reports what is actually used.
 - Deviation from the draft API: the draft wrote `world.addParticleSystem`. It is a free function so the core world does not import particle code.
-- Not implemented: text-shape attraction, surface collision against DOM geometry (only viewport bounds), WebGPU.
+- Text-shape attraction: `setTargets(points, strength)` pulls particle i toward target i % count; `pointsFromAlpha(rgba, w, h, step)` samples opaque pixels (for example from a rendered canvas of text) into targets.
+- DOM collision: `setObstacles(rects)` makes particles bounce off axis-aligned rectangles (for example DOM rects) with the same restitution as the viewport.
+- Not implemented: WebGPU renderer, Worker computation mode.
 - Demo: `demos/particles`. Tests: `tests/v05-particles.test.ts` and three browser cases in `npm run test:modules`.
 
 ### v0.6 (local branch, not published)

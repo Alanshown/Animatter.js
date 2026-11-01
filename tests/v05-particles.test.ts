@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ParticleSim, PARTICLE_LIMITS } from "../packages/core/src/particles/sim.js";
+import { ParticleSim, PARTICLE_LIMITS, pointsFromAlpha } from "../packages/core/src/particles/sim.js";
 
 const finiteAll = (sim: ParticleSim) =>
   [sim.x, sim.y, sim.vx, sim.vy].every((arr) => Array.from(arr).every((v) => Number.isFinite(v)));
@@ -96,4 +96,53 @@ test("resize keeps particles in the new viewport proportionally", () => {
     assert.ok(sim.x[i]! <= 200 && sim.y[i]! <= 50);
   }
   assert.throws(() => sim.resize(0, 10), RangeError);
+});
+
+test("particles never end inside an obstacle rectangle and bounce off its faces", () => {
+  const sim = new ParticleSim(400, 500, 400, 21);
+  sim.flow = { strength: 0, scale: 0, speed: 0 };
+  sim.setObstacles([{ x: 200, y: 150, width: 100, height: 100 }]);
+  sim.emit(60, 200, 400, 600);
+  for (let i = 0; i < 900; i++) sim.step(1 / 60);
+  assert.ok(finiteAll(sim));
+  let inside = 0;
+  for (let i = 0; i < sim.capacity; i++) {
+    const x = sim.x[i]!;
+    const y = sim.y[i]!;
+    if (x > 200 && x < 300 && y > 150 && y < 250) inside++;
+  }
+  assert.equal(inside, 0);
+  assert.throws(() => sim.setObstacles([{ x: 0, y: 0, width: 0, height: 5 }]), RangeError);
+});
+
+test("text targets pull particles toward their assigned points", () => {
+  const sim = new ParticleSim(64, 300, 300, 4);
+  sim.flow = { strength: 0, scale: 0, speed: 0 };
+  sim.drag = 3;
+  const targets = new Float32Array(64 * 2);
+  for (let i = 0; i < 64; i++) {
+    targets[i * 2] = 100 + (i % 8) * 12;
+    targets[i * 2 + 1] = 100 + Math.floor(i / 8) * 12;
+  }
+  sim.setTargets(targets, 30);
+  for (let i = 0; i < 600; i++) sim.step(1 / 60);
+  assert.ok(finiteAll(sim));
+  let worst = 0;
+  for (let i = 0; i < 64; i++) worst = Math.max(worst, Math.hypot(sim.x[i]! - targets[i * 2]!, sim.y[i]! - targets[i * 2 + 1]!));
+  assert.ok(worst < 4, `worst distance to target ${worst}`);
+  sim.setTargets(null);
+  assert.equal(sim.targetStrength, 0);
+  assert.throws(() => sim.setTargets([1, 2, 3]), TypeError);
+});
+
+test("pointsFromAlpha keeps opaque samples on a grid and validates input", () => {
+  const w = 8;
+  const h = 4;
+  const data = new Uint8ClampedArray(w * h * 4);
+  data[(2 * w + 4) * 4 + 3] = 255; // (4, 2) opaque
+  data[(0 * w + 0) * 4 + 3] = 100; // (0, 0) too faint
+  const pts = pointsFromAlpha(data, w, h, 1);
+  assert.deepEqual(Array.from(pts), [4, 2]);
+  assert.throws(() => pointsFromAlpha(new Uint8Array(4), w, h), RangeError);
+  assert.throws(() => pointsFromAlpha(data, w, h, 0), RangeError);
 });

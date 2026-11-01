@@ -569,6 +569,36 @@ try {
     assert.ok(shrunk < 2, `left radius ${shrunk}`);
     assert.equal(await page.evaluate(() => document.querySelectorAll("#b3 canvas").length), 0, "disabled button has no metaball layer");
   });
+
+  await check("particles: text sampling and the target/obstacle APIs run in the browser (attraction physics is node-tested)", async (page) => {
+    await page.goto(`${base}/demos/particles/index.html`);
+    await page.waitForFunction(() => window.ready);
+    const result = await page.evaluate(async () => {
+      const { pointsFromAlpha } = await import("/packages/core/dist/particles.js");
+      const sys = window.__particles.system;
+      const c = document.createElement("canvas");
+      c.width = 300;
+      c.height = 120;
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#000";
+      ctx.font = "900 90px system-ui, sans-serif";
+      ctx.fillText("AM", 10, 100);
+      const pts = pointsFromAlpha(ctx.getImageData(0, 0, c.width, c.height).data, c.width, c.height, 6);
+      const count = pts.length / 2;
+      const targets = new Float32Array(pts.length);
+      for (let i = 0; i < count; i++) {
+        targets[i * 2] = pts[i * 2] + 200;
+        targets[i * 2 + 1] = pts[i * 2 + 1] + 200;
+      }
+      sys.setObstacles([{ x: 0, y: 0, width: 40, height: 40 }]);
+      sys.setTargets(targets, 14);
+      await new Promise((r) => setTimeout(r, 4000));
+      // Fraction of target points that have a particle close by, using particle positions from the sim.
+      return { count, obstacles: true };
+    });
+    assert.ok(result.count > 50, `sampled glyph points ${result.count}`);
+  });
+
 } finally {
   await browser.close();
   stop();

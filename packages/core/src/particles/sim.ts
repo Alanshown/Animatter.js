@@ -26,7 +26,20 @@ export const PARTICLE_LIMITS = {
   fields: 4,
 } as const;
 
+/** Axis-aligned collision box in the same coordinates as the particles (for example a DOM rect). */
+export interface ObstacleRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
 export class ParticleSim {
+  /** Rectangles particles collide with. Replaced as a whole by setObstacles. */
+  obstacles: ObstacleRect[] = [];
+  /** Target points (interleaved x,y). Particle i is attracted to target i % count. */
+  targets: Float32Array | null = null;
+  targetStrength = 0;
   readonly capacity: number;
   readonly x: Float32Array;
   readonly y: Float32Array;
@@ -164,6 +177,12 @@ export class ParticleSim {
           ay += (dx / d) * fld.strength * falloff;
         }
       }
+      if (this.targets && this.targetStrength > 0) {
+        const tcount = this.targets.length / 2;
+        const t = i % tcount;
+        ax += (this.targets[t * 2]! - px) * this.targetStrength;
+        ay += (this.targets[t * 2 + 1]! - py) * this.targetStrength;
+      }
       let vx = (this.vx[i]! + ax * h) * damp;
       let vy = (this.vy[i]! + ay * h) * damp;
       let nx = px + vx * h;
@@ -191,11 +210,56 @@ export class ParticleSim {
         vx = 0;
         vy = 0;
       }
+      for (const r of this.obstacles) {
+        // Push out of the rectangle along the axis of least penetration and reflect that velocity.
+        if (nx <= r.x || nx >= r.x + r.width || ny <= r.y || ny >= r.y + r.height) continue;
+        const left = nx - r.x;
+        const right = r.x + r.width - nx;
+        const top = ny - r.y;
+        const bottom = r.y + r.height - ny;
+        const m = Math.min(left, right, top, bottom);
+        if (m === left) {
+          nx = r.x;
+          vx = -Math.abs(vx) * e;
+        } else if (m === right) {
+          nx = r.x + r.width;
+          vx = Math.abs(vx) * e;
+        } else if (m === top) {
+          ny = r.y;
+          vy = -Math.abs(vy) * e;
+        } else {
+          ny = r.y + r.height;
+          vy = Math.abs(vy) * e;
+        }
+      }
       this.x[i] = nx;
       this.y[i] = ny;
       this.vx[i] = vx;
       this.vy[i] = vy;
     }
+  }
+
+  /** Replaces the obstacle list. Non-finite or empty boxes are rejected. */
+  setObstacles(rects: readonly ObstacleRect[]): void {
+    for (const r of rects) {
+      if (![r.x, r.y, r.width, r.height].every(Number.isFinite) || r.width <= 0 || r.height <= 0)
+        throw new RangeError("obstacle rectangles need finite x, y and positive width and height");
+    }
+    this.obstacles = rects.map((r) => ({ ...r }));
+  }
+
+  /** Sets attraction targets (interleaved x,y), or clears them with null. */
+  setTargets(points: ArrayLike<number> | null, strength = 4): void {
+    if (strength < 0 || !Number.isFinite(strength)) throw new RangeError("target strength must be >= 0");
+    if (points === null || points.length === 0) {
+      this.targets = null;
+      this.targetStrength = 0;
+      return;
+    }
+    if (points.length % 2 !== 0 || !Array.from(points).every(Number.isFinite))
+      throw new TypeError("targets must be finite interleaved x,y pairs");
+    this.targets = Float32Array.from(points);
+    this.targetStrength = strength;
   }
 
   /** Mean speed in px/s, for diagnostics and tests. */
@@ -204,4 +268,20 @@ export class ParticleSim {
     for (let i = 0; i < this.capacity; i++) sum += Math.hypot(this.vx[i]!, this.vy[i]!);
     return sum / this.capacity;
   }
+}
+
+/**
+ * Samples opaque pixels from RGBA data (for example getImageData of rendered text) into a list of
+ * target points. Every `step`-th pixel with alpha above 127 is kept, so the result stays small.
+ */
+export function pointsFromAlpha(data: Uint8ClampedArray | Uint8Array, width: number, height: number, step = 4): Float32Array {
+  if (!(step >= 1) || !Number.isInteger(step)) throw new RangeError("step must be an integer >= 1");
+  if (data.length < width * height * 4) throw new RangeError("data is smaller than width * height * 4");
+  const out: number[] = [];
+  for (let y = 0; y < height; y += step) {
+    for (let x = 0; x < width; x += step) {
+      if (data[(y * width + x) * 4 + 3]! > 127) out.push(x, y);
+    }
+  }
+  return Float32Array.from(out);
 }

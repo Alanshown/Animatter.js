@@ -1,5 +1,5 @@
 import type { AnimatterWorld } from "../world.js";
-import { ParticleSim, type FieldSpec, type FlowSpec } from "./sim.js";
+import { ParticleSim, type FieldSpec, type FlowSpec, type ObstacleRect } from "./sim.js";
 import { Canvas2DParticleRenderer, WebGL2ParticleRenderer, type ParticleRenderer, type ParticleRendererKind } from "./render.js";
 
 export type ParticleBehavior = "flow" | "calm" | "swirl";
@@ -26,6 +26,10 @@ export interface ParticleSystemHandle {
   emit(x: number, y: number, n?: number, speed?: number): number;
   setField(field: FieldSpec | null, slot?: number): void;
   setFlow(flow: Partial<FlowSpec>): void;
+  /** Collision boxes in the stage's coordinates, for example DOM rects. Replaces the previous list. */
+  setObstacles(rects: readonly ObstacleRect[]): void;
+  /** Interleaved x,y targets; each particle is pulled to target i % count. null clears them. */
+  setTargets(points: ArrayLike<number> | null, strength?: number): void;
   pause(): void;
   resume(): void;
   resize(): void;
@@ -122,6 +126,14 @@ export function addParticleSystem(
     },
     setFlow(flow) {
       sim.flow = { ...sim.flow, ...flow };
+    },
+    setObstacles(rects) {
+      if (destroyed) throw new Error("Particle system has been destroyed");
+      sim.setObstacles(rects);
+    },
+    setTargets(points, strength) {
+      if (destroyed) throw new Error("Particle system has been destroyed");
+      sim.setTargets(points, strength);
     },
     pause() {
       paused = true;
