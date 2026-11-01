@@ -72,3 +72,13 @@ export {
   SCENE_RENDERERS,
 } from "./scene/schema.js";
 export type { SceneDocument, SceneEntity, SceneParseResult, SceneRendererKind } from "./scene/schema.js";
+
+// v0.4: rope / tether, soft body, metaball renderer
+export { createRope, elementAnchor, mountRopeSvg } from "./rope/rope.js";
+export type { RopeHandle, RopeOptions, RopeEnd, AnchorTarget, Point } from "./rope/rope.js";
+export { RopeSolver, normaliseRopeOptions, ROPE_LIMITS } from "./rope/solver.js";
+export type { RopeSolverOptions } from "./rope/solver.js";
+export { createSoftBody, linkSoftBodyContacts, normaliseSoftBodyOptions, polygonArea, SOFT_BODY_LIMITS } from "./softbody/body.js";
+export type { SoftBody, SoftBodyOptions, Obstacle } from "./softbody/body.js";
+export { createMetaballCanvas, evaluateField } from "./renderers/metaball.js";
+export type { MetaBlob, MetaballCanvas, MetaballOptions } from "./renderers/metaball.js";

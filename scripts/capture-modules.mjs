@@ -9,6 +9,10 @@ const shots = [
   { file: "liquid-dock-organic-vertical.png", path: "/demos/liquid-dock/index.html", theme: "organic", vertical: true, hover: '[data-dock-id="maps"]' },
   { file: "kinetic-type.png", path: "/demos/kinetic-type/index.html", move: true },
   { file: "lab.png", path: "/demos/lab/index.html" },
+  { file: "rope-editor.png", path: "/demos/rope-editor/index.html", wait: 1500 },
+  { file: "soft-body-outline.png", path: "/demos/soft-body/index.html", wait: 1200 },
+  { file: "soft-body-metaball.png", path: "/demos/soft-body/index.html", metaball: true, wait: 1500 },
+  { file: "jelly-card.png", path: "/demos/jelly-card/index.html", wait: 800 },
 ];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 try {
@@ -16,6 +20,8 @@ try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
     await page.goto(base + shot.path);
     await page.waitForFunction(() => window.ready);
+    if (shot.wait) await sleep(shot.wait);
+    if (shot.metaball) await page.click("#view");
     if (shot.theme) await page.click(`[data-theme="${shot.theme}"]`);
     if (shot.vertical) await page.click("#orientation");
     if (shot.hover) {

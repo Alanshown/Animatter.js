@@ -198,6 +198,106 @@ try {
     const mode = await page.evaluate(() => window.__lab.world.stats().enabled);
     assert.equal(mode, true);
   });
+
+  await check("rope editor: pointer drag moves rope nodes and an over-stretch breaks one end", async (page) => {
+    await page.goto(`${base}/demos/rope-editor/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await sleep(600);
+    const before = await page.evaluate(() => Array.from(window.__ropes.ropes[1].points()));
+    const box = await page.locator('.node').nth(0).boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + 14);
+    await page.mouse.down();
+    for (let i = 1; i <= 10; i++) {
+      await page.mouse.move(box.x + box.width / 2 + i * 12, box.y + 14 + i * 6);
+      await sleep(30);
+    }
+    await sleep(400);
+    await page.mouse.up();
+    await sleep(300);
+    const after = await page.evaluate(() => Array.from(window.__ropes.ropes[1].points()));
+    assert.ok(after.every(Number.isFinite), "rope nodes stay finite");
+    assert.notDeepEqual(after, before, "dragging the card moves rope nodes");
+    // Pull card 2 far away so rope 2 stretches past breakStretch.
+    const far = await page.locator('.node').nth(2).boundingBox();
+    await page.mouse.move(far.x + far.width / 2, far.y + 14);
+    await page.mouse.down();
+    for (let i = 1; i <= 20; i++) {
+      // Cards are clamped to the board, so drag toward the far corner to exceed the break threshold.
+      await page.mouse.move(far.x + far.width / 2 + i * 35, far.y + 14 + i * 25);
+      await sleep(25);
+    }
+    await page.mouse.up();
+    await sleep(500);
+    const states = await page.evaluate(() => window.__ropes.ropes.map((r) => [r.state("a"), r.state("b")]));
+    const logText = await page.textContent("#log");
+    assert.ok(states.flat().includes("broken") || logText.includes("broke"), `expected a break, states ${JSON.stringify(states)} log "${logText}"`);
+    await page.click("#reconnect");
+    assert.match(await page.textContent("#log"), /Reconnected|Nothing to reconnect/);
+  });
+
+  await check("soft body playground: bodies stay finite, a ripple moves them and metaball view draws pixels", async (page) => {
+    await page.goto(`${base}/demos/soft-body/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await sleep(400);
+    const count = await page.evaluate(() => window.__soft.bodies.length);
+    assert.equal(count, 5);
+    const before = await page.evaluate(() => Array.from(window.__soft.bodies[0].positions()));
+    await page.locator("#stage").click({ position: { x: 40, y: 500 } });
+    await sleep(600);
+    const after = await page.evaluate(() => Array.from(window.__soft.bodies[0].positions()));
+    assert.ok(after.every(Number.isFinite), "positions finite after ripple");
+    assert.notDeepEqual(after, before, "ripple moves particles");
+    await page.click("#view");
+    await sleep(500);
+    const pixels = await page.evaluate(() => {
+      const c = window.__soft.meta.canvas;
+      const data = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      let lit = 0;
+      for (let i = 3; i < data.length; i += 4) if (data[i] > 0) lit++;
+      return { lit, total: c.width * c.height, ms: window.__soft.meta.averageFrameMs() };
+    });
+    assert.ok(pixels.lit > 500, `metaball lit pixels ${pixels.lit}`);
+    assert.ok(pixels.ms >= 0 && pixels.ms < 200, `metaball frame ms ${pixels.ms}`);
+  });
+
+  await check("jelly card: pressing and dragging deforms the label with the body; deformation off is rigid and still clickable", async (page) => {
+    await page.goto(`${base}/demos/jelly-card/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await sleep(300);
+    const card = await page.locator("#card").boundingBox();
+    const cx = card.x + card.width / 2;
+    const cy = card.y + card.height / 2;
+    await page.mouse.move(cx - 150, cy);
+    await page.mouse.down();
+    for (let i = 1; i <= 12; i++) {
+      await page.mouse.move(cx - 150 + i * 8, cy - i * 5);
+      await sleep(25);
+    }
+    await sleep(200);
+    const t = await page.evaluate(() => document.querySelector("#label").style.transform);
+    assert.match(t, /translate\(/, "label follows the body centre");
+    await page.mouse.up();
+    await page.click("#deform");
+    await sleep(200);
+    const rigidLabel = await page.evaluate(() => document.querySelector("#label").style.transform);
+    assert.equal(rigidLabel, "", "no label transform when deformation is off");
+    await page.click("#card");
+    assert.match(await page.textContent("#clicks"), /clicks 1/, "a plain click counts once");
+    assert.equal(await page.evaluate(() => window.__jelly.card.classList.contains("deform-on")), false);
+  });
+
+  await check("jelly card: reduced motion keeps the body at rest", async (page) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`${base}/demos/jelly-card/index.html`);
+    await page.waitForFunction(() => window.ready);
+    const a = await page.evaluate(() => Array.from(window.__jelly.body.positions()));
+    await sleep(800);
+    const b = await page.evaluate(() => Array.from(window.__jelly.body.positions()));
+    // Float32 rounding can move a rest state by a hair per step, so compare with a 0.05 px tolerance.
+    const drift = Math.max(...a.map((v, i) => Math.abs(v - b[i])));
+    assert.ok(drift < 0.05, `max drift ${drift} px under reduced motion`);
+  });
+
 } finally {
   await browser.close();
   stop();

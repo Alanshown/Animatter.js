@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Rope Editor</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1e2622;
+        --muted: #667069;
+        --paper: #f3f1ea;
+        --card: #fffdf7;
+        --line: #d7d3c4;
+        --accent: #b1462f;
+        --rope: #3d4a43;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 14px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      header a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        font-size: 13px;
+      }
+      button {
+        font: inherit;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      .node:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+      #board {
+        position: relative;
+        height: 600px;
+        margin: 16px 22px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: radial-gradient(circle at 20% 10%, #fffdf6, #efeadc 70%);
+        overflow: hidden;
+        touch-action: none;
+      }
+      #ropes {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        color: var(--rope);
+      }
+      .anchor {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 14px;
+        height: 14px;
+        margin: -7px 0 0 -7px;
+        border-radius: 50%;
+        background: var(--ink);
+      }
+      .node {
+        position: absolute;
+        width: 170px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+      .node.held {
+        cursor: grabbing;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
+      }
+      .node .title {
+        font-weight: 700;
+      }
+      .node .sub {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .node.broken {
+        border-color: var(--accent);
+      }
+      .pin {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        left: 50%;
+        top: -5px;
+        margin-left: -5px;
+      }
+      .readout {
+        padding: 0 22px 20px;
+        color: var(--muted);
+        font: 12px ui-monospace, Consolas, monospace;
+      }
+      .log {
+        padding: 0 22px 20px;
+        color: var(--accent);
+        font: 12px ui-monospace, Consolas, monospace;
+        min-height: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · rope editor</a>
+      <div class="controls" role="group" aria-label="Rope controls">
+        <label>Break stretch <input id="break" type="range" min="1.1" max="3" step="0.05" value="1.8" /> <output id="break-out">1.80</output></label>
+        <label>Stiffness <input id="stiffness" type="range" min="0.2" max="1" step="0.05" value="0.95" /> <output id="stiff-out">0.95</output></label>
+        <button type="button" id="reconnect">Reconnect broken rope</button>
+        <button type="button" id="drop">Drop all</button>
+      </div>
+    </header>
+
+    <div id="board" aria-label="Physics node editor">
+      <svg id="ropes" aria-hidden="true"></svg>
+    </div>
+
+    <p class="readout" id="readout">starting…</p>
+    <p class="log" id="log" role="status" aria-live="polite"></p>
+
+    <script type="module">
+      import { createWorld, createRope, elementAnchor, mountRopeSvg } from "/packages/core/dist/animatter.js";
+
+      const board = document.querySelector("#board");
+      const svg = document.querySelector("#ropes");
+      const readout = document.querySelector("#readout");
+      const logEl = document.querySelector("#log");
+      const breakInput = document.querySelector("#break");
+      const stiffInput = document.querySelector("#stiffness");
+      const world = createWorld({ mode: "field" });
+      const cards = [
+        { name: "Inbox", sub: "3 new" },
+        { name: "Review", sub: "pull request #42" },
+        { name: "Ship", sub: "release 0.3" },
+      ];
+
+      // Fixed anchor at the top of the board. A small dot shows where the rope is fixed.
+      const anchorDot = document.createElement("div");
+      anchorDot.className = "anchor";
+      board.append(anchorDot);
+      anchorDot.style.top = "40px";
+      const origin = () => ({ x: board.clientWidth / 2, y: 40 });
+
+      const nodes = cards.map((c, i) => {
+        const el = document.createElement("div");
+        el.className = "node";
+        el.tabIndex = 0;
+        el.setAttribute("role", "group");
+        el.setAttribute("aria-label", `${c.name}: ${c.sub}. Drag to move.`);
+        el.innerHTML = `<div class="pin"></div><div class="title">${c.name}</div><div class="sub">${c.sub}</div>`;
+        const left = board.clientWidth / 2 - 85 + (i - 1) * 260;
+        const top = 200 + (i % 2) * 60;
+        el.style.left = `${left}px`;
+        el.style.top = `${top}px`;
+        board.append(el);
+        return { el, x: left, y: top };
+      });
+
+      const ropes = [];
+      // Rope 0: fixed anchor to first card. Ropes 1 and 2 chain the cards together.
+      const make = (startTarget, endTarget) => {
+        const rope = createRope(world, {
+          segments: 18,
+          length: 300,
+          stiffness: Number(stiffInput.value),
+          damping: 0.985,
+          gravity: { x: 0, y: 900 },
+          iterations: 10,
+          breakStretch: Number(breakInput.value),
+          start: { x: 0, y: 0 },
+          end: { x: 300, y: 0 },
+        });
+        rope.attachA(startTarget);
+        rope.attachB(endTarget);
+        rope.onBreak((end) => {
+          logEl.textContent = `Rope broke at end ${end.toUpperCase()}. Use Reconnect to re-attach.`;
+        });
+        mountRopeSvg(world, rope, svg, { stroke: "currentColor", width: 3 });
+        return rope;
+      };
+      // Ropes hang from the pin at the top edge of each card.
+      const local = (node) => elementAnchor(node.el, board, "top");
+      ropes.push(make(origin, local(nodes[0])));
+      ropes.push(make(local(nodes[0]), local(nodes[1])));
+      ropes.push(make(local(nodes[1]), local(nodes[2])));
+
+      // Pointer dragging: the card follows the pointer, and rope anchors follow the card through elementAnchor.
+      let held = null;
+      board.addEventListener("pointerdown", (event) => {
+        const node = nodes.find((n) => n.el === event.target.closest(".node"));
+        if (!node) return;
+        held = { node, dx: event.clientX - node.el.getBoundingClientRect().left, dy: event.clientY - node.el.getBoundingClientRect().top, id: event.pointerId };
+        node.el.classList.add("held");
+        board.setPointerCapture(event.pointerId);
+      });
+      board.addEventListener("pointermove", (event) => {
+        if (!held || held.id !== event.pointerId) return;
+        const r = board.getBoundingClientRect();
+        const x = Math.min(Math.max(0, event.clientX - r.left - held.dx), r.width - 170);
+        const y = Math.min(Math.max(0, event.clientY - r.top - held.dy), r.height - 60);
+        held.node.el.style.left = `${x}px`;
+        held.node.el.style.top = `${y}px`;
+      });
+      const release = (event) => {
+        if (!held || held.id !== event.pointerId) return;
+        held.node.el.classList.remove("held");
+        held = null;
+      };
+      board.addEventListener("pointerup", release);
+      board.addEventListener("pointercancel", release);
+
+      breakInput.addEventListener("input", () => {
+        document.querySelector("#break-out").textContent = Number(breakInput.value).toFixed(2);
+        ropes.forEach((r) => r.setBreakStretch(Number(breakInput.value)));
+      });
+      stiffInput.addEventListener("input", () => {
+        document.querySelector("#stiff-out").textContent = Number(stiffInput.value).toFixed(2);
+      });
+      document.querySelector("#reconnect").addEventListener("click", () => {
+        let reconnected = 0;
+        ropes.forEach((rope) => {
+          for (const end of ["a", "b"]) if (rope.state(end) === "broken" && rope.reconnect(end)) reconnected++;
+        });
+        logEl.textContent = reconnected ? `Reconnected ${reconnected} end(s).` : "Nothing to reconnect.";
+      });
+      document.querySelector("#drop").addEventListener("click", () => {
+        nodes.forEach((n, i) => {
+          n.el.style.left = `${board.clientWidth / 2 - 85 + (i - 1) * 260}px`;
+          n.el.style.top = "200px";
+        });
+      });
+
+      const sample = () => {
+        const s = world.stats();
+        const states = ropes.map((r) => `${r.state("a")}/${r.state("b")}:${r.stretch().toFixed(2)}`).join("  ");
+        readout.textContent = `ropes ${ropes.length} · segments 18 each · states a/b:stretch ${states} · frames ${s.frames}`;
+      };
+      setInterval(sample, 500);
+      sample();
+      window.__ropes = { world, ropes, nodes, svg };
+      window.ready = true;
+    </script>
+  </body>
+</html>

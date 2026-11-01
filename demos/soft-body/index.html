@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Soft Collision Playground</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1b2328;
+        --muted: #617078;
+        --paper: #eef2f1;
+        --line: #cfd9d6;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 14px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 14px 22px;
+      }
+      header a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        align-items: center;
+        font-size: 13px;
+      }
+      button {
+        font: inherit;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      button:focus-visible,
+      input:focus-visible,
+      canvas:focus-visible {
+        outline: 3px solid #2b7a8c;
+        outline-offset: 3px;
+      }
+      #stage {
+        position: relative;
+        height: 560px;
+        margin: 0 22px;
+        border-radius: 20px;
+        background: #f9fbfa;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        touch-action: none;
+      }
+      #outline,
+      #stage canvas.meta {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .metrics {
+        padding: 12px 22px 22px;
+        color: var(--muted);
+        font: 12px ui-monospace, Consolas, monospace;
+      }
+      .hint {
+        padding: 0 22px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · soft collision playground</a>
+      <div class="controls" role="group" aria-label="Soft body controls">
+        <button type="button" id="view" aria-pressed="false">Metaball view</button>
+        <label>Pressure <input id="pressure" type="range" min="0" max="2" step="0.05" value="0.8" /></label>
+        <label>Shape recovery <input id="shape" type="range" min="0" max="1" step="0.05" value="0.35" /></label>
+        <label>Stiffness <input id="stiff" type="range" min="0.2" max="1" step="0.05" value="0.7" /></label>
+        <button type="button" id="reset">Reset bodies</button>
+      </div>
+    </header>
+
+    <p class="hint">Drag a body's edge to deform it. Click empty space for a ripple. Metaball view fuses the bodies visually. It does not change their physics.</p>
+
+    <div id="stage" aria-label="Soft body stage">
+      <canvas id="outline" aria-hidden="true"></canvas>
+    </div>
+
+    <div class="metrics" id="metrics">starting…</div>
+
+    <script type="module">
+      import {
+        createWorld,
+        createSoftBody,
+        linkSoftBodyContacts,
+        createMetaballCanvas,
+      } from "/packages/core/dist/animatter.js";
+
+      const stage = document.querySelector("#stage");
+      const outline = document.querySelector("#outline");
+      const octx = outline.getContext("2d");
+      const metrics = document.querySelector("#metrics");
+      const viewButton = document.querySelector("#view");
+      const pressureInput = document.querySelector("#pressure");
+      const shapeInput = document.querySelector("#shape");
+      const stiffInput = document.querySelector("#stiff");
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const world = createWorld({ mode: "field", reducedMotion: reduced ? "always" : "system" });
+
+      let bodies = [];
+      let contacts = null;
+      let meta = null;
+      let metaView = false;
+      const colors = ["#2b7a8c", "#d1603d", "#6c5ce7", "#2f9e6a", "#c9a227", "#b04a7d"];
+
+      const size = () => ({ width: stage.clientWidth, height: stage.clientHeight });
+      function resizeCanvas() {
+        const { width, height } = size();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        outline.width = Math.round(width * dpr);
+        outline.height = Math.round(height * dpr);
+        octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      function options(center, radius, i) {
+        const { width, height } = size();
+        return {
+          points: 18,
+          radius,
+          center,
+          stiffness: Number(stiffInput.value),
+          shapeStiffness: Number(shapeInput.value),
+          pressure: reduced ? 0 : Number(pressureInput.value),
+          damping: 0.97,
+          maxDisplacement: 18,
+          iterations: 6,
+          gravity: { x: 0, y: 260 },
+          bounds: { x: 0, y: 0, width, height },
+        };
+      }
+
+      function build() {
+        contacts?.();
+        for (const b of bodies) b.destroy();
+        const { width, height } = size();
+        bodies = [];
+        const count = 5;
+        for (let i = 0; i < count; i++) {
+          const radius = 44 + (i % 3) * 12;
+          const cx = (width / (count + 1)) * (i + 1);
+          const cy = height * (0.3 + (i % 2) * 0.35);
+          bodies.push(createSoftBody(world, options({ x: cx, y: cy }, radius, i)));
+        }
+        contacts = linkSoftBodyContacts(world, bodies, { particleRadius: 9 });
+      }
+
+      function drawOutline() {
+        const { width, height } = size();
+        octx.clearRect(0, 0, width, height);
+        bodies.forEach((body, index) => {
+          const p = body.positions();
+          const n = body.count - 1;
+          octx.beginPath();
+          // Smooth closed curve through the ring (midpoints as control points).
+          for (let i = 0; i < n; i++) {
+            const a = i;
+            const b = (i + 1) % n;
+            const mx = (p[a * 2] + p[b * 2]) / 2;
+            const my = (p[a * 2 + 1] + p[b * 2 + 1]) / 2;
+            if (i === 0) octx.moveTo(mx, my);
+            else octx.quadraticCurveTo(p[a * 2], p[a * 2 + 1], mx, my);
+          }
+          const first = 0;
+          const second = 1 % n;
+          octx.quadraticCurveTo(p[first * 2], p[first * 2 + 1], (p[first * 2] + p[second * 2]) / 2, (p[first * 2 + 1] + p[second * 2 + 1]) / 2);
+          octx.closePath();
+          octx.fillStyle = colors[index % colors.length] + "cc";
+          octx.fill();
+        });
+      }
+
+      // Per-frame drawing runs on the world clock, like every other module.
+      world.attach({
+        name: "playground-draw",
+        frame() {
+          if (!metaView) drawOutline();
+          if (meta) {
+            meta.setBlobs(
+              bodies.flatMap((body) => {
+                const p = body.positions();
+                const blobs = [];
+                for (let i = 0; i < body.count; i++) blobs.push({ x: p[i * 2], y: p[i * 2 + 1], r: i === body.count - 1 ? 26 : 14 });
+                return blobs;
+              }),
+            );
+          }
+        },
+      });
+
+      function setView(metaball) {
+        metaView = metaball;
+        viewButton.setAttribute("aria-pressed", String(metaball));
+        viewButton.textContent = metaball ? "Outline view" : "Metaball view";
+        outline.style.display = metaball ? "none" : "block";
+        if (metaball && !meta) {
+          meta = createMetaballCanvas(world, stage, { cell: 3, threshold: 1, color: [43, 122, 140] });
+          meta.canvas.classList.add("meta");
+        } else if (!metaball && meta) {
+          meta.destroy();
+          meta = null;
+        }
+      }
+
+      // Pointer: grab a body edge particle, or ripple empty space.
+      let grabbing = null;
+      const local = (event) => {
+        const r = stage.getBoundingClientRect();
+        return { x: event.clientX - r.left, y: event.clientY - r.top };
+      };
+      stage.addEventListener("pointerdown", (event) => {
+        const p = local(event);
+        const hit = bodies.find((b) => b.grab(p, 22));
+        if (hit) {
+          grabbing = hit;
+          stage.setPointerCapture(event.pointerId);
+        } else {
+          bodies.forEach((b) => b.impulse(p, 2200, 170));
+        }
+      });
+      stage.addEventListener("pointermove", (event) => {
+        if (grabbing) grabbing.drag(local(event));
+      });
+      const release = () => {
+        if (grabbing) grabbing.release();
+        grabbing = null;
+      };
+      stage.addEventListener("pointerup", release);
+      stage.addEventListener("pointercancel", release);
+
+      viewButton.addEventListener("click", () => setView(!metaView));
+      document.querySelector("#reset").addEventListener("click", build);
+      const applyTuning = () => {
+        // Tuning changes apply to new bodies. Rebuilding keeps the state of each body independent.
+        build();
+      };
+      pressureInput.addEventListener("change", applyTuning);
+      shapeInput.addEventListener("change", applyTuning);
+      stiffInput.addEventListener("change", applyTuning);
+
+      build();
+
+      let lastEnergy = 0;
+      let lastFrames = 0;
+      setInterval(() => {
+        const s = world.stats();
+        const energy = bodies.reduce((sum, b) => sum + b.energy(), 0);
+        const fps = s.frames - lastFrames;
+        lastFrames = s.frames;
+        lastEnergy = energy;
+        const meta_ms = meta ? meta.averageFrameMs().toFixed(2) : "off";
+        const cells = meta ? meta.cellCount() : 0;
+        metrics.textContent = `bodies ${bodies.length} × 18 particles · contacts linked · frames/s ${fps} · last frame ${s.lastFrameMs.toFixed(2)} ms · metaball ${meta_ms} ms/frame over 60 frames (${cells} cells) · energy ${lastEnergy.toFixed(1)} · reduced motion ${reduced}`;
+      }, 1000);
+
+      window.__soft = { world, get bodies() { return bodies; }, setView, build, get meta() { return meta; } };
+      window.ready = true;
+    </script>
+  </body>
+</html>

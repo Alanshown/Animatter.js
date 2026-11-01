@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Jelly Card</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #241d2f;
+        --muted: #6d6480;
+        --paper: #f7f3fb;
+        --jelly: #d9466f;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 14px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 14px 22px;
+      }
+      header a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      button {
+        font: inherit;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      button:focus-visible,
+      input:focus-visible,
+      .card:focus-visible {
+        outline: 3px solid var(--ink);
+        outline-offset: 4px;
+      }
+      .stage {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: 560px;
+      }
+      .card {
+        position: relative;
+        width: 360px;
+        height: 300px;
+        border: 0;
+        padding: 0;
+        background: none;
+        cursor: pointer;
+        touch-action: none;
+        font: inherit;
+        color: inherit;
+      }
+      .card svg {
+        position: absolute;
+        left: -60px;
+        top: -60px;
+        width: 480px;
+        height: 420px;
+        max-width: none;
+        max-height: none;
+        overflow: visible;
+        filter: drop-shadow(0 18px 24px rgba(36, 29, 47, 0.18));
+      }
+      .jelly-label {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 260px;
+        margin-left: -130px;
+        margin-top: -54px;
+        text-align: center;
+        pointer-events: none;
+        color: #fff;
+      }
+      .jelly-label .title {
+        display: block;
+        margin: 0 0 6px;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .jelly-label .sub {
+        display: block;
+        font-size: 14px;
+        opacity: 0.92;
+      }
+      .card:not(.deform-on) .jelly-label {
+        transform: none !important;
+      }
+      .readout {
+        color: var(--muted);
+        font: 12px ui-monospace, Consolas, monospace;
+        padding: 0 22px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · jelly card</a>
+      <div class="controls" role="group" aria-label="Jelly controls">
+        <button type="button" id="deform" aria-pressed="true">Deformation on</button>
+        <label>Pressure <input id="pressure" type="range" min="0" max="2" step="0.05" value="0.9" /></label>
+        <label>Wobble <input id="wobble" type="range" min="0.1" max="1" step="0.05" value="0.45" /></label>
+        <button type="button" id="ripple">Jolt</button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <button type="button" class="card deform-on" id="card" aria-describedby="card-help">
+        <svg id="shape" viewBox="-60 -60 480 420" preserveAspectRatio="none" aria-hidden="true">
+          <path id="blob" fill="#ff7a9a" stroke="none"></path>
+        </svg>
+        <span class="jelly-label" id="label">
+          <span class="title">Jelly Card</span>
+          <span class="sub">Press, drag or click. The content stays readable and clickable.</span>
+        </span>
+      </button>
+    </main>
+    <p class="readout" id="help">Card is a real button: keyboard Enter activates it. Its label is ordinary DOM text.</p>
+    <p class="readout" id="clicks" role="status" aria-live="polite">clicks 0</p>
+    <p class="readout" id="readout"></p>
+
+    <script type="module">
+      import { createWorld, createSoftBody } from "/packages/core/dist/animatter.js";
+
+      const card = document.querySelector("#card");
+      const label = document.querySelector("#label");
+      const blob = document.querySelector("#blob");
+      const deformButton = document.querySelector("#deform");
+      const pressureInput = document.querySelector("#pressure");
+      const wobbleInput = document.querySelector("#wobble");
+      const readout = document.querySelector("#readout");
+      const clicksOut = document.querySelector("#clicks");
+      let pressAt = null;
+      let travelled = 0;
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const world = createWorld({ mode: "field", reducedMotion: reduced ? "always" : "system" });
+      const W = 360;
+      const H = 300;
+      const center = { x: W / 2, y: H / 2 };
+      let deform = !reduced;
+      let body = null;
+      let clicks = 0;
+
+      // Ring of offsets along a rounded rectangle, so the rest shape reads as a card.
+      function roundedRectRing(width, height, corner, count) {
+        const hw = width / 2;
+        const hh = height / 2;
+        const r = corner;
+        const pts = [];
+        const perimeter = [];
+        // Sample the outline by arc length, starting at the top-middle and going clockwise.
+        const segs = [
+          { len: 2 * (hw - r), at: (t) => ({ x: -hw + r + t * 2 * (hw - r), y: -hh }) },
+          { len: (Math.PI / 2) * r, at: (t) => arc(hw - r, -hh + r, r, -Math.PI / 2 + t * (Math.PI / 2)) },
+          { len: 2 * (hh - r), at: (t) => ({ x: hw, y: -hh + r + t * 2 * (hh - r) }) },
+          { len: (Math.PI / 2) * r, at: (t) => arc(hw - r, hh - r, r, t * (Math.PI / 2)) },
+          { len: 2 * (hw - r), at: (t) => ({ x: hw - r - t * 2 * (hw - r), y: hh }) },
+          { len: (Math.PI / 2) * r, at: (t) => arc(-hw + r, hh - r, r, Math.PI / 2 + t * (Math.PI / 2)) },
+          { len: 2 * (hh - r), at: (t) => ({ x: -hw, y: hh - r - t * 2 * (hh - r) }) },
+          { len: (Math.PI / 2) * r, at: (t) => arc(-hw + r, -hh + r, r, Math.PI + t * (Math.PI / 2)) },
+        ];
+        function arc(cx, cy, rad, a) {
+          return { x: cx + Math.cos(a) * rad, y: cy + Math.sin(a) * rad };
+        }
+        const total = segs.reduce((sum, seg) => sum + seg.len, 0);
+        for (let i = 0; i < count; i++) {
+          let d = (i / count) * total;
+          for (const seg of segs) {
+            if (d <= seg.len || seg === segs[segs.length - 1]) {
+              pts.push(seg.at(Math.min(1, d / seg.len)));
+              break;
+            }
+            d -= seg.len;
+          }
+        }
+        perimeter.push(...pts);
+        return perimeter;
+      }
+
+      function makeBody() {
+        body?.destroy();
+        body = createSoftBody(world, {
+          points: 32,
+          radius: 140,
+          center,
+          outline: roundedRectRing(W - 40, H - 40, 46, 32),
+          stiffness: deform ? Number(wobbleInput.value) : 1,
+          shapeStiffness: deform ? 0.5 : 1,
+          pressure: deform && !reduced ? Number(pressureInput.value) : 0,
+          damping: 0.965,
+          maxDisplacement: 22,
+          iterations: 8,
+          gravity: { x: 0, y: 0 },
+          bounds: null,
+        });
+        // Scale the rest outline into a card-shaped rounded rectangle by using the ring as a control set.
+      }
+      makeBody();
+
+      // The card's visual outline is the soft-body ring, rendered as a smooth closed path.
+      world.attach({
+        name: "jelly-draw",
+        frame() {
+          if (!body) return;
+          const p = body.positions();
+          const n = body.count - 1;
+          let d = "";
+          for (let i = 0; i < n; i++) {
+            const a = i;
+            const b = (i + 1) % n;
+            const mx = (p[a * 2] + p[b * 2]) / 2;
+            const my = (p[a * 2 + 1] + p[b * 2 + 1]) / 2;
+            d += i === 0 ? `M${mx.toFixed(1)} ${my.toFixed(1)}` : "";
+            const cx = p[a * 2];
+            const cy = p[a * 2 + 1];
+            d += ` Q${cx.toFixed(1)} ${cy.toFixed(1)} ${mx.toFixed(1)} ${my.toFixed(1)}`;
+          }
+          d += "Z";
+          blob.setAttribute("d", d);
+          // Keep the label on the body centre so it moves and squashes with the shape.
+          const c = body.center();
+          const dx = c.x - center.x;
+          const dy = c.y - center.y;
+          label.style.transform = deform && !reduced ? `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)` : "";
+        },
+      });
+
+      // Interaction: pressing grabs the nearest edge particle. A click jolts the body, unless deformation is off.
+      card.addEventListener("pointerdown", (event) => {
+        pressAt = { x: event.clientX, y: event.clientY };
+        travelled = 0;
+        if (!deform || !body) return;
+        const r = card.getBoundingClientRect();
+        const p = { x: event.clientX - r.left, y: event.clientY - r.top };
+        if (body.grab(p, 60)) card.setPointerCapture(event.pointerId);
+      });
+      card.addEventListener("pointermove", (event) => {
+        if (pressAt) travelled = Math.max(travelled, Math.hypot(event.clientX - pressAt.x, event.clientY - pressAt.y));
+        if (!body || !deform) return;
+        const r = card.getBoundingClientRect();
+        body.drag({ x: event.clientX - r.left, y: event.clientY - r.top });
+      });
+      const release = () => body?.release();
+      card.addEventListener("pointerup", release);
+      card.addEventListener("pointercancel", release);
+      card.addEventListener("click", (event) => {
+        // A press that travelled is a drag, not a click. Browsers still fire click when the release lands on the button.
+        if (travelled > 6) {
+          travelled = 0;
+          event.preventDefault();
+          return;
+        }
+        clicks++;
+        clicksOut.textContent = `clicks ${clicks}`;
+        if (deform && body) body.impulse(center, 900, 220);
+      });
+      document.querySelector("#ripple").addEventListener("click", () => {
+        if (deform && body) body.impulse(center, 1400, 240);
+      });
+
+      deformButton.addEventListener("click", () => {
+        deform = !deform;
+        deformButton.setAttribute("aria-pressed", String(deform));
+        deformButton.textContent = deform ? "Deformation on" : "Deformation off";
+        card.classList.toggle("deform-on", deform);
+        makeBody();
+        if (!deform) label.style.transform = "";
+      });
+      pressureInput.addEventListener("change", makeBody);
+      wobbleInput.addEventListener("change", makeBody);
+
+      setInterval(() => {
+        const e = body ? body.energy() : 0;
+        readout.textContent = `deformation ${deform ? "on" : "off"} · reduced motion ${reduced} · energy ${e.toFixed(2)} · area ${body ? body.area().toFixed(0) : 0} · frames ${world.stats().frames}`;
+      }, 500);
+
+      window.__jelly = { world, get body() { return body; }, setDeform: (v) => deformButton.click(), card };
+      window.ready = true;
+    </script>
+  </body>
+</html>
