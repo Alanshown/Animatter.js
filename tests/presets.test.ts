@@ -105,11 +105,11 @@ test("replace-group presets supersede each other and restore the earlier one on 
   const el = fakeElement("c") as unknown as HTMLElement;
   const elastic = reg.enhance(el, presets.elastic());
   const id = elastic.ids[0]!;
-  assert.equal(surfaces.get(id)!.options.material.stiffness, 150);
+  assert.equal(surfaces.get(id)!.options.material.stiffness, 240);
   const snap = reg.enhance(el, presets.snap());
   assert.equal(surfaces.get(id)!.options.material.stiffness, 320);
   snap.destroy();
-  assert.equal(surfaces.get(id)!.options.material.stiffness, 150, "elastic restored");
+  assert.equal(surfaces.get(id)!.options.material.stiffness, 240, "elastic restored");
   elastic.destroy();
   assert.equal(surfaces.has(id), false, "owned surface released after the last handle");
 });
@@ -132,6 +132,16 @@ test("strength interpolates between the baseline and the preset target", () => {
   const handle = reg.enhance(el, presets.elastic({ strength: 0.5, stiffness: 250 }));
   const stiffness = surfaces.get(handle.ids[0]!)!.options.material.stiffness;
   assert.equal(stiffness, base.stiffness + (250 - base.stiffness) * 0.5);
+  handle.destroy();
+});
+
+test("strength above 1 extrapolates but stays inside the valid material range", () => {
+  const { world, surfaces } = fakeWorld();
+  const reg = new EnhancementRegistry(world as never);
+  const el = fakeElement("m") as unknown as HTMLElement;
+  const handle = reg.enhance(el, presets.tilt({ strength: 2 }));
+  const material = surfaces.get(handle.ids[0]!)!.options.material;
+  assert.equal(material.softness, 1, "softness clamped to 1 instead of 1.4");
   handle.destroy();
 });
 

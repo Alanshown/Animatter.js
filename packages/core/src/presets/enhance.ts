@@ -1,5 +1,6 @@
 import type { AnimatterWorld } from "../world.js";
 import { resolveMaterial } from "../materials.js";
+import { materialRanges } from "./catalog.js";
 import type { Material } from "../types.js";
 import type {
   ConflictPolicy,
@@ -186,7 +187,9 @@ export class EnhancementRegistry {
       for (const key of Object.keys(c.target) as (keyof Material)[]) {
         const from = record.base[key];
         const to = c.target[key] as number;
-        material[key] = from + (to - from) * c.strength;
+        const [min, max] = materialRanges[key];
+        // Strength above 1 extrapolates; clamp to the valid range so the material stays resolvable.
+        material[key] = clamp(from + (to - from) * c.strength, min, max);
       }
     }
     this.world.configure(record.id, { material: resolveMaterial(material) });

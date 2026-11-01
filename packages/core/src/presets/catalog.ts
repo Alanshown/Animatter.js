@@ -115,7 +115,7 @@ export const presets = {
   elastic: definePreset({
     name: "elastic",
     group: "motion",
-    defaults: { stiffness: 150, damping: 16, restitution: 0.58 },
+    defaults: { stiffness: 240, damping: 10, restitution: 0.72 },
   }),
   /** Fast, damped settle. Good for controls that should land decisively. */
   snap: definePreset({

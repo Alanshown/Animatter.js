@@ -51,7 +51,7 @@ The effective value for a key is `base + (target - base) * strength`, where `bas
 
 | Preset | Group | Conflict | Defaults | Trigger | Disabled behaviour |
 | --- | --- | --- | --- | --- | --- |
-| `elastic` | motion | replace | stiffness 150, damping 16, restitution 0.58 | always | baseline restored |
+| `elastic` | motion | replace | stiffness 240, damping 10, restitution 0.72 | always | baseline restored |
 | `snap` | motion | replace | stiffness 320, damping 34, restitution 0.1 | always | baseline restored |
 | `inertia` | motion | replace | mass 2.5, damping 6, restitution 0.3 | always | baseline restored |
 | `springFollow` | motion | replace | stiffness 55, damping 12, magnetism 48, radius 260 | always | baseline restored |
