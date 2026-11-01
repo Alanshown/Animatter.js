@@ -123,4 +123,4 @@ const text = createKineticText(world, heroTitle, { mode: "elastic", strength: 0.
 text.setText("New title"); text.setMode("wave"); text.scatter(); text.reform(); text.remeasure(); text.destroy();
 ```
 
-The DOM letter renderer is the default. `renderer: "canvas"` draws the same text on a canvas (see the Kinetic section of CHANGELOG.md when that renderer ships).
+The DOM letter renderer is the default. use `createCanvasKinetic(world, host, text, options)` for the canvas renderer (fillText, same modes, 400-glyph limit). The DOM controller stays the default.

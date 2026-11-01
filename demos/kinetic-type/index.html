@@ -170,10 +170,14 @@
       <div class="poster"><div class="big" id="poster-c">👩‍👩‍👧 🇨🇳</div><p class="hint">Emoji sequences stay whole.</p></div>
     </section>
 
+    <section class="poster-grid" aria-label="Canvas kinetic text">
+      <div class="poster" id="canvas-poster" style="grid-column: span 2"><div id="canvas-host" style="font: 800 48px system-ui, sans-serif"></div><p class="hint">Canvas renderer: same springs, drawn with fillText on a canvas.</p></div>
+    </section>
+
     <p class="status" id="status" role="status">starting…</p>
 
     <script type="module">
-      import { createWorld, createKineticText } from "/packages/core/dist/animatter.js";
+      import { createWorld, createKineticText, createCanvasKinetic } from "/packages/core/dist/animatter.js";
 
       const samples = {
         hero: "Physical type that remembers its shape.",
@@ -228,8 +232,12 @@
       });
       window.addEventListener("resize", () => handles.forEach((h) => h.remeasure()));
 
+      const canvasHost = document.querySelector("#canvas-host");
+      canvasHost.textContent = "Canvas letters 画布 文字 spring";
+      const canvasText = createCanvasKinetic(world, canvasHost, "Canvas letters 画布 文字 spring", { mode: "wave", strength: 1 });
+
       refreshStatus();
-      window.__kinetic = { world, handles, targets };
+      window.__kinetic = { world, handles, targets, canvasText };
       window.ready = true;
     </script>
   </body>

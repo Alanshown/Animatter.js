@@ -445,6 +445,34 @@ try {
     await sleep(100);
     assert.equal(await page.evaluate(() => document.querySelectorAll("#dock canvas").length), 0, "connector destroyed with toggle off");
   });
+
+  await check("kinetic canvas: glyphs are laid out, drawn, and animate in wave mode", async (page) => {
+    await page.goto(`${base}/demos/kinetic-type/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await sleep(300);
+    const info = await page.evaluate(() => ({ glyphs: window.__kinetic.canvasText.glyphCount(), lines: window.__kinetic.canvasText.lineCount() }));
+    assert.equal(info.glyphs, 27, "every grapheme including the four spaces (spaces take a slot but draw nothing)");
+    const sample = () => page.evaluate(() => {
+      const c = document.querySelector("#canvas-host canvas");
+      const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      let lit = 0;
+      let hash = 0;
+      for (let i = 3; i < d.length; i += 4) {
+        if (d[i] > 0) lit++;
+        hash = (hash * 31 + d[i]) >>> 0;
+      }
+      return { lit, hash };
+    });
+    const a = await sample();
+    assert.ok(a.lit > 200, `canvas text pixels ${a.lit}`);
+    await sleep(400);
+    const b = await sample();
+    assert.notEqual(a.hash, b.hash, "wave mode changes the drawing over time");
+    await page.evaluate(() => window.__kinetic.canvasText.setText("x".repeat(500)));
+    assert.equal(await page.evaluate(() => window.__kinetic.canvasText.glyphCount()), 0, "over the glyph limit draws nothing");
+    await page.evaluate(() => window.__kinetic.canvasText.setText("Canvas letters 画布 文字 spring"));
+  });
+
 } finally {
   await browser.close();
   stop();

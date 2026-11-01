@@ -94,3 +94,5 @@ export type {
   BehaviourContext,
   ActorBehaviourHandle,
 } from "./actor/behaviours.js";
+export { createCanvasKinetic, layoutGlyphs } from "./typography/canvas.js";
+export type { CanvasKineticHandle, CanvasKineticOptions } from "./typography/canvas.js";
