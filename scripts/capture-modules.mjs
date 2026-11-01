@@ -17,6 +17,8 @@ const shots = [
   { file: "soft-body-metaball-gl.png", path: "/demos/soft-body/index.html", metaball: true, gl: true, wait: 1500 },
   { file: "particles.png", path: "/demos/particles/index.html", wait: 2500 },
   { file: "actor-behaviours.png", path: "/demos/actor-behaviours/index.html", wait: 6000 },
+  { file: "blob-nav.png", path: "/demos/blob-nav/index.html", click: 'nav a[href="#lab"]', wait: 2500 },
+  { file: "liquid-button.png", path: "/demos/liquid-button/index.html", hover: "#b2", wait: 700 },
   { file: "jelly-card.png", path: "/demos/jelly-card/index.html", wait: 800 },
 ];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -28,6 +30,7 @@ try {
     if (shot.wait) await sleep(shot.wait);
     if (shot.metaball) await page.click("#view");
     if (shot.gl) await page.click("#metarenderer");
+    if (shot.click) await page.click(shot.click);
     if (shot.renderer) await page.selectOption("#renderer", shot.renderer);
     if (shot.theme) await page.click(`[data-theme="${shot.theme}"]`);
     if (shot.vertical) await page.click("#orientation");

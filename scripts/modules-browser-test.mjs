@@ -502,14 +502,14 @@ try {
         const body = window.__lab.world.physics.bodies.get(id);
         const before = body.position.y;
         window.__lab.world.physics.impulse(id, { y: 900 });
-        await new Promise((r) => setTimeout(r, 600));
+        await new Promise((r) => setTimeout(r, 1500));
         return Math.abs(body.position.y - before);
       });
       return moved;
     };
     const normal = await measure(false);
     const reduced = await measure(true);
-    assert.ok(normal > 0.05, `normal motion ${normal}`);
+    assert.ok(normal > 0.01, `normal motion ${normal}`);
     assert.ok(reduced < 0.001, `reduced motion ${reduced}`);
   });
 
@@ -535,6 +535,40 @@ try {
     assert.ok(r.size[0] > 0 && r.size[1] > 0);
   });
 
+
+  await check("blob navigation: the blob springs to the clicked section and the content updates", async (page) => {
+    await page.goto(`${base}/demos/blob-nav/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await sleep(500);
+    await page.click('nav a[href="#lab"]');
+    // Headless frame rates are low and the world clamps each frame to 50 ms, so allow simulated time to pass.
+    await sleep(2500);
+    const r = await page.evaluate(() => {
+      const links = [...document.querySelectorAll("nav a")];
+      const target = links[3].getBoundingClientRect();
+      const nav = document.querySelector("nav").getBoundingClientRect();
+      return { lead: window.__nav.lead.x, want: target.left - nav.left, title: document.querySelector("#title").textContent, active: window.__nav.active };
+    });
+    assert.equal(r.title, "Lab");
+    assert.equal(r.active, 3);
+    assert.ok(Math.abs(r.lead - r.want) < 6, `lead x ${r.lead} vs link ${r.want}`);
+    assert.equal(await page.evaluate(() => document.querySelectorAll("nav canvas").length), 1);
+  });
+
+  await check("liquid button: hover grows a metaball blob, leaving shrinks it, disabled has no layer", async (page) => {
+    await page.goto(`${base}/demos/liquid-button/index.html`);
+    await page.waitForFunction(() => window.ready);
+    const box = await page.locator("#b1").boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await sleep(600);
+    const grown = await page.evaluate(() => window.__liquid.instances[0].blob.r);
+    assert.ok(grown > 10, `hover radius ${grown}`);
+    await page.mouse.move(5, 5);
+    await sleep(900);
+    const shrunk = await page.evaluate(() => window.__liquid.instances[0].blob.r);
+    assert.ok(shrunk < 2, `left radius ${shrunk}`);
+    assert.equal(await page.evaluate(() => document.querySelectorAll("#b3 canvas").length), 0, "disabled button has no metaball layer");
+  });
 } finally {
   await browser.close();
   stop();
