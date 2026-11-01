@@ -29,6 +29,8 @@
 
 每个场景都有独立 HTML 入口，并使用同一套核心。这些动图来自**真实 Chromium 页面录屏**，转换为循环 GIF；完整分辨率 PNG 和来源记录位于 [docs/assets/demos](docs/assets/demos)。下方链接是需要本地运行的源码入口，不是已经部署的在线演示。
 
+较新模块（Dock、Blob 导航、Liquid Button、Kinetic 文字）的交互录屏位于 [docs/assets/interactions](docs/assets/interactions)，由 `node scripts/record-interactions.mjs` 生成（需要 ffmpeg）。
+
 | Skeleton Pet · 骨架宠物 · Moss & Morning | Liquid World · 液体世界 · Tidal |
 | --- | --- |
 | [![骨架宠物浏览器录屏](docs/assets/demos/skeleton-pet.gif)](demos/skeleton-pet/index.html) | [![液体世界浏览器录屏](docs/assets/demos/liquid-world.gif)](demos/liquid-world/index.html) |
