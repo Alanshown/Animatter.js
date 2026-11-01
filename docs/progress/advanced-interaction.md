@@ -40,3 +40,18 @@
 ## 未测项
 
 - 真机、Safari、Firefox：本机环境只有 Chromium（Playwright），未验证其它引擎；记为 Not Tested。
+
+## Status on branch worktree-agent-a06071328e0d3b8c5 (local, unpublished)
+
+| Item | Status | Commit |
+|---|---|---|
+| v0.2 wrap-up, launcher fix | Done | df47252, 3842f85 |
+| v0.3 dock, kinetic, Lab, schema | Done; connector, Canvas kinetic, Lab renderer switch and reduced motion added | 2f8cdb7, 6a54268, 3bca7df, 5904498 |
+| v0.3 kinetic API form | Decided: controller API (documented in PRESETS.md) | b9e4934 |
+| v0.4 rope, soft body, metaball | Done; WebGL2 metaball with timing comparison; Blob Navigation and Liquid Button demos | d219afe, 1263b62, 621a759 |
+| v0.5 particles | WebGL2 + Canvas2D, text targets, DOM obstacles done; WebGPU and Worker not implemented | a3ab155, df8acaa |
+| v0.6 actor behaviours | Behaviour machine done; A* grid planner done (not yet wired into the actor); multi-actor avoidance not done | 1b43c99, c78b4d3 |
+| Packaging | Core exports animatter/particles; adapter peers ^0.2.0 (version still 0.1.0); verify:install | 0aa9cfd, a959508, d6b8fef |
+| Interaction GIFs | docs/assets/interactions | 9b827ee |
+
+Not tested: Safari, real iOS/Android, real GPU drivers (software WebGL only), GitHub Packages (no token), Nuxt SSR and Vite builds of consumers.
