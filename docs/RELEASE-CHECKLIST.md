@@ -37,6 +37,8 @@ This is a template for future releases, not evidence of completion. An unchecked
 - [ ] Obtain explicit maintainer authorization to publish this exact version/artifacts. A repository merge is not npm authorization.
 - [ ] If enabling CI publishing, configure a package-specific OIDC trusted publisher, protected environment and allowed action; verify current npm prerequisites. No stored write token default.
 - [ ] Publish reviewed core artifact, verify Registry availability/integrity, then publish reviewed adapters.
+- [ ] Dist-tags: publish stable versions with the default tag, which sets `latest`. Do not pass `--tag` for a stable release. After publishing, `npm view animatter dist-tags` and the same command for each adapter must show `latest` at the new version. If not, fix with `npm dist-tag add <name>@<version> latest` and record why.
+- [ ] Peer ranges: adapters' `animatter` peer must allow the core version being published (0.2.0 needs `^0.2.0`). Run `node scripts/verify-install.mjs --version <v>` before publishing and `node scripts/verify-install.mjs --registry <v>` after publishing; both must pass with no ERESOLVE.
 - [ ] Install exact Registry versions into a fresh project and verify ESM/types/CSS/React/Vue and browser behavior.
 - [ ] Record real npm URLs and integrity; only then enable npm badges and optionally create an accurate GitHub Release.
 - [ ] Ensure deprecation/fix-forward guidance is ready; never overwrite/reuse a published version.

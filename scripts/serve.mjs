@@ -19,7 +19,12 @@ createServer(async (req, res) => {
       ),
       file = resolve(
         root,
-        "." + (pathname === "/" ? "/demos/index.html" : pathname),
+        "." +
+          (pathname === "/"
+            ? "/demos/index.html"
+            : pathname === "/favicon.ico"
+              ? "/docs/assets/branding/favicon.svg"
+              : pathname),
       );
     if (!file.startsWith(root + sep)) {
       res.writeHead(403).end();

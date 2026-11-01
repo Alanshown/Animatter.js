@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Liquid Button</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #14201b;
+        color: #eef5f0;
+        font: 15px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 26px;
+      }
+      header a {
+        position: fixed;
+        top: 16px;
+        left: 22px;
+        color: #eef5f0;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .row {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .liquid {
+        position: relative;
+        isolation: isolate;
+        border: 1px solid rgba(238, 245, 240, 0.35);
+        background: rgba(238, 245, 240, 0.06);
+        color: #eef5f0;
+        font: 600 16px system-ui, sans-serif;
+        padding: 16px 30px;
+        border-radius: 999px;
+        cursor: pointer;
+        min-width: 180px;
+        overflow: hidden;
+        transition: color 0.2s;
+      }
+      .liquid .label {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .liquid canvas {
+        z-index: 0;
+      }
+      .liquid:hover .label,
+      .liquid:focus-visible .label {
+        color: #14201b;
+      }
+      .liquid:focus-visible {
+        outline: 3px solid #9be3d4;
+        outline-offset: 3px;
+      }
+      .liquid.primary:hover .label,
+      .liquid.primary:focus-visible .label {
+        color: #eef5f0;
+      }
+      .liquid.primary {
+        background: #9be3d4;
+        color: #14201b;
+        border-color: transparent;
+      }
+      .liquid.primary canvas {
+        filter: none;
+      }
+      .readout {
+        font: 12px ui-monospace, Consolas, monospace;
+        color: #9db3a7;
+        min-height: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <header><a href="/demos/index.html">animatter · liquid button</a></header>
+
+    <div class="row">
+      <button type="button" class="liquid" id="b1"><span class="label">Hover me</span></button>
+      <button type="button" class="liquid primary" id="b2"><span class="label">Press and hold</span></button>
+      <button type="button" class="liquid" id="b3" disabled><span class="label">Disabled</span></button>
+    </div>
+
+    <p class="readout" id="readout" role="status" aria-live="polite">ready</p>
+
+    <script type="module">
+      import { createWorld, createMetaballCanvas } from "/packages/core/dist/animatter.js";
+
+      const world = createWorld({ mode: "field" });
+      const reduced = () => world.stats().reducedMotion;
+      const readout = document.querySelector("#readout");
+      const buttons = [...document.querySelectorAll(".liquid")];
+
+      // Each live button has its own metaball layer and a blob that springs toward the pointer.
+      const instances = buttons.map((el) => {
+        const color = el.classList.contains("primary") ? [20, 32, 27] : [158, 227, 212];
+        const meta = el.disabled ? null : createMetaballCanvas(world, el, { cell: 2, threshold: 0.9, color });
+        const blob = { x: 0, y: 0, r: 0, vx: 0, vy: 0, vr: 0, tx: 0, ty: 0, tr: 0, pressed: false };
+        const inst = { el, meta, blob, hover: false, down: false };
+        if (el.disabled) return inst;
+        el.addEventListener("pointerenter", (e) => {
+          inst.hover = true;
+          inst.blob.tx = localX(el, e);
+          inst.blob.ty = localY(el, e);
+          inst.blob.tr = 0;
+          inst.blob.r = 0;
+          readout.textContent = `hover ${el.textContent.trim()}`;
+        });
+        el.addEventListener("pointermove", (e) => {
+          inst.blob.tx = localX(el, e);
+          inst.blob.ty = localY(el, e);
+        });
+        el.addEventListener("pointerleave", () => {
+          inst.hover = false;
+          inst.down = false;
+          inst.blob.tr = 0;
+        });
+        el.addEventListener("pointerdown", (e) => {
+          inst.down = true;
+          inst.blob.tx = localX(el, e);
+          inst.blob.ty = localY(el, e);
+          readout.textContent = `press ${el.textContent.trim()}`;
+        });
+        el.addEventListener("pointerup", () => (inst.down = false));
+        el.addEventListener("pointercancel", () => (inst.down = false));
+        el.addEventListener("click", () => {
+          readout.textContent = `clicked ${el.textContent.trim()}`;
+        });
+        return inst;
+      });
+
+      function localX(el, e) {
+        const r = el.getBoundingClientRect();
+        return e.clientX - r.left;
+      }
+      function localY(el, e) {
+        const r = el.getBoundingClientRect();
+        return e.clientY - r.top;
+      }
+
+      world.attach({
+        name: "liquid-buttons",
+        fixedStep(dt) {
+          const h = Math.min(dt, 1 / 30);
+          for (const inst of instances) {
+            const b = inst.blob;
+            // Target radius: grows while hovered, a little more while pressed, zero when left.
+            const targetR = inst.hover ? (inst.down ? 0.75 : 0.6) * Math.max(inst.el.offsetHeight, 40) : 0;
+            const k = 220;
+            b.vx += (k * (b.tx - b.x) - 18 * b.vx) * h;
+            b.vy += (k * (b.ty - b.y) - 18 * b.vy) * h;
+            b.vr += (k * (targetR - b.r) - 18 * b.vr) * h;
+            b.x += b.vx * h;
+            b.y += b.vy * h;
+            b.r = Math.max(0, b.r + b.vr * h);
+          }
+        },
+        frame() {
+          for (const inst of instances) {
+            if (!inst.meta) continue;
+            const b = inst.blob;
+            if (reduced()) {
+              b.x = b.tx;
+              b.y = b.ty;
+              b.r = inst.hover ? inst.el.offsetHeight * 0.5 : 0;
+            }
+            // Pressed: split into two blobs, which merge again when released.
+            const split = inst.down && !reduced() ? 1 : 0;
+            // A spine of blobs spans the button around the pointer, so the fill reads as a liquid band.
+            const w = inst.el.offsetWidth;
+            const spine = [-0.36, -0.18, 0, 0.18, 0.36].map((o) => ({
+              x: Math.min(Math.max(b.x + o * w * (b.r / Math.max(1, 0.36 * inst.el.offsetHeight)), 0), w),
+              y: b.y,
+              r: b.r * (o === 0 ? 1 : 0.8),
+            }));
+            const blobs = spine;
+            if (split) blobs.push({ x: b.x - b.r * 1.8, y: b.y, r: b.r * 0.5 }, { x: b.x + b.r * 1.8, y: b.y, r: b.r * 0.5 });
+            inst.meta.setBlobs(blobs.filter((x) => x.r > 0.5));
+          }
+        },
+      });
+
+      window.__liquid = { world, instances, buttons };
+      window.ready = true;
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "animatter",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An optional physics-driven interaction runtime for the Web",
   "type": "module",
   "license": "MIT",
@@ -25,6 +25,10 @@
     "./browser": {
       "types": "./dist/index.d.ts",
       "import": "./dist/animatter.js"
+    },
+    "./particles": {
+      "types": "./dist/particles/index.d.ts",
+      "import": "./dist/particles.js"
     }
   },
   "sideEffects": [

@@ -1,6 +1,6 @@
 {
   "name": "@animatter/vue",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -17,7 +17,7 @@
     }
   },
   "peerDependencies": {
-    "animatter": "^0.1.0",
+    "animatter": "^0.2.0",
     "vue": ">=3.3"
   },
   "description": "Vue composition functions for the shared Animatter.js physics interaction runtime",

@@ -77,7 +77,7 @@ npm publish "./artifacts/packages/animatter-react-${RELEASE_VERSION}.tgz" --acce
 npm publish "./artifacts/packages/animatter-vue-${RELEASE_VERSION}.tgz" --access public --registry=https://registry.npmjs.org
 ```
 
-A publish command reporting acceptance or processing is not yet proof of public installation. Wait for Registry metadata, compare `dist.integrity` with the reviewed archive, install exact versions anonymously into a fresh external consumer, verify lockfile Registry URLs, types, imports, CSS, peers and browser behavior. Do not repeatedly republish an accepted version while waiting for visibility. Confirm the intended `latest` dist-tag before updating consumer documentation or npm badges.
+A publish command reporting acceptance or processing is not yet proof of public installation. Wait for Registry metadata, compare `dist.integrity` with the reviewed archive, install exact versions anonymously into a fresh external consumer, verify lockfile Registry URLs, types, imports, CSS, peers and browser behavior. Do not repeatedly republish an accepted version while waiting for visibility. Confirm the intended `latest` dist-tag before updating consumer documentation or npm badges. Stable releases use the default tag (sets `latest`); `npm view <name> dist-tags` must show the new version for `latest` for `animatter`, `@animatter/react` and `@animatter/vue`. Adapter peer ranges must match the core version (`animatter ^0.2.0` for 0.2.0). `node scripts/verify-install.mjs --registry <version>` installs the published versions into fresh consumers and imports them.
 
 ## Future Trusted Publishing / OIDC
 

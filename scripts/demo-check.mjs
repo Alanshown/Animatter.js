@@ -1,9 +1,8 @@
-import { chromium } from "@playwright/test";
 import { writeFile, mkdir } from "node:fs/promises";
-import { startServer } from "./browser-utils.mjs";
+import { startServer, launchChromium } from "./browser-utils.mjs";
 import { testDemos } from "./demo-tests.mjs";
 const stop = await startServer(),
-  browser = await chromium.launch({ headless: true }),
+  browser = await launchChromium(),
   report = { cases: [] };
 try {
   await testDemos(browser, report);

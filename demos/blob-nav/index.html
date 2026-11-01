@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Blob Navigation</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      body {
+        margin: 0;
+        background: #f3efe6;
+        color: #222a22;
+        font: 15px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header.top {
+        padding: 14px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header.top a {
+        color: #222a22;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      nav {
+        position: relative;
+        margin: 40px auto 0;
+        width: min(760px, calc(100% - 40px));
+        border-radius: 999px;
+        background: #fffdf6;
+        border: 1px solid #d8d3c2;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.07);
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        overflow: hidden;
+      }
+      #blob {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      nav a {
+        position: relative;
+        z-index: 1;
+        padding: 12px 20px;
+        border-radius: 999px;
+        color: #222a22;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      nav a[aria-current="true"] {
+        color: #fffdf6;
+      }
+      nav a:focus-visible {
+        outline: 3px solid #5c7a2b;
+        outline-offset: 2px;
+      }
+      .content {
+        margin: 40px auto;
+        width: min(760px, calc(100% - 40px));
+        min-height: 220px;
+        padding: 26px;
+        border-radius: 22px;
+        background: #fffdf6;
+        border: 1px solid #d8d3c2;
+      }
+      .hint {
+        color: #5b6a5b;
+        font-size: 14px;
+      }
+      .status {
+        position: fixed;
+        bottom: 12px;
+        right: 14px;
+        font: 12px ui-monospace, Consolas, monospace;
+        color: #5b6a5b;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a href="/demos/index.html">animatter · blob navigation</a>
+      <span class="hint">Arrow keys move between sections. Hover to preview.</span>
+    </header>
+
+    <nav aria-label="Sections" id="nav">
+      <div id="blob" aria-hidden="true"></div>
+      <a href="#home" data-index="0" aria-current="true">Home</a>
+      <a href="#work" data-index="1">Work</a>
+      <a href="#notes" data-index="2">Notes</a>
+      <a href="#lab" data-index="3">Lab</a>
+      <a href="#about" data-index="4">About</a>
+    </nav>
+
+    <section class="content" id="panel" aria-live="polite">
+      <h1 id="title">Home</h1>
+      <p id="body">The blob follows the active link with a spring, and a second blob trails it, so the highlight stretches between items.</p>
+    </section>
+
+    <div class="status" id="status" role="status">starting…</div>
+
+    <script type="module">
+      import { createWorld, createMetaballCanvas } from "/packages/core/dist/animatter.js";
+
+      const nav = document.querySelector("#nav");
+      const links = [...nav.querySelectorAll("a")];
+      const titles = ["Home", "Work", "Notes", "Lab", "About"];
+      const bodies = [
+        "The blob follows the active link with a spring, and a second blob trails it, so the highlight stretches between items.",
+        "Projects are shown with the same physics as the rest of the page.",
+        "Notes are short. Each one is a real link, so keyboard and screen readers see normal navigation.",
+        "The lab is where presets and materials are tuned live.",
+        "Animatter is an interaction runtime. This page is one small example of it.",
+      ];
+      const world = createWorld({ mode: "field" });
+      const meta = createMetaballCanvas(world, nav, { cell: 2, threshold: 0.9, color: [92, 122, 43] });
+      const status = document.querySelector("#status");
+      const reduced = () => world.stats().reducedMotion;
+
+      // Two blobs: a lead that springs to the target, and a trailing blob that springs to the lead.
+      const lead = { x: 0, y: 0, vx: 0, vy: 0, w: 0, h: 0, wv: 0, hv: 0 };
+      const trail = { x: 0, y: 0, vx: 0, vy: 0, w: 0, h: 0, wv: 0, hv: 0 };
+      let active = 0;
+      let hover = null;
+
+      function targetOf(index) {
+        const a = links[index];
+        const navRect = nav.getBoundingClientRect();
+        const r = a.getBoundingClientRect();
+        return { x: r.left - navRect.left, y: r.top - navRect.top, w: r.width, h: r.height };
+      }
+      function setActive(index, focus = false) {
+        active = index;
+        links.forEach((a, i) => a.setAttribute("aria-current", String(i === index)));
+        document.querySelector("#title").textContent = titles[index];
+        document.querySelector("#body").textContent = bodies[index];
+        if (focus) links[index].focus();
+      }
+      links.forEach((a, i) => {
+        a.addEventListener("click", (event) => {
+          event.preventDefault();
+          setActive(i);
+          history.replaceState(null, "", `#${a.getAttribute("href").slice(1)}`);
+        });
+        a.addEventListener("pointerenter", () => (hover = i));
+        a.addEventListener("pointerleave", () => (hover = null));
+        a.addEventListener("focus", () => setActive(i));
+      });
+      nav.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          event.preventDefault();
+          const next = (active + (event.key === "ArrowRight" ? 1 : links.length - 1)) % links.length;
+          setActive(next, true);
+        }
+      });
+
+      // Critically damped-ish spring on one rectangle. Velocities are stored per axis.
+      function spring(s, tx, ty, tw, th, dt, k) {
+        const h = Math.min(dt, 1 / 30);
+        const axes = [
+          ["x", "vx", tx],
+          ["y", "vy", ty],
+          ["w", "wv", tw],
+          ["h", "hv", th],
+        ];
+        for (const [key, vkey, target] of axes) {
+          s[vkey] += (k * (target - s[key]) - 16 * s[vkey]) * h;
+          s[key] += s[vkey] * h;
+        }
+      }
+
+      function freeze(index) {
+        const t = targetOf(index);
+        Object.assign(lead, t, { vx: 0, vy: 0, wv: 0, hv: 0 });
+        Object.assign(trail, t, { vx: 0, vy: 0, wv: 0, hv: 0 });
+      }
+
+      function blobsFor(s, scale) {
+        const out = [];
+        const cy = s.y + s.h / 2;
+        const r = Math.max(4, (s.h / 2) * scale);
+        const steps = Math.max(1, Math.floor(s.w / (r * 1.2)));
+        for (let i = 0; i <= steps; i++) out.push({ x: s.x + (s.w * i) / steps, y: cy, r });
+        return out;
+      }
+
+      world.attach({
+        name: "blob-nav",
+        fixedStep(dt) {
+          if (reduced()) return;
+          const t = targetOf(hover ?? active);
+          spring(lead, t.x, t.y, t.w, t.h, dt, 260);
+          spring(trail, lead.x, lead.y, lead.w, lead.h, dt, 120);
+        },
+        frame() {
+          if (reduced()) freeze(hover ?? active);
+          const blobs = [...blobsFor(trail, 0.85), ...blobsFor(lead, 0.95)];
+          meta.setBlobs(blobs);
+          status.textContent = `active ${titles[active]} · blobs ${blobs.length} · lead x ${lead.x.toFixed(0)} · stretch ${Math.abs(lead.vx).toFixed(0)}`;
+        },
+      });
+
+      const hashIndex = ["#home", "#work", "#notes", "#lab", "#about"].indexOf(location.hash);
+      setActive(hashIndex < 0 ? 0 : hashIndex);
+      requestAnimationFrame(() => freeze(active));
+      window.addEventListener("resize", () => freeze(active));
+      window.__nav = { world, lead, trail, get active() { return active; }, get meta() { return meta; }, setActive };
+      window.ready = true;
+    </script>
+  </body>
+</html>

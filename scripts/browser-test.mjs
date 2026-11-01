@@ -1,7 +1,7 @@
 import { chromium, firefox, webkit } from "@playwright/test";
 import assert from "node:assert/strict";
 import { mkdir, writeFile, access } from "node:fs/promises";
-import { base, startServer } from "./browser-utils.mjs";
+import { base, startServer, launchChromium } from "./browser-utils.mjs";
 const stop = await startServer();
 await mkdir("test-results", { recursive: true });
 const report = {
@@ -20,7 +20,9 @@ let failed = false;
 for (const engine of engines) {
   let browser;
   try {
-    browser = await engine.launch({ headless: true, timeout: 15000 });
+    browser = engine === chromium
+      ? await launchChromium({ timeout: 15000 })
+      : await engine.launch({ headless: true, timeout: 15000 });
     report.browsers.push({ name: engine.name(), version: browser.version() });
     const context = await browser.newContext({
       viewport: { width: 1440, height: 1000 },

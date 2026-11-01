@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Presets Studio</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1f2419;
+        --muted: #6b7262;
+        --paper: #f4f2ea;
+        --card: #fffdf6;
+        --line: #d6d4c5;
+        --accent: #5c7a2b;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+      }
+      header.top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 28px;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: var(--paper);
+        z-index: 10;
+      }
+      header.top a {
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .controls {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+        font-size: 14px;
+      }
+      .controls button {
+        font: inherit;
+        padding: 6px 12px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .controls button:focus-visible,
+      .card:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+      .controls input[type="range"] {
+        width: 180px;
+      }
+      .hint {
+        padding: 14px 28px 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      #stage {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 26px;
+        padding: 28px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 18px 16px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04), 0 8px 22px -14px rgba(31, 36, 25, 0.35);
+        min-height: 132px;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 17px;
+      }
+      .card p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .card .tag {
+        display: inline-block;
+        font: 12px ui-monospace, Consolas, monospace;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .card[data-dragging="true"] {
+        cursor: grabbing;
+      }
+      section.declared {
+        padding: 0 28px 28px;
+      }
+      section.declared h2 {
+        font-size: 18px;
+        margin: 10px 0 12px;
+      }
+      .declared-row {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .tile {
+        box-sizing: border-box;
+        width: 210px;
+        min-height: 96px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+        font: 600 14px ui-monospace, Consolas, monospace;
+        color: #fff;
+        background: #2f3d1d;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+      .tile.liquid {
+        background: #3e6a86;
+      }
+      .tile.heavy {
+        background: #7a4a2a;
+      }
+      .status {
+        position: fixed;
+        bottom: 12px;
+        right: 14px;
+        font: 12px ui-monospace, Consolas, monospace;
+        color: var(--muted);
+        background: rgba(255, 253, 246, 0.9);
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        z-index: 20;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .card,
+        .tile {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a href="/demos/index.html">animatter · presets studio</a>
+      <div class="controls" role="group" aria-label="Preset controls">
+        <label for="strength">Strength <output id="strength-out">1.00</output></label>
+        <input id="strength" type="range" min="0" max="2" step="0.05" value="1" />
+        <button id="toggle" type="button" aria-pressed="true">Presets on</button>
+      </div>
+    </header>
+    <p class="hint">Drag any card. Each card carries one preset from the public API. Move the strength slider to update every live preset in place.</p>
+
+    <main id="stage" aria-label="Preset cards"></main>
+
+    <section class="declared" aria-label="Declarative data-am attributes">
+      <h2>Declarative DOM (data-am-preset / data-am-strength / data-am-material)</h2>
+      <div class="declared-row" id="declared"></div>
+    </section>
+
+    <div class="status" id="status" role="status" aria-live="polite">starting…</div>
+
+    <script type="module">
+      import { createWorld, presets } from "/packages/core/dist/animatter.js";
+
+      const stage = document.querySelector("#stage");
+      const declared = document.querySelector("#declared");
+      const statusEl = document.querySelector("#status");
+      const strengthInput = document.querySelector("#strength");
+      const strengthOut = document.querySelector("#strength-out");
+      const toggle = document.querySelector("#toggle");
+
+      const catalog = [
+        ["elastic", "Spring back with a lively overshoot.", (o) => presets.elastic(o)],
+        ["snap", "Fast, damped settle for decisive controls.", (o) => presets.snap(o)],
+        ["inertia", "Heavier body that glides after release.", (o) => presets.inertia(o)],
+        ["springFollow", "Soft spring that lags and is pulled toward the pointer.", (o) => presets.springFollow(o)],
+        ["magnetic", "Pointer attraction inside a radius (field mode).", (o) => presets.magnetic(o)],
+        ["gravity", "Downward pull on the surface.", (o) => presets.gravity(o)],
+        ["float", "Deeper z travel and softness; hovers without a periodic oscillator.", (o) => presets.float(o)],
+        ["tilt", "More softness, so velocity tilt and squash respond harder.", (o) => presets.tilt(o)],
+        ["hoverLift", "Lifts while hovered; restored on leave.", (o) => presets.hoverLift(o)],
+        ["dragFeedback", "Extra damping while dragging; restored on dragend.", (o) => presets.dragFeedback(o)],
+        ["collisionFeedback", "Enables collision and raises restitution.", (o) => presets.collisionFeedback(o)],
+        ["ripple", "Shorter settle after a click ripple.", (o) => presets.ripple(o)],
+      ];
+
+      const world = createWorld({ root: document.body, mode: "both" });
+      const live = [];
+
+      function makeCard(name, description, factory, extra = "") {
+        const el = document.createElement("article");
+        el.className = "card";
+        el.tabIndex = 0;
+        el.setAttribute("aria-label", `${name} card`);
+        el.innerHTML = `<span class="tag">${name}</span><h3>${name}</h3><p>${description}</p>${extra}`;
+        stage.append(el);
+        return el;
+      }
+
+      // Each card is registered as draggable (developer registration). enhance() then reuses the surface.
+      for (const [name, description, factory] of catalog) {
+        const el = makeCard(name, description, factory);
+        world.register(el, { id: `card-${name}`, draggable: true });
+        const handle = world.enhance(el, factory());
+        live.push({ name, handle, factory, el });
+      }
+
+      // Composition: several presets on one surface, with the depth group stacking and feedback group stacking.
+      {
+        const el = makeCard(
+          "composition",
+          "float + tilt + hoverLift + dragFeedback on one surface. Depth and feedback groups stack.",
+          null,
+        );
+        world.register(el, { id: "card-composition", draggable: true });
+        const handle = world.enhance(el, [presets.float(), presets.tilt(), presets.hoverLift(), presets.dragFeedback()]);
+        live.push({ name: "composition", handle, factory: null, el });
+      }
+
+      // Declarative tiles, scanned explicitly. Attributes are parsed and validated, never evaluated.
+      const declaredTiles = [
+        ["elastic magnetic", "0.7", "", "elastic + magnetic"],
+        ["snap", "1", "liquid", "liquid material + snap"],
+        ["", "", "heavy", "heavy material"],
+      ];
+      for (const [presetAttr, strength, material, label] of declaredTiles) {
+        const tile = document.createElement("div");
+        tile.className = `tile ${material}`;
+        tile.tabIndex = 0;
+        tile.textContent = label;
+        if (presetAttr) tile.dataset.amPreset = presetAttr;
+        if (strength) tile.dataset.amStrength = strength;
+        if (material) tile.dataset.amMaterial = material;
+        declared.append(tile);
+        world.register(tile, { draggable: true, id: `tile-${label.replace(/\W+/g, "-")}` });
+      }
+      const stopScan = world.scanPresets();
+
+      // Make the declared tiles draggable by registration above; scanPresets only adds enhancement.
+      let strength = 1;
+      function applyStrength(value) {
+        strength = value;
+        strengthOut.textContent = value.toFixed(2);
+        for (const item of live) {
+          if (!item.factory) continue;
+          item.handle.update({ presets: item.factory({ strength: value }) });
+        }
+      }
+      strengthInput.addEventListener("input", () => applyStrength(Number(strengthInput.value)));
+
+      let enabled = true;
+      toggle.addEventListener("click", () => {
+        enabled = !enabled;
+        for (const item of live) (enabled ? item.handle.enable() : item.handle.disable());
+        toggle.textContent = enabled ? "Presets on" : "Presets off";
+        toggle.setAttribute("aria-pressed", String(enabled));
+      });
+
+      function updateStatus() {
+        const s = world.stats();
+        statusEl.textContent =
+          `surfaces ${s.surfaces} · frames ${s.frames} · steps ${s.simulationSteps} · last ${s.lastFrameMs.toFixed(2)} ms · strength ${strength.toFixed(2)}`;
+        requestAnimationFrame(updateStatus);
+      }
+      updateStatus();
+      window.__studio = { world, live, applyStrength, stopScan, stats: () => world.stats() };
+    </script>
+  </body>
+</html>

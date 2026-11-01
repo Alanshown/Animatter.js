@@ -1,4 +1,4 @@
-import { chromium } from "@playwright/test";
+import { launchChromium } from "./browser-utils.mjs";
 import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
 import assert from "node:assert/strict";
 const dir = "docs/assets/branding";
@@ -24,7 +24,7 @@ const svgs = await Promise.all(
       text: await readFile(`${dir}/${name}`, "utf8"),
     })),
 );
-const browser = await chromium.launch({ headless: true });
+const browser = await launchChromium();
 const report = {
   checkedAt: new Date().toISOString(),
   browser: browser.version(),

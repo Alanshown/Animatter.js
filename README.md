@@ -29,6 +29,8 @@ Make existing interfaces respond with weight, curiosity and a little life. Anima
 
 Every scene is an independent HTML entry using the same core. These are **actual Chromium recordings**, converted to looping GIFs; full-resolution PNG captures and provenance are in [docs/assets/demos](docs/assets/demos). Links below are source entries to run locally, not deployed online demos.
 
+Interaction recordings for the newer modules (dock, blob navigation, liquid button, kinetic type) are in [docs/assets/interactions](docs/assets/interactions). They are Chromium recordings of the local demos, made by `node scripts/record-interactions.mjs` (requires ffmpeg).
+
 | Skeleton Pet · Moss & Morning | Liquid World · Tidal |
 | --- | --- |
 | [![Skeleton Pet browser recording](docs/assets/demos/skeleton-pet.gif)](demos/skeleton-pet/index.html) | [![Liquid World browser recording](docs/assets/demos/liquid-world.gif)](demos/liquid-world/index.html) |
@@ -113,7 +115,7 @@ npm install animatter @animatter/react react react-dom
 npm install animatter @animatter/vue vue
 ```
 
-Append `@0.1.0` to pin the first release. Adapters share the same `animatter` core; the application owns its React/Vue dependencies. Manage updates through package.json, your lockfile and npm. Source development and local demos are covered under [API and Documentation](#api-and-documentation); see the [npm release verification](docs/NPM-RELEASE-0.1.0.md).
+Append `@0.2.0` to pin the release (for example `npm install animatter@0.2.0`). Until 0.2.0 is published, the pinned form does not resolve; the unversioned commands above install the latest published version. Adapters share the same `animatter` core; the application owns its React/Vue dependencies. Manage updates through package.json, your lockfile and npm. Source development and local demos are covered under [API and Documentation](#api-and-documentation); see the [npm release verification](docs/NPM-RELEASE-0.1.0.md).
 
 The same version is also available through [GitHub Packages](docs/GITHUB-PACKAGES.md) as `@alanshown/animatter`, `@alanshown/animatter-react` and `@alanshown/animatter-vue`. These public packages require GitHub authentication and scope configuration; keep the core and adapters in the same package family. The npm commands above remain the simplest installation path.
 

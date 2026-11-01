@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Liquid Dock</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1d2320;
+        --muted: #5f6a64;
+        --paper: #eef1ec;
+        --accent: #2d6b5a;
+        --item-bg: #ffffff;
+        --dock-bg: rgba(255, 255, 255, 0.7);
+        --dock-radius: 22px;
+        --item-radius: 16px;
+      }
+      body.theme-glass {
+        --paper: linear-gradient(135deg, #1b2a3a, #2b4c6b 55%, #5a3e7a);
+        --ink: #f3f7ff;
+        --muted: #c7d2e6;
+        --accent: #9be3d4;
+        --item-bg: rgba(255, 255, 255, 0.14);
+        --dock-bg: rgba(255, 255, 255, 0.12);
+      }
+      body.theme-organic {
+        --paper: #f6efe4;
+        --ink: #3b2a1e;
+        --muted: #7a6150;
+        --accent: #b5562c;
+        --item-bg: #fff8ee;
+        --dock-bg: rgba(255, 244, 226, 0.9);
+        --dock-radius: 60px;
+        --item-radius: 50%;
+      }
+      html,
+      body {
+        min-height: 100%;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        padding: 24px 28px 60px;
+        min-height: 100vh;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      header a {
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 22px 0;
+      }
+      .controls button {
+        font: inherit;
+        padding: 6px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      .controls button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      button:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+      .stage {
+        display: grid;
+        place-items: center;
+        min-height: 320px;
+        border-radius: 28px;
+        background: var(--dock-bg);
+        padding: 40px 20px;
+      }
+      .dock {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        gap: 26px;
+        padding: 16px 22px;
+        border-radius: var(--dock-radius);
+        background: var(--dock-bg);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+      .dock.vertical {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .dock.vertical .item {
+        width: 68px;
+        height: 68px;
+      }
+      body.theme-glass .dock {
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+      .item {
+        width: 78px;
+        height: 78px;
+        white-space: nowrap;
+        border-radius: var(--item-radius);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: var(--item-bg);
+        color: var(--ink);
+        font: 600 12px/1.1 system-ui, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: grab;
+        user-select: none;
+        -webkit-user-select: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      }
+      .item .glyph {
+        font-size: 24px;
+        line-height: 1;
+      }
+      .item:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+      .readout {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .readout code {
+        font-family: ui-monospace, Consolas, monospace;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 14px;
+        max-width: 70ch;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .item {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · liquid dock</a>
+      <span class="hint">Hover to magnify. Drag to reorder. Focus an item and press Alt + arrow to move it.</span>
+    </header>
+
+    <div class="controls" role="group" aria-label="Theme">
+      <button type="button" data-theme="minimal" aria-pressed="true">Minimal</button>
+      <button type="button" data-theme="glass" aria-pressed="false">Glass</button>
+      <button type="button" data-theme="organic" aria-pressed="false">Organic</button>
+      <span style="width: 16px"></span>
+      <button type="button" id="orientation" aria-pressed="false">Vertical layout</button>
+      <button type="button" id="reset">Reset order</button>
+      <button type="button" id="connector" aria-pressed="false">Liquid connector</button>
+    </div>
+
+    <main class="stage" id="stage">
+      <div class="dock" id="dock"></div>
+    </main>
+
+    <p class="readout" aria-live="polite">Order: <code id="order"></code></p>
+    <p class="readout">Events: <code id="log">none</code></p>
+
+    <script type="module">
+      import { createWorld, createLiquidDock } from "/packages/core/dist/animatter.js";
+
+      const items = [
+        ["mail", "Mail", "✉"],
+        ["calendar", "Calendar", "▦"],
+        ["notes", "Notes", "✎"],
+        ["music", "Music", "♫"],
+        ["maps", "Maps", "◎"],
+        ["photos", "Photos", "◧"],
+        ["settings", "Settings", "⚙"],
+      ];
+      const defaultOrder = items.map(([id]) => id);
+      const world = createWorld({ mode: "both" });
+      const dockEl = document.querySelector("#dock");
+      const orderOut = document.querySelector("#order");
+      const logOut = document.querySelector("#log");
+      const orientationButton = document.querySelector("#orientation");
+      let vertical = false;
+      let connectorOn = false;
+      let dock = null;
+      let log = [];
+
+      function renderItems(order) {
+        dockEl.replaceChildren();
+        for (const id of order) {
+          const [, label, glyph] = items.find(([key]) => key === id);
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "item";
+          button.dataset.dockId = id;
+          button.setAttribute("aria-label", label);
+          button.innerHTML = `<span class="glyph" aria-hidden="true">${glyph}</span><span>${label}</span>`;
+          button.addEventListener("click", () => {
+            pushLog(`open ${label}`);
+          });
+          dockEl.append(button);
+        }
+      }
+
+      function pushLog(message) {
+        log = [message, ...log].slice(0, 4);
+        logOut.textContent = log.join(" · ");
+      }
+
+      function mount(order = currentOrder()) {
+        dock?.destroy();
+        dockEl.classList.toggle("vertical", vertical);
+        renderItems(order);
+        dock = createLiquidDock(world, dockEl, {
+          orientation: vertical ? "vertical" : "horizontal",
+          connector: connectorOn,
+          maxScale: 1.6,
+          sigma: 64,
+          onReorder(next) {
+            orderOut.textContent = next.join(", ");
+            pushLog(`reordered: ${next.join(" > ")}`);
+          },
+        });
+        orderOut.textContent = dock.order().join(", ");
+      }
+
+      function currentOrder() {
+        return dock ? dock.order() : defaultOrder;
+      }
+
+      document.querySelectorAll("[data-theme]").forEach((button) =>
+        button.addEventListener("click", () => {
+          document.body.className = button.dataset.theme === "minimal" ? "" : `theme-${button.dataset.theme}`;
+          document.querySelectorAll("[data-theme]").forEach((b) =>
+            b.setAttribute("aria-pressed", String(b === button)),
+          );
+        }),
+      );
+      orientationButton.addEventListener("click", () => {
+        vertical = !vertical;
+        orientationButton.setAttribute("aria-pressed", String(vertical));
+        orientationButton.textContent = vertical ? "Horizontal layout" : "Vertical layout";
+        mount();
+      });
+      document.querySelector("#connector").addEventListener("click", (event) => {
+        connectorOn = !connectorOn;
+        event.target.setAttribute("aria-pressed", String(connectorOn));
+        mount();
+      });
+      document.querySelector("#reset").addEventListener("click", () => {
+        dock.setOrder(defaultOrder);
+      });
+
+      mount(defaultOrder);
+      window.__dock = { world, get dock() { return dock; }, remount: mount, defaultOrder };
+      window.ready = true;
+    </script>
+  </body>
+</html>

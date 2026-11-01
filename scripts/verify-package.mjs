@@ -14,6 +14,7 @@ const npm = (args, cwd = resolve(".")) =>
     },
   );
 const root = JSON.parse(await readFile("package.json", "utf8"));
+const NEXT_PEER_RANGE = "^0.2.0";
 const output = resolve("artifacts/packages");
 await mkdir(output, { recursive: true });
 const report = [],
@@ -70,7 +71,8 @@ for (const folder of ["core", "react", "vue"]) {
     assert.ok(paths.includes("dist/animatter.js"));
   } else {
     assert.equal(pkg.sideEffects, false);
-    assert.equal(pkg.peerDependencies.animatter, "^0.1.0");
+    // Next release peer range. Update together with the workspace version bump (0.1.0 published adapters keep ^0.1.0).
+    assert.equal(pkg.peerDependencies.animatter, NEXT_PEER_RANGE);
     assert.equal(
       pkg.peerDependencies[folder],
       folder === "react" ? ">=18" : ">=3.3",

@@ -29,6 +29,8 @@
 
 每个场景都有独立 HTML 入口，并使用同一套核心。这些动图来自**真实 Chromium 页面录屏**，转换为循环 GIF；完整分辨率 PNG 和来源记录位于 [docs/assets/demos](docs/assets/demos)。下方链接是需要本地运行的源码入口，不是已经部署的在线演示。
 
+较新模块（Dock、Blob 导航、Liquid Button、Kinetic 文字）的交互录屏位于 [docs/assets/interactions](docs/assets/interactions)，由 `node scripts/record-interactions.mjs` 生成（需要 ffmpeg）。
+
 | Skeleton Pet · 骨架宠物 · Moss & Morning | Liquid World · 液体世界 · Tidal |
 | --- | --- |
 | [![骨架宠物浏览器录屏](docs/assets/demos/skeleton-pet.gif)](demos/skeleton-pet/index.html) | [![液体世界浏览器录屏](docs/assets/demos/liquid-world.gif)](demos/liquid-world/index.html) |
@@ -113,7 +115,7 @@ npm install animatter @animatter/react react react-dom
 npm install animatter @animatter/vue vue
 ```
 
-需要锁定首次发布版本时，为包名追加 `@0.1.0`。适配器使用同一个 `animatter` 核心；React/Vue 仍由应用管理。此后通过 `package.json`、锁文件及 npm 管理依赖。源码构建和本地 Demo 步骤见[API 与文档](#api-与文档)，公开下载校验记录见[首次 npm 发布报告](docs/NPM-RELEASE-0.1.0.md)。
+需要锁定版本时，为包名追加 `@0.2.0`（例如 `npm install animatter@0.2.0`）。在 0.2.0 发布前，锁定写法无法解析；不带版本号的命令会安装最新已发布版本。适配器使用同一个 `animatter` 核心；React/Vue 仍由应用管理。此后通过 `package.json`、锁文件及 npm 管理依赖。源码构建和本地 Demo 步骤见[API 与文档](#api-与文档)，公开下载校验记录见[首次 npm 发布报告](docs/NPM-RELEASE-0.1.0.md)。
 
 同一版本也已发布到 [GitHub Packages](docs/GITHUB-PACKAGES.md)，包名分别为 `@alanshown/animatter`、`@alanshown/animatter-react` 和 `@alanshown/animatter-vue`。这些公开包仍需 GitHub 身份验证和 scope 配置；核心与适配器应使用同一套包名。通常直接使用上方 npm 安装方式更方便。
 
