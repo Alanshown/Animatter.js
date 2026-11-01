@@ -32,6 +32,15 @@ No additional package version has been published after 0.1.0. Documentation upda
 - Not implemented: text-shape attraction, surface collision against DOM geometry (only viewport bounds), WebGPU.
 - Demo: `demos/particles`. Tests: `tests/v05-particles.test.ts` and three browser cases in `npm run test:modules`.
 
+### v0.6 (local branch, not published)
+
+- Actor behaviours: `BehaviourMachine` (pure state machine: idle, exploring, resting, dragged, loading, celebrating, erroring, following) with three profiles (`calm`, `curious`, `busy`), bounded memory (five recent targets, idle time since the last user signal, one interrupted target), and commands that map onto existing ActorRuntime methods.
+- `attachActorBehaviour(world, actor, options)`: runs the machine on the world clock. A cancelled walk is re-planned on the next decision. Dragging interrupts a walk; the calm and curious profiles resume the same target on release.
+- Not implemented: obstacle-aware path replanning beyond cancellation, multi-actor avoidance, and the Nuxt, Vue and React consumer builds from the spec.
+- Demo: `demos/actor-behaviours`. Tests: `tests/v06-behaviours.test.ts` (14 node tests) and four browser cases in `npm run test:modules`.
+- Cross-browser: `npm run test:compat` covers Chromium, Firefox and WebKit (Playwright engines). `MODULE_ENGINE=firefox|webkit npm run test:modules` runs the module demo checks on each engine. Safari and real devices are not tested.
+- Fixture: `tests/fixtures/runtime.html` now declares a viewport meta tag, so mobile emulation in WebKit uses a 390 px layout.
+
 ## 0.1.0 — 2026-10-31
 
 First npm publication of `animatter`, `@animatter/react` and `@animatter/vue`, after explicit maintainer authorization and interactive npm authentication. No GitHub Release was created. Source baseline: `91f7c649eff039cc2401862b40b14a23bc559389`.

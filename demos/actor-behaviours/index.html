@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Actor Behaviours</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1d2627;
+        --muted: #5f6c6d;
+        --paper: #f1f3ea;
+        --card: #fffdf6;
+        --line: #d4d8c8;
+        --accent: #6d8a1f;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 14px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 20px;
+      }
+      header a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+        align-items: center;
+      }
+      button,
+      select {
+        font: inherit;
+        padding: 5px 11px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button:focus-visible,
+      select:focus-visible,
+      .card:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 14px;
+        padding: 14px 20px 24px;
+      }
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+      .stage {
+        position: relative;
+        min-height: 520px;
+        border-radius: 20px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, #fbfcf6, #eef1e4);
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 26px;
+        padding: 40px;
+        align-content: center;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        min-height: 110px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 16px;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px;
+        font-size: 13px;
+      }
+      .panel h2 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 0 0 8px;
+      }
+      .panel dl {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 4px 10px;
+        margin: 0 0 12px;
+      }
+      .panel dt {
+        color: var(--muted);
+      }
+      .panel dd {
+        margin: 0;
+        font-family: ui-monospace, Consolas, monospace;
+        overflow-wrap: anywhere;
+      }
+      .signals {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .note {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · actor behaviours</a>
+      <div class="controls" role="group" aria-label="Behaviour profile">
+        <label>Profile
+          <select id="profile">
+            <option value="calm">calm</option>
+            <option value="curious" selected>curious</option>
+            <option value="busy">busy</option>
+          </select>
+        </label>
+        <button type="button" id="follow">Follow card C</button>
+        <button type="button" id="unfollow">Stop following</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <main class="stage" id="stage" aria-label="Surfaces the actor visits">
+        <article class="card" id="card-a" tabindex="0"><h3>Inbox</h3><p>Messages wait here.</p></article>
+        <article class="card" id="card-b" tabindex="0"><h3>Plan</h3><p>Next week at a glance.</p></article>
+        <article class="card" id="card-c" tabindex="0"><h3>Build</h3><p>Compile and test.</p></article>
+        <article class="card" id="card-d" tabindex="0"><h3>Review</h3><p>Two pull requests.</p></article>
+        <article class="card" id="card-e" tabindex="0"><h3>Ship</h3><p>Release notes ready.</p></article>
+      </main>
+
+      <aside class="panel" aria-label="Behaviour state">
+        <h2>Signals</h2>
+        <div class="signals" role="group" aria-label="Send signals">
+          <button type="button" data-signal="loading">Loading</button>
+          <button type="button" data-signal="loaded">Loaded</button>
+          <button type="button" data-signal="success">Success</button>
+          <button type="button" data-signal="error">Error</button>
+        </div>
+        <h2 style="margin-top: 14px">State</h2>
+        <dl>
+          <dt>state</dt><dd id="state">-</dd>
+          <dt>target</dt><dd id="target">-</dd>
+          <dt>recent</dt><dd id="recent">-</dd>
+          <dt>idle</dt><dd id="idle">-</dd>
+          <dt>interrupted</dt><dd id="interrupted">-</dd>
+          <dt>last</dt><dd id="last">-</dd>
+        </dl>
+        <p class="note">Drag the actor to interrupt its walk. With the calm or curious profile it resumes the same target when released. Memory is in-page state only.</p>
+      </aside>
+    </div>
+
+    <script type="module">
+      import { createWorld, SVGActorRenderer, attachActorBehaviour, BEHAVIOUR_PROFILES } from "/packages/core/dist/animatter.js";
+
+      const stage = document.querySelector("#stage");
+      const cards = [...stage.querySelectorAll(".card")];
+      const ids = cards.map((c) => c.id);
+      const world = createWorld({ mode: "embodied" });
+      cards.forEach((el) => world.register(el, { id: el.id }));
+      const actor = world.addActor("mochi", {
+        renderer: new SVGActorRenderer("#e4c77a"),
+        position: { x: 120, y: 160, z: 0 },
+        idle: false,
+        draggable: true,
+        reactTo: ["dragstart", "dragend", "focus", "click"],
+      });
+      let handle = null;
+      const profileSelect = document.querySelector("#profile");
+      const stateEl = document.querySelector("#state");
+      const targetEl = document.querySelector("#target");
+      const recentEl = document.querySelector("#recent");
+      const idleEl = document.querySelector("#idle");
+      const interruptedEl = document.querySelector("#interrupted");
+      const lastEl = document.querySelector("#last");
+
+      function attach() {
+        handle?.destroy();
+        handle = attachActorBehaviour(world, actor, {
+          profile: BEHAVIOUR_PROFILES[profileSelect.value],
+          targets: () => ids,
+          name: `behaviour-${profileSelect.value}`,
+        });
+      }
+      attach();
+      profileSelect.addEventListener("change", attach);
+
+      // Dragging is a user signal too: the actor's own drag starts the same state change.
+      const actorStage = () => document.querySelector(".am-actor");
+      document.addEventListener("pointerdown", (event) => {
+        if (event.target.closest?.(".am-actor")) handle.signal("dragstart");
+      });
+      document.addEventListener("pointerup", () => {
+        if (handle.machine.state === "dragged") handle.signal("dragend");
+      });
+
+      document.querySelectorAll("[data-signal]").forEach((button) =>
+        button.addEventListener("click", () => handle.signal(button.dataset.signal)),
+      );
+      document.querySelector("#follow").addEventListener("click", () => handle.follow("card-c"));
+      document.querySelector("#unfollow").addEventListener("click", () => handle.follow(null));
+
+      setInterval(() => {
+        const m = handle.machine;
+        stateEl.textContent = m.state;
+        targetEl.textContent = m.currentTarget ?? "-";
+        recentEl.textContent = m.memory.recentTargets.join(", ") || "-";
+        idleEl.textContent = `${m.memory.idleTime.toFixed(1)} s since the last user signal`;
+        interruptedEl.textContent = m.memory.interrupted ? m.memory.interrupted.target : "none";
+        lastEl.textContent = m.memory.lastAction ?? "-";
+        actorStage();
+      }, 250);
+
+      window.__behaviour = { world, actor, get handle() { return handle; }, ids };
+      window.ready = true;
+    </script>
+  </body>
+</html>

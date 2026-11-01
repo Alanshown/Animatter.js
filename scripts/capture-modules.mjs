@@ -13,6 +13,7 @@ const shots = [
   { file: "soft-body-outline.png", path: "/demos/soft-body/index.html", wait: 1200 },
   { file: "soft-body-metaball.png", path: "/demos/soft-body/index.html", metaball: true, wait: 1500 },
   { file: "particles.png", path: "/demos/particles/index.html", wait: 2500 },
+  { file: "actor-behaviours.png", path: "/demos/actor-behaviours/index.html", wait: 6000 },
   { file: "jelly-card.png", path: "/demos/jelly-card/index.html", wait: 800 },
 ];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

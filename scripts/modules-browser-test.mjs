@@ -1,10 +1,18 @@
 import assert from "node:assert/strict";
 import { startServer, base, launchChromium } from "./browser-utils.mjs";
+import { chromium, firefox, webkit } from "@playwright/test";
+
+// MODULE_ENGINE=chromium (default), firefox or webkit. Firefox and WebKit are Playwright engines,
+// not Safari itself; Safari and real devices are not covered by this script.
+const engineName = process.env.MODULE_ENGINE ?? "chromium";
+const engines = { chromium, firefox, webkit };
+if (!engines[engineName]) throw new Error(`Unknown MODULE_ENGINE: ${engineName}`);
 
 // Browser checks for v0.3 modules: liquid dock, kinetic typography, Lab scene round trip.
 // Runs in local Chromium (see browser-utils.mjs for resolution order).
 const stop = await startServer();
-const browser = await launchChromium();
+const browser = engineName === "chromium" ? await launchChromium() : await engines[engineName].launch({ headless: true });
+console.log(`engine: ${engineName} ${browser.version()}`);
 const results = [];
 const check = async (name, fn) => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -218,7 +226,8 @@ try {
     assert.ok(after.every(Number.isFinite), "rope nodes stay finite");
     assert.notDeepEqual(after, before, "dragging the card moves rope nodes");
     // Pull card 2 far away so rope 2 stretches past breakStretch.
-    const far = await page.locator('.node').nth(2).boundingBox();
+    const home = await page.locator('.node').nth(2).boundingBox();
+    const far = home;
     await page.mouse.move(far.x + far.width / 2, far.y + 14);
     await page.mouse.down();
     for (let i = 1; i <= 20; i++) {
@@ -231,8 +240,23 @@ try {
     const states = await page.evaluate(() => window.__ropes.ropes.map((r) => [r.state("a"), r.state("b")]));
     const logText = await page.textContent("#log");
     assert.ok(states.flat().includes("broken") || logText.includes("broke"), `expected a break, states ${JSON.stringify(states)} log "${logText}"`);
+    // Reconnecting while the card is still far away breaks again on the next frame, so bring it back first.
+    const farNow = await page.locator(".node").nth(2).boundingBox();
+    await page.mouse.move(farNow.x + farNow.width / 2, farNow.y + 14);
+    await page.mouse.down();
+    const dx = home.x - farNow.x;
+    const dy = home.y - farNow.y;
+    for (let i = 1; i <= 15; i++) {
+      await page.mouse.move(farNow.x + farNow.width / 2 + (dx * i) / 15, farNow.y + 14 + (dy * i) / 15);
+      await sleep(25);
+    }
+    await page.mouse.up();
+    await sleep(300);
     await page.click("#reconnect");
-    assert.match(await page.textContent("#log"), /Reconnected|Nothing to reconnect/);
+    await sleep(200);
+    assert.match(await page.textContent("#log"), /Reconnected/);
+    const reattached = await page.evaluate(() => window.__ropes.ropes[2].state("b"));
+    assert.equal(reattached, "attached", "end B reattached after the card returned");
   });
 
   await check("soft body playground: bodies stay finite, a ripple moves them and metaball view draws pixels", async (page) => {
@@ -340,6 +364,64 @@ try {
     await sleep(1600);
     assert.equal(await page.evaluate(() => window.__particles.system.stats().contextLost), false, "restored");
     assert.match(await page.textContent("#metrics"), /alive 10000/);
+  });
+
+
+  await check("actor behaviours: the actor wanders to surfaces on its own and records memory", async (page) => {
+    await page.goto(`${base}/demos/actor-behaviours/index.html`);
+    await page.waitForFunction(() => window.ready);
+    const start = await page.evaluate(() => ({ ...window.__behaviour.actor.pose.position }));
+    await sleep(9000);
+    const after = await page.evaluate(() => ({ pos: { ...window.__behaviour.actor.pose.position }, recent: window.__behaviour.handle.machine.memory.recentTargets, state: window.__behaviour.handle.machine.state }));
+    assert.ok(after.recent.length >= 1, `recent targets ${JSON.stringify(after.recent)}`);
+    assert.ok(Math.hypot(after.pos.x - start.x, after.pos.y - start.y) > 5, "actor moved");
+    for (const v of Object.values(after.pos)) assert.ok(Number.isFinite(v));
+  });
+
+  await check("actor behaviours: signals drive reactions and loading holds the actor", async (page) => {
+    await page.goto(`${base}/demos/actor-behaviours/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.click('[data-signal="success"]');
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.state), "celebrating");
+    await page.click('[data-signal="error"]');
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.state), "erroring");
+    await page.click('[data-signal="loading"]');
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.state), "loading");
+    await sleep(1500);
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.state), "loading", "still loading");
+    await page.click('[data-signal="loaded"]');
+    assert.notEqual(await page.evaluate(() => window.__behaviour.handle.machine.state), "loading");
+  });
+
+  await check("actor behaviours: follow targets one card and stop-following returns to wandering", async (page) => {
+    await page.goto(`${base}/demos/actor-behaviours/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.click("#follow");
+    await sleep(300);
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.state), "following");
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.currentTarget), "card-c");
+    await page.click("#unfollow");
+    assert.notEqual(await page.evaluate(() => window.__behaviour.handle.machine.state), "following");
+  });
+
+  await check("actor behaviours: dragging interrupts the walk and release resumes it", async (page) => {
+    await page.goto(`${base}/demos/actor-behaviours/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.selectOption("#profile", "calm");
+    await sleep(200);
+    await page.evaluate(() => window.__behaviour.handle.follow("card-d"));
+    await sleep(400);
+    const el = page.locator(".am-actor");
+    const box = await el.boundingBox();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 60, box.y + 40, { steps: 6 });
+    await sleep(150);
+    assert.equal(await page.evaluate(() => window.__behaviour.handle.machine.state), "dragged");
+    await page.mouse.up();
+    await sleep(200);
+    const state = await page.evaluate(() => window.__behaviour.handle.machine.state);
+    assert.notEqual(state, "dragged", "release leaves the dragged state");
   });
 
 } finally {

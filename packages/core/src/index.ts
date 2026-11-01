@@ -82,3 +82,15 @@ export { createSoftBody, linkSoftBodyContacts, normaliseSoftBodyOptions, polygon
 export type { SoftBody, SoftBodyOptions, Obstacle } from "./softbody/body.js";
 export { createMetaballCanvas, evaluateField } from "./renderers/metaball.js";
 export type { MetaBlob, MetaballCanvas, MetaballOptions } from "./renderers/metaball.js";
+
+// v0.6: actor behaviours
+export { BehaviourMachine, attachActorBehaviour, BEHAVIOUR_PROFILES } from "./actor/behaviours.js";
+export type {
+  BehaviourSignal,
+  BehaviourState,
+  BehaviourCommand,
+  BehaviourProfile,
+  BehaviourMemory,
+  BehaviourContext,
+  ActorBehaviourHandle,
+} from "./actor/behaviours.js";
