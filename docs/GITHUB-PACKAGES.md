@@ -24,16 +24,19 @@ All staging lives under ignored `artifacts/github-packages/`. The original npm p
 
 Most users should keep using the existing public npm packages; they need no GitHub authentication. GitHub's npm registry requires authentication even for public packages. Follow the [official authentication guidance](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry) for a classic personal access token with `read:packages` or an authorized Actions token. Never paste tokens into chat or commit them.
 
-Configure only the GitHub owner scope in the consuming project's `.npmrc`:
+Add these two lines to the consuming project's `.npmrc`. They only apply to the `@alanshown` scope, so `npm install animatter` keeps using the public npm registry:
 
 ```ini
 @alanshown:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
-Authenticate in your own terminal using the official login flow (supply the token only to npm's password prompt):
+npm expands `${NODE_AUTH_TOKEN}` from the environment. Export the token in your own shell (a classic token with `read:packages`); do not write the token into any file or commit it. The file contains no secret.
+
+Alternatively, use the official login flow in your own terminal. It writes the token to your user-level `~/.npmrc`, not to the project:
 
 ```sh
-npm login --scope=@alanshown --auth-type=legacy --registry=https://npm.pkg.github.com
+npm login --scope=@alanshown --registry=https://npm.pkg.github.com
 npm install @alanshown/animatter@0.1.0
 # Optional integrations:
 npm install @alanshown/animatter@0.1.0 @alanshown/animatter-react@0.1.0 react react-dom

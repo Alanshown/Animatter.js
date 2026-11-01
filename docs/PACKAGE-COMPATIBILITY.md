@@ -9,8 +9,8 @@ Version 0.1.0 is published for all three packages. Anonymous public Registry ins
 | `animatter` | `dist/index.js`, native ES2022 ESM modules | `dist/index.d.ts` | No runtime or peer dependencies |
 | `animatter/browser` | `dist/animatter.js`, standalone minified ESM | `dist/index.d.ts` (same API as root) | No external runtime dependencies |
 | `animatter/materials.css` | Not JavaScript | `dist/materials.css`, optional | Preserved by `sideEffects: ["**/*.css"]` |
-| `@animatter/react` | `dist/index.js`, ESM | `dist/index.d.ts` | Required peers `animatter ^0.1.0`, `react >=18` |
-| `@animatter/vue` | `dist/index.js`, ESM | `dist/index.d.ts` | Required peers `animatter ^0.1.0`, `vue >=3.3` |
+| `@animatter/react` | `dist/index.js`, ESM | `dist/index.d.ts` | Required peers `animatter ^0.2.0`, `react >=18` (0.1.0 published adapters require `^0.1.0`) |
+| `@animatter/vue` | `dist/index.js`, ESM | `dist/index.d.ts` | Required peers `animatter ^0.2.0`, `vue >=3.3` (0.1.0 published adapters require `^0.1.0`) |
 
 Framework peers are intentionally required, not optional; `peerDependenciesMeta` is unnecessary. Neither adapter bundles a framework or a second copy of the core. The root workspace is private. No `@animatter/core` package is produced. Root and `/browser` exports share the same type declarations; `/browser` also supports direct browser ESM JavaScript imports. There is no CommonJS build or `require` export; Node's evolving ability to load ESM through require is not a CommonJS support promise.
 

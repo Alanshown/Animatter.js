@@ -113,7 +113,7 @@ npm install animatter @animatter/react react react-dom
 npm install animatter @animatter/vue vue
 ```
 
-需要锁定首次发布版本时，为包名追加 `@0.1.0`。适配器使用同一个 `animatter` 核心；React/Vue 仍由应用管理。此后通过 `package.json`、锁文件及 npm 管理依赖。源码构建和本地 Demo 步骤见[API 与文档](#api-与文档)，公开下载校验记录见[首次 npm 发布报告](docs/NPM-RELEASE-0.1.0.md)。
+需要锁定版本时，为包名追加 `@0.2.0`（例如 `npm install animatter@0.2.0`）。在 0.2.0 发布前，锁定写法无法解析；不带版本号的命令会安装最新已发布版本。适配器使用同一个 `animatter` 核心；React/Vue 仍由应用管理。此后通过 `package.json`、锁文件及 npm 管理依赖。源码构建和本地 Demo 步骤见[API 与文档](#api-与文档)，公开下载校验记录见[首次 npm 发布报告](docs/NPM-RELEASE-0.1.0.md)。
 
 同一版本也已发布到 [GitHub Packages](docs/GITHUB-PACKAGES.md)，包名分别为 `@alanshown/animatter`、`@alanshown/animatter-react` 和 `@alanshown/animatter-vue`。这些公开包仍需 GitHub 身份验证和 scope 配置；核心与适配器应使用同一套包名。通常直接使用上方 npm 安装方式更方便。
 
