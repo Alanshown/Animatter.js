@@ -10,6 +10,15 @@ await build({
   minify: true,
   sourcemap: true,
 });
+await build({
+  entryPoints: ["packages/core/src/particles/index.ts"],
+  outfile: "packages/core/dist/particles.js",
+  bundle: true,
+  format: "esm",
+  target: "es2022",
+  minify: true,
+  sourcemap: true,
+});
 await copyFile(
   "packages/core/src/materials.css",
   "packages/core/dist/materials.css",

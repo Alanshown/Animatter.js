@@ -298,6 +298,50 @@ try {
     assert.ok(drift < 0.05, `max drift ${drift} px under reduced motion`);
   });
 
+
+  await check("particles: renders with the requested renderer and emits on pointer down", async (page) => {
+    await page.goto(`${base}/demos/particles/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await sleep(700);
+    const info = await page.evaluate(() => ({ kind: window.__particles.system.rendererKind, count: window.__particles.system.count, stats: window.__particles.system.stats() }));
+    assert.ok(["webgl2", "canvas2d"].includes(info.kind), info.kind);
+    assert.equal(info.stats.alive, 10000);
+    assert.ok(info.stats.frameMs >= 0);
+    await page.mouse.move(400, 400);
+    await page.mouse.down();
+    await sleep(200);
+    await page.mouse.up();
+    assert.equal(await page.evaluate(() => window.__particles.system.stats().alive), 10000, "emit recycles, count stays fixed");
+  });
+
+  await check("particles: switching renderer and count rebuilds one system and destroys the old canvas", async (page) => {
+    await page.goto(`${base}/demos/particles/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.click("#renderer");
+    await sleep(200);
+    const canvases = await page.evaluate(() => document.querySelectorAll("#stage canvas").length);
+    assert.equal(canvases, 1, "old canvas removed");
+    await page.selectOption("#count", "2000");
+    await sleep(200);
+    assert.equal(await page.evaluate(() => window.__particles.system.count), 2000);
+  });
+
+  await check("particles: WebGL context loss and restore keeps the system alive", async (page) => {
+    await page.goto(`${base}/demos/particles/index.html`);
+    await page.waitForFunction(() => window.ready);
+    const kind = await page.evaluate(() => window.__particles.system.rendererKind);
+    if (kind !== "webgl2") {
+      console.log("  (no WebGL2 in this browser: context-loss path not exercised)");
+      return;
+    }
+    await page.click("#loss");
+    await sleep(400);
+    assert.equal(await page.evaluate(() => window.__particles.system.stats().contextLost), true, "lost while simulated");
+    await sleep(1600);
+    assert.equal(await page.evaluate(() => window.__particles.system.stats().contextLost), false, "restored");
+    assert.match(await page.textContent("#metrics"), /alive 10000/);
+  });
+
 } finally {
   await browser.close();
   stop();

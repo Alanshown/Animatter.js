@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Particle Field</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1f2a2a;
+        --muted: #5e6b6b;
+        --paper: #f6f4ee;
+        --line: #d9d6ca;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 14px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 20px;
+      }
+      header a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        align-items: center;
+        font-size: 13px;
+      }
+      button,
+      select {
+        font: inherit;
+        padding: 5px 11px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      button:focus-visible,
+      select:focus-visible {
+        outline: 3px solid #2b7a8c;
+        outline-offset: 3px;
+      }
+      #stage {
+        position: relative;
+        height: 600px;
+        margin: 0 20px;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: var(--paper);
+        touch-action: none;
+      }
+      .note {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 260px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: #fffdf6;
+        border: 1px solid var(--line);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+        z-index: 2;
+        text-align: center;
+      }
+      .note strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+      .metrics {
+        padding: 12px 20px 24px;
+        color: var(--muted);
+        font: 12px ui-monospace, Consolas, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · particle field</a>
+      <div class="controls" role="group" aria-label="Particle controls">
+        <label>Behaviour
+          <select id="behavior">
+            <option value="flow">flow</option>
+            <option value="calm">calm</option>
+            <option value="swirl">swirl</option>
+          </select>
+        </label>
+        <label>Count
+          <select id="count">
+            <option value="2000">2 000</option>
+            <option value="10000" selected>10 000</option>
+            <option value="50000">50 000</option>
+          </select>
+        </label>
+        <button type="button" id="renderer" aria-pressed="false">Renderer: webgl2</button>
+        <button type="button" id="loss">Simulate context loss</button>
+        <button type="button" id="pause" aria-pressed="false">Pause</button>
+      </div>
+    </header>
+
+    <div id="stage" aria-label="Particle stage">
+      <div class="note" id="note">
+        <strong>DOM card in the same coordinate space</strong>
+        The card repels particles through a field placed at its centre. Click empty space to emit. Hold the pointer to attract.
+      </div>
+    </div>
+
+    <p class="metrics" id="metrics">starting…</p>
+
+    <script type="module">
+      import { createWorld } from "/packages/core/dist/animatter.js";
+      import { addParticleSystem, WebGL2ParticleRenderer } from "/packages/core/dist/particles.js";
+
+      const stage = document.querySelector("#stage");
+      const note = document.querySelector("#note");
+      const metrics = document.querySelector("#metrics");
+      const behavior = document.querySelector("#behavior");
+      const countSelect = document.querySelector("#count");
+      const rendererButton = document.querySelector("#renderer");
+      const lossButton = document.querySelector("#loss");
+      const pauseButton = document.querySelector("#pause");
+      const world = createWorld({ mode: "field" });
+      let preferred = WebGL2ParticleRenderer.supported() ? "webgl2" : "canvas2d";
+      let system = null;
+      let paused = false;
+      let pointerDown = false;
+      let pointer = null;
+
+      function localPoint(event) {
+        const r = stage.getBoundingClientRect();
+        return { x: event.clientX - r.left, y: event.clientY - r.top };
+      }
+
+      function build() {
+        system?.destroy();
+        system = addParticleSystem(world, stage, {
+          count: Number(countSelect.value),
+          renderer: preferred,
+          behavior: behavior.value,
+          size: 2.5,
+          trail: preferred === "canvas2d" ? 0.18 : 0,
+          background: "#f6f4ee",
+          seed: 2026,
+        });
+        // The note is a DOM element; its centre is a repel field in stage coordinates.
+        system.pause();
+        system.resume();
+        rendererButton.textContent = `Renderer: ${system.rendererKind}`;
+        rendererButton.setAttribute("aria-pressed", String(system.rendererKind === "canvas2d"));
+        if (paused) system.pause();
+        system.canvas.style.zIndex = "1";
+        note.style.zIndex = "2";
+      }
+
+      function updateCardField() {
+        if (!system) return;
+        const s = stage.getBoundingClientRect();
+        const n = note.getBoundingClientRect();
+        system.setField({ kind: "repel", x: n.left + n.width / 2 - s.left, y: n.top + n.height / 2 - s.top, strength: 380, radius: 180 }, 0);
+      }
+
+      stage.addEventListener("pointerdown", (event) => {
+        if (!system) return;
+        pointerDown = true;
+        pointer = localPoint(event);
+        system.emit(pointer.x, pointer.y, 300, 260);
+      });
+      stage.addEventListener("pointermove", (event) => {
+        if (!system || !pointerDown) return;
+        pointer = localPoint(event);
+        system.setField({ kind: "attract", x: pointer.x, y: pointer.y, strength: 1400, radius: 220 }, 1);
+      });
+      const release = () => {
+        pointerDown = false;
+        system?.setField(null, 1);
+      };
+      stage.addEventListener("pointerup", release);
+      stage.addEventListener("pointercancel", release);
+
+      behavior.addEventListener("change", () => {
+        const flow = { flow: { strength: 70, scale: 0.012, speed: 0.4 }, calm: { strength: 18, scale: 0.008, speed: 0.2 }, swirl: { strength: 110, scale: 0.02, speed: 0.9 } }[behavior.value];
+        system.setFlow(flow);
+      });
+      countSelect.addEventListener("change", build);
+      rendererButton.addEventListener("click", () => {
+        preferred = preferred === "webgl2" ? "canvas2d" : "webgl2";
+        build();
+      });
+      pauseButton.addEventListener("click", () => {
+        paused = !paused;
+        pauseButton.setAttribute("aria-pressed", String(paused));
+        pauseButton.textContent = paused ? "Resume" : "Pause";
+        if (paused) system.pause();
+        else system.resume();
+      });
+      lossButton.addEventListener("click", () => {
+        // Simulated GPU loss: only meaningful for the WebGL2 renderer.
+        const gl = system.canvas.getContext("webgl2");
+        const ext = gl?.getExtension("WEBGL_lose_context");
+        if (!ext) {
+          metrics.textContent = "Context loss simulation needs the WebGL2 renderer.";
+          return;
+        }
+        ext.loseContext();
+        setTimeout(() => ext.restoreContext(), 1500);
+      });
+
+      build();
+      updateCardField();
+      window.addEventListener("resize", () => {
+        system.resize();
+        updateCardField();
+      });
+      setInterval(() => {
+        updateCardField();
+        const st = system.stats();
+        metrics.textContent = `renderer ${system.rendererKind} · particles ${system.count} · alive ${st.alive} · frame sim+draw ${st.frameMs.toFixed(2)} ms (last 60) · context lost ${st.contextLost} · world frames ${world.stats().frames} · paused ${st.paused}`;
+      }, 500);
+
+      window.__particles = { world, get system() { return system; }, build, preferred: () => preferred, set preferred(v) { preferred = v; } };
+      window.ready = true;
+    </script>
+  </body>
+</html>

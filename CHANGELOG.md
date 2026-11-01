@@ -24,6 +24,14 @@ No additional package version has been published after 0.1.0. Documentation upda
 - Demos: `demos/rope-editor`, `demos/jelly-card`, `demos/soft-body`.
 - Tests: `tests/v04-modules.test.ts` (node, with a world double) and new browser cases in `npm run test:modules`.
 
+### v0.5 (local branch, not published)
+
+- Particles: `addParticleSystem(world, host, options)` from the optional `particles` entry (`dist/particles.js`), so the core bundle has no GPU code. Fixed-capacity typed-array simulation (flow field, attract / repel / vortex fields in 4 slots, viewport reflection with restitution, deterministic seed). Emit recycles the oldest slots.
+- Renderers: WebGL2 (one POINTS draw, `webglcontextlost` / `restored` handled, GPU objects released on destroy) with a Canvas2D fallback that supports trails. `rendererKind` reports what is actually used.
+- Deviation from the draft API: the draft wrote `world.addParticleSystem`. It is a free function so the core world does not import particle code.
+- Not implemented: text-shape attraction, surface collision against DOM geometry (only viewport bounds), WebGPU.
+- Demo: `demos/particles`. Tests: `tests/v05-particles.test.ts` and three browser cases in `npm run test:modules`.
+
 ## 0.1.0 — 2026-10-31
 
 First npm publication of `animatter`, `@animatter/react` and `@animatter/vue`, after explicit maintainer authorization and interactive npm authentication. No GitHub Release was created. Source baseline: `91f7c649eff039cc2401862b40b14a23bc559389`.
