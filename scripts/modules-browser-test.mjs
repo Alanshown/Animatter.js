@@ -424,6 +424,27 @@ try {
     assert.notEqual(state, "dragged", "release leaves the dragged state");
   });
 
+
+  await check("dock connector: the metaball layer draws behind items and reacts to hover", async (page) => {
+    await page.goto(`${base}/demos/liquid-dock/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.click("#connector");
+    await sleep(300);
+    const litBefore = await page.evaluate(() => {
+      const c = document.querySelector("#dock canvas");
+      if (!c) return -1;
+      const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      let n = 0;
+      for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
+      return n;
+    });
+    assert.ok(litBefore > 0, `connector pixels ${litBefore}`);
+    const z = await page.evaluate(() => getComputedStyle(document.querySelector('[data-dock-id="mail"]')).zIndex);
+    assert.equal(z, "1");
+    await page.click("#connector");
+    await sleep(100);
+    assert.equal(await page.evaluate(() => document.querySelectorAll("#dock canvas").length), 0, "connector destroyed with toggle off");
+  });
 } finally {
   await browser.close();
   stop();

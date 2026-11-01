@@ -1,5 +1,6 @@
 import type { AnimatterWorld, WorldSystem } from "../world.js";
 import { claimStyle } from "../style-ownership.js";
+import { createMetaballCanvas, type MetaballCanvas, type MetaBlob } from "../renderers/metaball.js";
 import {
   keyboardTarget,
   nearestSlot,
@@ -22,6 +23,11 @@ export interface LiquidDockOptions {
   reorder?: boolean;
   /** Called after a reorder with the new id order. Business data is not touched. */
   onReorder?: (order: readonly string[]) => void;
+  /**
+   * Liquid connector: draws a metaball layer behind the items, so neighbouring items that are
+   * magnified close together look joined. Visual only; hit-testing and order are unchanged.
+   */
+  connector?: boolean | { color?: [number, number, number] };
 }
 
 export interface LiquidDockHandle {
@@ -35,6 +41,8 @@ export interface LiquidDockHandle {
 
 interface ItemState {
   el: HTMLElement;
+  /** Extra claims made only when the connector is on (position, z-index). */
+  extra: Array<() => void>;
   spring: Spring1D;
   target: number;
   dragOffset: number;
@@ -104,6 +112,11 @@ export function createLiquidDock(
   container.setAttribute("aria-orientation", orientation);
   container.append(status);
 
+  const connectorOptions = options.connector ? (options.connector === true ? {} : options.connector) : null;
+  const connector: MetaballCanvas | null = connectorOptions
+    ? createMetaballCanvas(world, container, { cell: 2, threshold: 0.9, color: connectorOptions.color ?? [196, 214, 208] })
+    : null;
+
   const axisOf = (clientX: number, clientY: number): number => {
     const r = container.getBoundingClientRect();
     return horizontal ? clientX - r.left : clientY - r.top;
@@ -130,12 +143,27 @@ export function createLiquidDock(
       }
       if (el.tabIndex < 0) el.tabIndex = 0;
       el.style.transformOrigin = horizontal ? "50% 100%" : "100% 50%";
+      const extra: Array<() => void> = [];
+      if (connector) {
+        extra.push(claimStyle(el, "position", owner), claimStyle(el, "z-index", owner));
+        el.style.position = "relative";
+        el.style.zIndex = "1";
+      }
+      const transformRelease = claimStyle(el, "transform", owner);
       items.set(id, {
         el,
+        extra,
         spring: { value: 1, velocity: 0 },
         target: 1,
         dragOffset: 0,
-        release: claimStyle(el, "transform", owner),
+        release: () => {
+          transformRelease();
+          for (const release of extra) release();
+          if (connector) {
+            el.style.position = "";
+            el.style.zIndex = "";
+          }
+        },
       });
     }
     for (const [id, state] of [...items]) {
@@ -266,6 +294,7 @@ export function createLiquidDock(
     frame() {
       if (destroyed) return;
       const reduced = world.stats().reducedMotion;
+      if (connector) connector.setBlobs(connectorBlobs());
       for (const state of items.values()) {
         const s = reduced ? 1 : state.spring.value;
         const shift = state.dragOffset.toFixed(2);
@@ -283,6 +312,36 @@ export function createLiquidDock(
     },
   };
   const detach = world.attach(system);
+
+  // Blobs for the connector, in container coordinates. Each item is a blob at its visual centre
+  // (transform-origin is the bottom or right edge, so the centre moves with scale). A bridge blob
+  // sits between each pair of neighbours and only shows a neck when they are close.
+  function connectorBlobs(): MetaBlob[] {
+    const blobs: MetaBlob[] = [];
+    let previous: MetaBlob | null = null;
+    for (const id of order()) {
+      const state = items.get(id);
+      if (!state) continue;
+      const el = state.el;
+      const s = state.spring.value;
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const x = horizontal ? el.offsetLeft + w / 2 : el.offsetLeft + w * (1 - s / 2);
+      const y = horizontal ? el.offsetTop + h * (1 - s / 2) : el.offsetTop + h / 2;
+      const r = 0.5 * Math.min(w, h) * s * 0.6;
+      const blob = { x, y, r };
+      blobs.push(blob);
+      if (previous) {
+        blobs.push({
+          x: (previous.x + x) / 2,
+          y: (previous.y + y) / 2,
+          r: 0.7 * Math.min(previous.r, r),
+        });
+      }
+      previous = blob;
+    }
+    return blobs;
+  }
 
   return {
     order,
@@ -305,6 +364,7 @@ export function createLiquidDock(
       container.removeEventListener("pointercancel", onPointerUp);
       container.removeEventListener("keydown", onKeyDown);
       detach();
+      connector?.destroy();
       for (const state of items.values()) {
         state.release();
         state.el.style.transform = "";

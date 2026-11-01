@@ -13,6 +13,7 @@ No additional package version has been published after 0.1.0. Documentation upda
 - `createLiquidDock(world, container, options)`: proximity magnification, spring settle, pointer drag reorder, Alt+Arrow keyboard reorder, horizontal and vertical layout, `onReorder` callback. The dock owns `transform` of its items and `touch-action` of its container.
 - `createKineticText(world, element, options)`: grapheme-cluster letters (`Intl.Segmenter`), elastic / magnetic / wave / gravity / velocity modes, `scatter()`, `reform()`, `setText()`, `setMode()`, `remeasure()`, `destroy()`. Words are kept on one line; text over 160 graphemes falls back to plain text.
 - `parseScene` / `serializeScene`: versioned (`schemaVersion: 1`) JSON-only scene schema with path-based errors. Used by Animatter Lab.
+- Liquid connector: `createLiquidDock(..., { connector: true })` draws a metaball layer behind the items so neighbours look joined. Visual only.
 - Demos: `demos/lab`, `demos/liquid-dock`, `demos/kinetic-type`.
 - Scripts: `npm run test:modules` (browser checks for dock, typography and Lab), shared Chromium launcher in `scripts/browser-utils.mjs` (`CHROME_PATH` override), dev server maps `/favicon.ico` to the brand favicon.
 

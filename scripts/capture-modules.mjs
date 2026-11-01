@@ -4,6 +4,7 @@ import { startServer, base, launchChromium } from "./browser-utils.mjs";
 const stop = await startServer();
 const browser = await launchChromium();
 const shots = [
+  { file: "liquid-dock-connector.png", path: "/demos/liquid-dock/index.html", connector: true, hover: '[data-dock-id="calendar"]' },
   { file: "liquid-dock-minimal.png", path: "/demos/liquid-dock/index.html", hover: '[data-dock-id="notes"]' },
   { file: "liquid-dock-glass.png", path: "/demos/liquid-dock/index.html", theme: "glass", hover: '[data-dock-id="music"]' },
   { file: "liquid-dock-organic-vertical.png", path: "/demos/liquid-dock/index.html", theme: "organic", vertical: true, hover: '[data-dock-id="maps"]' },
@@ -26,6 +27,7 @@ try {
     if (shot.metaball) await page.click("#view");
     if (shot.theme) await page.click(`[data-theme="${shot.theme}"]`);
     if (shot.vertical) await page.click("#orientation");
+    if (shot.connector) await page.click("#connector");
     if (shot.hover) {
       const box = await page.locator(shot.hover).boundingBox();
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
