@@ -20,6 +20,16 @@ import { ActorRuntime, type ActorOptions } from "./actor/runtime.js";
 import type { BehaviorBinding } from "./interaction/composition.js";
 import type { ForceField } from "./physics/fields.js";
 import { resolveMaterial } from "./materials.js";
+import { EnhancementRegistry } from "./presets/enhance.js";
+import {
+  scanPresets as scanDeclarative,
+  type DeclarativeErrorHandler,
+} from "./presets/declarative.js";
+import type {
+  EnhancementHandle,
+  PresetInput,
+  Target,
+} from "./presets/types.js";
 export interface WorldOptions {
   root?: HTMLElement;
   mode?: Mode;
@@ -71,6 +81,7 @@ export class AnimatterWorld {
   private metric = { frames: 0, simulationSteps: 0, lastFrameMs: 0 };
   private lastPointer = -Infinity;
   private eventQueue: Interaction[] = [];
+  private enhancements = new EnhancementRegistry(this);
   private dispatching = false;
   constructor(private options: WorldOptions = {}) {
     this.field = options.fieldRenderer ?? new FieldRenderer();
@@ -276,6 +287,22 @@ export class AnimatterWorld {
       velocity: vec(),
       originalEvent: null,
     });
+  }
+  /**
+   * Applies one or more presets to surfaces. Targets that are not yet registered are registered and
+   * released when the last handle to them is destroyed. Presets never write DOM transforms.
+   */
+  enhance(target: Target, presets: PresetInput): EnhancementHandle {
+    this.assertAlive();
+    return this.enhancements.enhance(target, presets);
+  }
+  /** Explicit scan for data-am-preset / data-am-strength / data-am-material. Does not observe DOM mutations. */
+  scanPresets(
+    selector?: string,
+    onError?: DeclarativeErrorHandler,
+  ): () => void {
+    this.assertAlive();
+    return scanDeclarative(this, selector, onError);
   }
   addActor(id: string, options: ActorOptions): ActorRuntime {
     this.assertAlive();
@@ -556,6 +583,7 @@ export class AnimatterWorld {
     this.enabled = false;
     this.physics.enabled = false;
     this.stop();
+    this.enhancements.close();
     this.safely(() => this.input.destroy());
     this.controller.abort();
     for (const cleanup of [...this.plugins.values()]) {

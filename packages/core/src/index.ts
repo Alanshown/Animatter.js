@@ -31,3 +31,20 @@ export type {
 
 export { FieldRenderer } from "./renderers/field.js";
 export type { SurfaceRenderer } from "./renderers/protocol.js";
+export { presets, definePreset, registerPreset, presetNames, validatePresetOptions, materialRanges } from "./presets/catalog.js";
+export type { PresetName } from "./presets/catalog.js";
+export { parseDeclarative } from "./presets/declarative.js";
+export type { DeclarativeSpec, DeclarativeErrorHandler } from "./presets/declarative.js";
+export type {
+  Disposer,
+  ConflictPolicy,
+  EnhancementHandle,
+  EnhancementPatch,
+  MaterialTarget,
+  PresetContext,
+  PresetDefinition,
+  PresetGroup,
+  PresetInput,
+  PresetOptions,
+  Target,
+} from "./presets/types.js";
