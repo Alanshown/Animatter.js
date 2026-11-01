@@ -473,6 +473,46 @@ try {
     await page.evaluate(() => window.__kinetic.canvasText.setText("Canvas letters 画布 文字 spring"));
   });
 
+
+  await check("lab renderer: canvas-trace draws the bodies and keeps DOM cards interactive (opacity 0)", async (page) => {
+    await page.goto(`${base}/demos/lab/index.html`);
+    await page.waitForFunction(() => window.ready);
+    await page.selectOption("#renderer", "canvas-trace");
+    await sleep(300);
+    const r = await page.evaluate(() => {
+      const c = document.querySelector("#trace");
+      const d = c.getContext("2d").getImageData(0, 0, c.width, c.height).data;
+      let lit = 0;
+      for (let i = 3; i < d.length; i += 4) if (d[i] > 0) lit++;
+      return { lit, opacity: window.__lab.entities[0].el.style.opacity, pe: getComputedStyle(window.__lab.entities[0].el).pointerEvents };
+    });
+    assert.ok(r.lit > 500, `trace pixels ${r.lit}`);
+    assert.equal(r.opacity, "0");
+    await page.selectOption("#renderer", "dom-field");
+    assert.equal(await page.evaluate(() => window.__lab.entities[0].el.style.opacity), "");
+  });
+
+  await check("lab reduced motion: physics stays still under prefers-reduced-motion, moves otherwise", async (page) => {
+    const measure = async (reduce) => {
+      await page.emulateMedia({ reducedMotion: reduce ? "reduce" : "no-preference" });
+      await page.goto(`${base}/demos/lab/index.html`);
+      await page.waitForFunction(() => window.ready);
+      const moved = await page.evaluate(async () => {
+        const id = window.__lab.entities[0].id;
+        const body = window.__lab.world.physics.bodies.get(id);
+        const before = body.position.y;
+        window.__lab.world.physics.impulse(id, { y: 900 });
+        await new Promise((r) => setTimeout(r, 600));
+        return Math.abs(body.position.y - before);
+      });
+      return moved;
+    };
+    const normal = await measure(false);
+    const reduced = await measure(true);
+    assert.ok(normal > 0.05, `normal motion ${normal}`);
+    assert.ok(reduced < 0.001, `reduced motion ${reduced}`);
+  });
+
 } finally {
   await browser.close();
   stop();

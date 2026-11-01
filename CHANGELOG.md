@@ -15,6 +15,7 @@ No additional package version has been published after 0.1.0. Documentation upda
 - `parseScene` / `serializeScene`: versioned (`schemaVersion: 1`) JSON-only scene schema with path-based errors. Used by Animatter Lab.
 - Kinetic text Canvas renderer: `createCanvasKinetic(world, host, text, options)` draws the same modes with `fillText`, greedy word wrap via `measureText`, and a 400-glyph limit. Original text kept in a visually hidden node. Surfaces the same spring semantics; the DOM controller remains the default.
 - Liquid connector: `createLiquidDock(..., { connector: true })` draws a metaball layer behind the items so neighbours look joined. Visual only.
+- Lab renderer switch: `dom-field` (transforms) or `canvas-trace` (bodies drawn on a canvas; DOM cards stay in place at opacity 0 so input works). Lab reduced motion follows `prefers-reduced-motion` by default and can be forced with the Reduced motion control; browser check confirms bodies do not move under reduce.
 - Demos: `demos/lab`, `demos/liquid-dock`, `demos/kinetic-type`.
 - Scripts: `npm run test:modules` (browser checks for dock, typography and Lab), shared Chromium launcher in `scripts/browser-utils.mjs` (`CHROME_PATH` override), dev server maps `/favicon.ico` to the brand favicon.
 
