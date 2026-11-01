@@ -40,6 +40,18 @@ export interface WorldOptions {
   regions?: { selector: string; mode: Mode; material?: Partial<Material> }[];
   onError?: (error: unknown) => void;
 }
+/**
+ * A module scheduled by the world clock. Systems never own a requestAnimationFrame loop.
+ * fixedStep runs at the world's fixed 1/120 s substep (after physics); frame runs once per
+ * rendered step after surfaces render. Both are optional and must not throw; errors go to onError.
+ */
+export interface WorldSystem {
+  readonly name: string;
+  fixedStep?(dt: number): void;
+  frame?(dt: number): void;
+  destroy?(): void;
+}
+
 export interface WorldStats {
   surfaces: number;
   bodies: number;
@@ -83,6 +95,7 @@ export class AnimatterWorld {
   private eventQueue: Interaction[] = [];
   private enhancements = new EnhancementRegistry(this);
   private dispatching = false;
+  private systems = new Map<WorldSystem, () => void>();
   constructor(private options: WorldOptions = {}) {
     this.field = options.fieldRenderer ?? new FieldRenderer();
     this.root = options.root ?? document.body;
@@ -526,6 +539,18 @@ export class AnimatterWorld {
       },
     });
   }
+  /** Attach a world-scheduled system. Returns a disposer; destroy() disposes any left over. */
+  attach(system: WorldSystem): () => void {
+    this.assertAlive();
+    if ([...this.systems.keys()].some((s) => s.name === system.name))
+      throw new Error(`Duplicate system: ${system.name}`);
+    const detach = () => {
+      if (!this.systems.delete(system)) return;
+      this.safely(() => system.destroy?.());
+    };
+    this.systems.set(system, detach);
+    return detach;
+  }
   start(): void {
     this.assertAlive();
     if (this.frame) return;
@@ -548,6 +573,8 @@ export class AnimatterWorld {
       if (!this.reducedMotion) this.applyFields();
       this.arbiter.tick(1 / 120);
       if (!this.reducedMotion) this.physics.step(1 / 120);
+      for (const system of [...this.systems.keys()])
+        this.safely(() => system.fixedStep?.(1 / 120));
       this.accumulator -= 1 / 120;
       this.metric.simulationSteps++;
     }
@@ -562,6 +589,8 @@ export class AnimatterWorld {
     if (this.mode === "embodied" || this.mode === "both")
       for (const actor of this.actors.values())
         actor.tick(dt, this.reducedMotion);
+    for (const system of [...this.systems.keys()])
+      this.safely(() => system.frame?.(dt));
     this.metric.frames++;
   }
   stats(): WorldStats {
@@ -594,6 +623,8 @@ export class AnimatterWorld {
       }
     }
     this.plugins.clear();
+    for (const detach of [...this.systems.values()]) this.safely(detach);
+    this.systems.clear();
     for (const dispose of [...this.bindingDisposers.values()])
       this.safely(dispose);
     this.bindingDisposers.clear();

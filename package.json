@@ -22,7 +22,8 @@
     "verify:docs": "node scripts/verify-docs.mjs && npm run verify:branding",
     "format": "prettier --write \"packages/*/src/**/*.{ts,css}\" \"tests/**/*.ts\" \"scripts/*.{mjs,ts}\" \"demos/**/*.{html,js,css}\" \"*.{json,js}\"",
     "verify:branding": "node scripts/verify-branding.mjs",
-    "test:demos": "node scripts/demo-check.mjs"
+    "test:demos": "node scripts/demo-check.mjs",
+    "test:modules": "node scripts/modules-browser-test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",

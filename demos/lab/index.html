@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Lab</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #1f2419;
+        --muted: #6b7262;
+        --paper: #f4f2ea;
+        --panel: #fffdf6;
+        --line: #d6d4c5;
+        --accent: #5c7a2b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 14px/1.45 "Inter", "Segoe UI", system-ui, sans-serif;
+      }
+      header.top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--line);
+        background: var(--paper);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      header.top a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 240px 1fr 300px;
+        gap: 14px;
+        padding: 14px;
+        min-height: calc(100vh - 110px);
+      }
+      @media (max-width: 1000px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        overflow: auto;
+      }
+      .panel h2 {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 10px;
+      }
+      button,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button {
+        padding: 5px 11px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .stage {
+        position: relative;
+        background: repeating-linear-gradient(0deg, transparent 0 39px, #e6e3d6 39px 40px),
+          repeating-linear-gradient(90deg, transparent 0 39px, #e6e3d6 39px 40px);
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        min-height: 520px;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 18px;
+        align-content: start;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px;
+        min-height: 110px;
+        cursor: grab;
+        user-select: none;
+        touch-action: none;
+      }
+      .card[aria-selected="true"] {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .card .name {
+        font-weight: 700;
+      }
+      .card .chips {
+        font: 11px ui-monospace, Consolas, monospace;
+        color: var(--accent);
+        margin-top: 6px;
+      }
+      .presets label {
+        display: block;
+        font-size: 13px;
+        padding: 2px 0;
+      }
+      label.slider {
+        display: grid;
+        grid-template-columns: 96px 1fr 58px;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+      label.slider output {
+        font: 12px ui-monospace, Consolas, monospace;
+        text-align: right;
+      }
+      textarea {
+        width: 100%;
+        min-height: 180px;
+        font: 12px ui-monospace, Consolas, monospace;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+        background: #fff;
+      }
+      .log {
+        font: 12px ui-monospace, Consolas, monospace;
+        color: var(--muted);
+        white-space: pre-wrap;
+        max-height: 150px;
+        overflow: auto;
+      }
+      .stats {
+        font: 12px ui-monospace, Consolas, monospace;
+        color: var(--muted);
+      }
+      .error {
+        color: #a03a2b;
+        white-space: pre-wrap;
+        font-size: 12px;
+      }
+      .status {
+        position: fixed;
+        bottom: 12px;
+        right: 14px;
+        font: 12px ui-monospace, Consolas, monospace;
+        color: var(--muted);
+        background: rgba(255, 253, 246, 0.92);
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top">
+      <a href="/demos/index.html">animatter · lab</a>
+      <div class="row" role="group" aria-label="Simulation controls">
+        <button type="button" id="pause" aria-pressed="false">Pause</button>
+        <button type="button" id="step">Step 1/60 s</button>
+        <button type="button" id="add">Add card</button>
+        <button type="button" id="remove">Remove selected</button>
+        <label>Mode
+          <select id="mode">
+            <option value="both">both</option>
+            <option value="field">field</option>
+            <option value="embodied">embodied</option>
+            <option value="off">off</option>
+          </select>
+        </label>
+        <label>Reduced motion
+          <select id="reduced">
+            <option value="system">system</option>
+            <option value="always">always</option>
+            <option value="never">never</option>
+          </select>
+        </label>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="panel" aria-label="Preset library">
+        <h2>Presets</h2>
+        <div class="presets" id="presets"></div>
+        <h2 style="margin-top: 18px">Renderers</h2>
+        <p class="stats">dom-field is live. svg, canvas, metaball and particles are listed in the scene schema for v0.4 and v0.5 and are not live in this build.</p>
+      </aside>
+
+      <main class="stage" id="stage" aria-label="Interactive canvas"></main>
+
+      <aside class="panel" aria-label="Inspector">
+        <h2>Material</h2>
+        <div id="inspector"><p class="stats">Select a card to edit its material.</p></div>
+        <h2 style="margin-top: 18px">Scene JSON</h2>
+        <div class="row">
+          <button type="button" id="export">Export</button>
+          <button type="button" id="import">Import</button>
+        </div>
+        <textarea id="json" spellcheck="false" aria-label="Scene JSON"></textarea>
+        <p class="error" id="json-error" role="alert"></p>
+        <h2 style="margin-top: 18px">Events</h2>
+        <div class="log" id="events" aria-live="off"></div>
+        <h2 style="margin-top: 18px">Performance</h2>
+        <div class="stats" id="perf">measuring…</div>
+      </aside>
+    </div>
+
+    <div class="status" id="status" role="status">starting…</div>
+
+    <script type="module">
+      import { createWorld, presets, parseScene, serializeScene, SCENE_SCHEMA_VERSION } from "/packages/core/dist/animatter.js";
+
+      const presetNames = Object.keys(presets);
+      const stage = document.querySelector("#stage");
+      const presetsEl = document.querySelector("#presets");
+      const inspector = document.querySelector("#inspector");
+      const json = document.querySelector("#json");
+      const jsonError = document.querySelector("#json-error");
+      const eventsEl = document.querySelector("#events");
+      const perfEl = document.querySelector("#perf");
+      const statusEl = document.querySelector("#status");
+
+      let world;
+      let entities = [];
+      let selected = null;
+      let serial = 0;
+      let eventLog = [];
+
+      function buildWorld(mode = "both", reducedMotion = "system") {
+        world?.destroy();
+        world = createWorld({ root: document.body, mode, reducedMotion });
+        world.on((event) => {
+          eventLog = [`${event.type} ${event.target ?? ""}`, ...eventLog].slice(0, 12);
+          eventsEl.textContent = eventLog.join("\n");
+        });
+      }
+
+      // Preset checkboxes, one list shared by every card.
+      for (const name of presetNames) {
+        const label = document.createElement("label");
+        const box = document.createElement("input");
+        box.type = "checkbox";
+        box.dataset.preset = name;
+        label.append(box, " ", name);
+        presetsEl.append(label);
+      }
+
+      function presetFactory(name) {
+        return presets[name]();
+      }
+
+      function enableEntity(entity) {
+        entity.handle?.destroy();
+        entity.handle = null;
+        if (entity.presets.length) {
+          entity.handle = world.enhance(entity.el, entity.presets.map(presetFactory));
+        }
+      }
+
+      function createEntity(spec = {}) {
+        const id = spec.id ?? `card-${++serial}`;
+        const el = document.createElement("article");
+        el.className = "card";
+        el.tabIndex = 0;
+        el.setAttribute("aria-selected", "false");
+        el.innerHTML = `<div class="name"></div><div class="chips"></div>`;
+        el.querySelector(".name").textContent = spec.label ?? `Card ${id.replace("card-", "")}`;
+        stage.append(el);
+        const entity = {
+          id,
+          el,
+          label: el.querySelector(".name").textContent,
+          presets: [...(spec.presets ?? [])],
+          strength: spec.strength ?? 1,
+          mode: spec.mode ?? "both",
+          material: { ...(spec.material ?? {}) },
+          handle: null,
+          unregister: null,
+        };
+        entity.unregister = world.register(el, { id, draggable: true, mode: entity.mode, material: entity.material });
+        el.addEventListener("click", () => select(entity));
+        el.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            select(entity);
+          }
+        });
+        entities.push(entity);
+        enableEntity(entity);
+        refreshChips(entity);
+        return entity;
+      }
+
+      function refreshChips(entity) {
+        entity.el.querySelector(".chips").textContent = entity.presets.join(" + ") || "no presets";
+      }
+
+      function destroyEntity(entity) {
+        entity.handle?.destroy();
+        entity.unregister?.();
+        entity.el.remove();
+        entities = entities.filter((e) => e !== entity);
+      }
+
+      function clearScene() {
+        for (const entity of [...entities]) destroyEntity(entity);
+        selected = null;
+      }
+
+      function select(entity) {
+        selected = entity;
+        for (const e of entities) e.el.setAttribute("aria-selected", String(e === entity));
+        renderInspector();
+      }
+
+      function renderInspector() {
+        if (!selected) {
+          inspector.innerHTML = '<p class="stats">Select a card to edit its material.</p>';
+          return;
+        }
+        const e = selected;
+        const sliders = [
+          ["stiffness", 0, 2000, 10],
+          ["damping", 0, 500, 1],
+          ["mass", 0.05, 20, 0.05],
+          ["restitution", 0, 1, 0.01],
+        ];
+        inspector.innerHTML = "";
+        const title = document.createElement("p");
+        title.className = "stats";
+        title.textContent = `${e.id} · mode ${e.mode}`;
+        inspector.append(title);
+        for (const [key, min, max, step] of sliders) {
+          const label = document.createElement("label");
+          label.className = "slider";
+          const value = e.material[key] ?? presetsDefault(key);
+          label.innerHTML = `<span>${key}</span><input type="range" min="${min}" max="${max}" step="${step}" value="${value}" /><output>${Number(value).toFixed(2)}</output>`;
+          const input = label.querySelector("input");
+          const output = label.querySelector("output");
+          input.addEventListener("input", () => {
+            const v = Number(input.value);
+            e.material[key] = v;
+            output.textContent = v.toFixed(2);
+            world.configure(e.id, { material: { [key]: v } });
+          });
+          inspector.append(label);
+        }
+        const strength = document.createElement("label");
+        strength.className = "slider";
+        strength.innerHTML = `<span>strength</span><input type="range" min="0" max="2" step="0.05" value="${e.strength}" /><output>${e.strength.toFixed(2)}</output>`;
+        const sInput = strength.querySelector("input");
+        sInput.addEventListener("input", () => {
+          e.strength = Number(sInput.value);
+          strength.querySelector("output").textContent = e.strength.toFixed(2);
+          enableEntity(e);
+        });
+        inspector.append(strength);
+      }
+
+      function presetsDefault(key) {
+        const defaults = { stiffness: 120, damping: 14, mass: 1, restitution: 0.4 };
+        return defaults[key] ?? 0;
+      }
+
+      presetsEl.addEventListener("change", (event) => {
+        const box = event.target;
+        if (!selected) {
+          box.checked = false;
+          statusEl.textContent = "Select a card first";
+          return;
+        }
+        const name = box.dataset.preset;
+        selected.presets = box.checked
+          ? [...new Set([...selected.presets, name])]
+          : selected.presets.filter((p) => p !== name);
+        enableEntity(selected);
+        refreshChips(selected);
+      });
+
+      function syncPresetBoxes() {
+        document.querySelectorAll("[data-preset]").forEach((box) => {
+          box.checked = !!selected && selected.presets.includes(box.dataset.preset);
+        });
+      }
+      stage.addEventListener("click", () => setTimeout(syncPresetBoxes, 0));
+
+      function toScene() {
+        return {
+          schemaVersion: SCENE_SCHEMA_VERSION,
+          metadata: { name: "Lab scene", createdWith: "animatter-lab" },
+          world: { mode: document.querySelector("#mode").value, reducedMotion: document.querySelector("#reduced").value },
+          entities: entities.map((e) => ({
+            id: e.id,
+            label: e.label,
+            presets: e.presets,
+            strength: e.strength,
+            mode: e.mode,
+            material: e.material,
+          })),
+          renderers: ["dom-field"],
+        };
+      }
+
+      function loadScene(scene) {
+        clearScene();
+        document.querySelector("#mode").value = scene.world.mode;
+        document.querySelector("#reduced").value = scene.world.reducedMotion;
+        buildWorld(scene.world.mode, scene.world.reducedMotion);
+        for (const spec of scene.entities) createEntity(spec);
+      }
+
+      document.querySelector("#export").addEventListener("click", () => {
+        json.value = serializeScene(toScene());
+        jsonError.textContent = "";
+      });
+      document.querySelector("#import").addEventListener("click", () => {
+        let raw;
+        try {
+          raw = JSON.parse(json.value);
+        } catch (error) {
+          jsonError.textContent = `Not JSON: ${error.message}`;
+          return;
+        }
+        const result = parseScene(raw);
+        if (!result.ok) {
+          jsonError.textContent = result.errors.join("\n");
+          return;
+        }
+        jsonError.textContent = "";
+        loadScene(result.scene);
+        statusEl.textContent = `Imported ${result.scene.entities.length} entities`;
+      });
+
+      document.querySelector("#add").addEventListener("click", () => {
+        const e = createEntity({ presets: ["elastic"] });
+        select(e);
+        syncPresetBoxes();
+      });
+      document.querySelector("#remove").addEventListener("click", () => {
+        if (!selected) return;
+        destroyEntity(selected);
+        selected = null;
+        renderInspector();
+        syncPresetBoxes();
+      });
+      document.querySelector("#pause").addEventListener("click", (event) => {
+        const paused = event.target.getAttribute("aria-pressed") !== "true";
+        event.target.setAttribute("aria-pressed", String(paused));
+        event.target.textContent = paused ? "Resume" : "Pause";
+        if (paused) world.stop();
+        else world.start();
+      });
+      document.querySelector("#step").addEventListener("click", () => world.step(1 / 60));
+      document.querySelector("#mode").addEventListener("change", (event) => {
+        world.setMode(event.target.value);
+      });
+      document.querySelector("#reduced").addEventListener("change", () => {
+        const scene = toScene();
+        loadScene(scene);
+      });
+
+      // Performance readout: sample the world's own counters once a second. This is an observer, not a render loop.
+      let lastFrames = 0;
+      let lastSteps = 0;
+      setInterval(() => {
+        const s = world.stats();
+        const frames = s.frames - lastFrames;
+        const steps = s.simulationSteps - lastSteps;
+        lastFrames = s.frames;
+        lastSteps = s.simulationSteps;
+        perfEl.textContent = `frames/s ${frames} · sim steps/s ${steps} · last frame ${s.lastFrameMs.toFixed(2)} ms · surfaces ${s.surfaces} · bodies ${s.bodies} · tasks ${s.tasks}`;
+      }, 1000);
+
+      buildWorld("both", "system");
+      createEntity({ label: "Elastic", presets: ["elastic"] });
+      createEntity({ label: "Magnetic", presets: ["magnetic"] });
+      createEntity({ label: "Snap + Tilt", presets: ["snap", "tilt"] });
+      createEntity({ label: "Gravity", presets: ["gravity"] });
+      createEntity({ label: "Plain", presets: [] });
+      statusEl.textContent = "lab ready";
+
+      window.__lab = {
+        get world() { return world; },
+        get entities() { return entities; },
+        select,
+        createEntity,
+        clearScene,
+        toScene,
+        loadScene,
+      };
+      window.ready = true;
+    </script>
+  </body>
+</html>

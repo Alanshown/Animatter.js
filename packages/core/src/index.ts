@@ -1,5 +1,5 @@
 export { createWorld, AnimatterWorld } from "./world.js";
-export type { WorldOptions, WorldStats } from "./world.js";
+export type { WorldOptions, WorldStats, WorldSystem } from "./world.js";
 export * from "./types.js";
 export { materials, resolveMaterial } from "./materials.js";
 export { PhysicsEngine } from "./physics/engine.js";
@@ -48,3 +48,27 @@ export type {
   PresetOptions,
   Target,
 } from "./presets/types.js";
+
+// v0.3: liquid dock, kinetic typography, style ownership, Lab scene schema
+export { createLiquidDock } from "./dock/liquid-dock.js";
+export type { LiquidDockOptions, LiquidDockHandle } from "./dock/liquid-dock.js";
+export {
+  proximityScale,
+  springStep,
+  reorderIds,
+  nearestSlot,
+  keyboardTarget,
+} from "./dock/model.js";
+export type { DockOrientation, Spring1D } from "./dock/model.js";
+export { createKineticText } from "./typography/kinetic.js";
+export type { KineticMode, KineticTextOptions, KineticTextHandle } from "./typography/kinetic.js";
+export { segmentText } from "./typography/segment.js";
+export { claimStyle, styleOwner } from "./style-ownership.js";
+export {
+  parseScene,
+  serializeScene,
+  SCENE_SCHEMA_VERSION,
+  SCENE_MAX_ENTITIES,
+  SCENE_RENDERERS,
+} from "./scene/schema.js";
+export type { SceneDocument, SceneEntity, SceneParseResult, SceneRendererKind } from "./scene/schema.js";

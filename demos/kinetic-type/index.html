@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Animatter — Kinetic Typography</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/demos/shared/base.css" />
+    <style>
+      :root {
+        --ink: #17151c;
+        --muted: #6a6470;
+        --paper: #fbf7f0;
+        --accent: #e0463c;
+        --accent2: #2a6fdb;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Inter", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+        padding: 24px 28px 60px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      header a {
+        color: var(--ink);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin: 18px 0 8px;
+        font-size: 14px;
+      }
+      .controls button,
+      .controls select {
+        font: inherit;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--ink);
+        background: transparent;
+        color: var(--ink);
+        cursor: pointer;
+      }
+      .controls button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      button:focus-visible,
+      select:focus-visible,
+      input:focus-visible {
+        outline: 3px solid var(--accent2);
+        outline-offset: 3px;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 14px;
+        margin: 6px 0 0;
+      }
+      .hero {
+        margin: 26px 0;
+        padding: 40px 32px;
+        border-radius: 28px;
+        background: #fff;
+        border: 1px solid #e6e0d4;
+        min-height: 220px;
+        display: grid;
+        align-content: center;
+      }
+      .hero .eyebrow {
+        font: 600 12px ui-monospace, Consolas, monospace;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .title {
+        font-size: clamp(40px, 8vw, 96px);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.02em;
+        margin: 10px 0 0;
+        position: relative;
+        overflow-wrap: anywhere;
+      }
+      .title[data-am-kinetic="fallback"] {
+        font-size: clamp(22px, 3vw, 32px);
+        font-weight: 500;
+      }
+      .title span[aria-hidden="true"] {
+        display: inline-block;
+      }
+      .poster-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 18px;
+        margin-top: 18px;
+      }
+      .poster {
+        border-radius: 22px;
+        padding: 24px;
+        min-height: 180px;
+        background: #fff;
+        border: 1px solid #e6e0d4;
+        display: grid;
+        align-content: end;
+      }
+      .poster.dark {
+        background: #17151c;
+        color: #fbf7f0;
+      }
+      .poster .big {
+        font-size: 56px;
+        font-weight: 800;
+        line-height: 1;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+      .status {
+        font: 12px ui-monospace, Consolas, monospace;
+        color: var(--muted);
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/demos/index.html">animatter · kinetic typography</a>
+      <span class="hint">Move the pointer over the letters. Elastic and magnetic react; gravity drops them.</span>
+    </header>
+
+    <div class="controls" role="group" aria-label="Kinetic modes">
+      <button type="button" data-mode="elastic" aria-pressed="true">Elastic</button>
+      <button type="button" data-mode="magnetic" aria-pressed="false">Magnetic</button>
+      <button type="button" data-mode="wave" aria-pressed="false">Wave</button>
+      <button type="button" data-mode="gravity" aria-pressed="false">Gravity</button>
+      <button type="button" data-mode="velocity" aria-pressed="false">Velocity</button>
+      <label>Strength <input id="strength" type="range" min="0" max="2" step="0.05" value="1" /></label>
+      <button type="button" id="scatter">Scatter</button>
+      <button type="button" id="reform">Reform</button>
+      <select id="sample" aria-label="Sample text">
+        <option value="hero">Hero (English)</option>
+        <option value="cjk">中文 + Emoji</option>
+        <option value="zwj">Grapheme clusters</option>
+        <option value="long">Long text (fallback)</option>
+      </select>
+    </div>
+
+    <section class="hero" aria-label="Interactive hero">
+      <span class="eyebrow">Spring Lab · v0.3</span>
+      <h1 class="title" id="title">Physical type that remembers its shape.</h1>
+    </section>
+
+    <section class="poster-grid" aria-label="Poster experiments">
+      <div class="poster"><div class="big" id="poster-a">Move</div><p class="hint">Letters spring back after each push.</p></div>
+      <div class="poster dark"><div class="big" id="poster-b">系统</div><p class="hint">中文不会被拆成半个字。</p></div>
+      <div class="poster"><div class="big" id="poster-c">👩‍👩‍👧 🇨🇳</div><p class="hint">Emoji sequences stay whole.</p></div>
+    </section>
+
+    <p class="status" id="status" role="status">starting…</p>
+
+    <script type="module">
+      import { createWorld, createKineticText } from "/packages/core/dist/animatter.js";
+
+      const samples = {
+        hero: "Physical type that remembers its shape.",
+        cjk: "中文 字体 🌊 Emoji 👨‍👩‍👧",
+        zwj: "é café 👩‍💻 🇨🇳🇺🇸 ❤️",
+        long: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ".repeat(6),
+      };
+      const world = createWorld({ mode: "both" });
+      const status = document.querySelector("#status");
+      const strengthInput = document.querySelector("#strength");
+      const sample = document.querySelector("#sample");
+      let mode = "elastic";
+      const targets = [document.querySelector("#title"), document.querySelector("#poster-a"), document.querySelector("#poster-b"), document.querySelector("#poster-c")];
+      const handles = [];
+
+      function make(el, text, opts) {
+        el.textContent = text;
+        return createKineticText(world, el, opts);
+      }
+
+      handles.push(make(targets[0], samples.hero, { mode, strength: 1 }));
+      handles.push(make(targets[1], "Move", { mode, strength: 1 }));
+      handles.push(make(targets[2], "系统", { mode, strength: 1 }));
+      handles.push(make(targets[3], "👩‍👩‍👧 🇨🇳", { mode, strength: 1 }));
+
+      function refreshStatus() {
+        const h = handles[0];
+        status.textContent = `title: ${h.fallback ? "fallback (plain text)" : `${h.letterCount()} graphemes`} · mode ${mode} · strength ${strengthInput.value}`;
+      }
+
+      for (const button of document.querySelectorAll("[data-mode]")) {
+        button.addEventListener("click", () => {
+          mode = button.dataset.mode;
+          for (const b of document.querySelectorAll("[data-mode]")) b.setAttribute("aria-pressed", String(b === button));
+          handles.forEach((h) => h.setMode(mode));
+          refreshStatus();
+        });
+      }
+      strengthInput.addEventListener("input", () => {
+        const value = Number(strengthInput.value);
+        handles.forEach((h) => h.destroy());
+        handles.length = 0;
+        const texts = [sample.value === "hero" ? samples.hero : samples[sample.value], "Move", "系统", "👩‍👩‍👧 🇨🇳"];
+        targets.forEach((el, i) => handles.push(make(el, i === 0 ? texts[0] : texts[i], { mode, strength: value })));
+        refreshStatus();
+      });
+      document.querySelector("#scatter").addEventListener("click", () => handles.forEach((h) => h.scatter()));
+      document.querySelector("#reform").addEventListener("click", () => handles.forEach((h) => h.reform()));
+      sample.addEventListener("change", () => {
+        handles[0].setText(samples[sample.value]);
+        refreshStatus();
+      });
+      window.addEventListener("resize", () => handles.forEach((h) => h.remeasure()));
+
+      refreshStatus();
+      window.__kinetic = { world, handles, targets };
+      window.ready = true;
+    </script>
+  </body>
+</html>
