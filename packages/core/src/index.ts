@@ -97,3 +97,5 @@ export type {
 export { createCanvasKinetic, layoutGlyphs } from "./typography/canvas.js";
 export type { CanvasKineticHandle, CanvasKineticOptions } from "./typography/canvas.js";
 export { createMetaballGL, MAX_BLOBS } from "./renderers/metaball-gl.js";
+export { gridFromRects, findPath, pathToPoints, cellOf } from "./actor/pathfind.js";
+export type { PlanRect, PlanGrid, PlanPoint } from "./actor/pathfind.js";

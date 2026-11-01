@@ -39,6 +39,18 @@ for (const segments of [18, 64, 200]) {
   await timeNode("soft bodies: 5x18 + contacts, 1/60 s frame", 1000, frame);
 }
 
+{
+  const { gridFromRects, findPath, cellOf } = await import("../packages/core/src/actor/pathfind.ts");
+  const bounds = { x: 0, y: 0, width: 1200, height: 600 };
+  const rects = [];
+  for (let i = 0; i < 24; i++) rects.push({ x: 60 + (i % 6) * 190, y: 40 + Math.floor(i / 6) * 130, width: 120, height: 70 });
+  const grid = gridFromRects(rects, bounds, 10, 8);
+  const start = cellOf(grid, { x: 10, y: 590 }, bounds);
+  const goal = cellOf(grid, { x: 1190, y: 10 }, bounds);
+  const path = findPath(grid, start, goal);
+  await timeNode(`A* grid path, 120x60 cells, 24 rects (${path ? path.length : 0} cells)`, 200, () => findPath(grid, start, goal));
+}
+
 for (const count of [10000, 50000]) {
   const sim = new ParticleSim(count, 1200, 600, 7);
   sim.setField({ kind: "attract", x: 600, y: 300, strength: 300, radius: 400 }, 0);
