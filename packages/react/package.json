@@ -17,7 +17,7 @@
     }
   },
   "peerDependencies": {
-    "animatter": "^0.1.0",
+    "animatter": "^0.2.0",
     "react": ">=18"
   },
   "description": "React lifecycle hooks for the shared Animatter.js physics interaction runtime",

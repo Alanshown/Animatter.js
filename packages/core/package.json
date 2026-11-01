@@ -25,6 +25,10 @@
     "./browser": {
       "types": "./dist/index.d.ts",
       "import": "./dist/animatter.js"
+    },
+    "./particles": {
+      "types": "./dist/particles/index.d.ts",
+      "import": "./dist/particles.js"
     }
   },
   "sideEffects": [
