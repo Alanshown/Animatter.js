@@ -1,12 +1,11 @@
-import { chromium } from "@playwright/test";
 import { mkdir, writeFile, stat, rename } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
-import { startServer, base } from "./browser-utils.mjs";
+import { startServer, base, launchChromium } from "./browser-utils.mjs";
 import { demos } from "./demo-tests.mjs";
 const stop = await startServer(),
-  browser = await chromium.launch({ headless: true });
+  browser = await launchChromium();
 await mkdir("artifacts/videos", { recursive: true });
 await mkdir("artifacts/gifs", { recursive: true });
 await mkdir("docs/assets/demos", { recursive: true });

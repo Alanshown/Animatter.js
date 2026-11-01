@@ -1,16 +1,11 @@
-import { chromium } from "@playwright/test";
 import { mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { startServer, base } from "./browser-utils.mjs";
+import { startServer, base, launchChromium } from "./browser-utils.mjs";
 
-// Uses a locally installed Chrome when present so no browser download is needed.
-const chromePath = process.env.CHROME_PATH ?? "C:/Program Files/Google/Chrome/Application/chrome.exe";
-const launchOptions = { headless: true, ...(existsSync(chromePath) ? { executablePath: chromePath } : {}) };
 
 const stop = await startServer();
 const out = "artifacts/demo-screenshots";
 await mkdir(out, { recursive: true });
-const browser = await chromium.launch(launchOptions);
+const browser = await launchChromium();
 const results = [];
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });

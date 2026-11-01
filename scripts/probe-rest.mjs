@@ -1,8 +1,7 @@
-import { chromium } from "@playwright/test";
-import { startServer, base } from "./browser-utils.mjs";
+import { startServer, base, launchChromium } from "./browser-utils.mjs";
 
 const stop = await startServer();
-const browser = await chromium.launch({ headless: true, executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe" });
+const browser = await launchChromium();
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(`${base}/demos/presets-studio/index.html`);
