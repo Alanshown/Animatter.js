@@ -2,7 +2,7 @@
 
 GitHub Packages is a separate registry from npm. This workflow creates no GitHub Release, tag or new version and does not republish to npm. Package visibility and publication must be verified after the workflow runs; the workflow's presence alone is not publication evidence.
 
-On 2026-10-31, [manual run #1](https://github.com/Alanshown/Animatter.js/actions/runs/41180358429) successfully published all three **0.1.0** variants from commit `042c479d2fc2a65887caceffdf756d2a448d2974`. The run passed 23 unit tests, 46 Chromium core/demo cases, documentation/branding checks, staged tarball checks and a fresh authenticated GitHub Registry installation with integrity, ESM, types, CSS and peer checks. Package settings independently showed all three as **public**, linked to this repository; the repository displayed **Packages (3)** and **No releases published**. See the [verification record](testing/github-packages/publication.json). This does not extend the documented browser/device acceptance scope.
+On 2026-11-11, [manual run #3](https://github.com/Alanshown/Animatter.js/actions/runs/42954387788) successfully published all three **0.2.0** variants from commit `5db8081958c45555cf722d7811dbcefe6e10d752`. The run passed 93 unit tests, 45 Chromium core/demo cases, documentation/branding checks, staged tarball checks and a fresh authenticated GitHub Registry installation with integrity, ESM, types, CSS and peer checks. Package settings independently showed all three as **public**, linked to this repository; the repository displayed **Packages (3)** and **No releases published**. See the [verification record](testing/github-packages/publication.json). This does not extend the documented browser/device acceptance scope.
 
 | npm package        | GitHub Packages variant      |
 | ------------------ | ---------------------------- |
@@ -10,7 +10,7 @@ On 2026-10-31, [manual run #1](https://github.com/Alanshown/Animatter.js/actions
 | `@animatter/react` | `@alanshown/animatter-react` |
 | `@animatter/vue`   | `@alanshown/animatter-vue`   |
 
-GitHub requires scoped lowercase names under the GitHub owner. The npm organization `@animatter` does not confer a GitHub namespace. The variants preserve the 0.1.0 runtime API, ESM exports, declarations, optional core CSS and framework peers. Only the ignored staging copies are renamed. Adapter JavaScript, declarations and core peer names use `@alanshown/animatter`; their source maps are omitted because import rewriting changes mappings. Core source maps remain unchanged. Do not combine adapters from one registry family with the other family's core, which can create duplicate runtimes.
+GitHub requires scoped lowercase names under the GitHub owner. The npm organization `@animatter` does not confer a GitHub namespace. The variants preserve the 0.2.0 runtime API, ESM exports, declarations, optional core CSS and framework peers. Only the ignored staging copies are renamed. Adapter JavaScript, declarations and core peer names use `@alanshown/animatter`; their source maps are omitted because import rewriting changes mappings. Core source maps remain unchanged. Do not combine adapters from one registry family with the other family's core, which can create duplicate runtimes.
 
 ## Manual publication
 
@@ -37,10 +37,10 @@ Alternatively, use the official login flow in your own terminal. It writes the t
 
 ```sh
 npm login --scope=@alanshown --registry=https://npm.pkg.github.com
-npm install @alanshown/animatter@0.1.0
+npm install @alanshown/animatter@0.2.0
 # Optional integrations:
-npm install @alanshown/animatter@0.1.0 @alanshown/animatter-react@0.1.0 react react-dom
-npm install @alanshown/animatter@0.1.0 @alanshown/animatter-vue@0.1.0 vue
+npm install @alanshown/animatter@0.2.0 @alanshown/animatter-react@0.2.0 react react-dom
+npm install @alanshown/animatter@0.2.0 @alanshown/animatter-vue@0.2.0 vue
 ```
 
-Use `@alanshown/animatter`, `@alanshown/animatter/materials.css`, `@alanshown/animatter-react` and `@alanshown/animatter-vue` in application imports. These commands apply to the verified 0.1.0 publication; recheck the Actions result and package pages for future versions. See [npm publishing](NPM-PUBLISHING.md) for the separate public npm distribution.
+Use `@alanshown/animatter`, `@alanshown/animatter/materials.css`, `@alanshown/animatter-react` and `@alanshown/animatter-vue` in application imports. These commands apply to the verified 0.2.0 publication; recheck the Actions result and package pages for future versions. See [npm publishing](NPM-PUBLISHING.md) for the separate public npm distribution.
