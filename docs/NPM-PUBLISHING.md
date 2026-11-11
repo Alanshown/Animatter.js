@@ -1,6 +1,6 @@
 # npm publishing and distribution
 
-Version **0.1.0** is published on the public npm Registry for the core and both adapters. The maintainer explicitly authorized this publication and completed npm's interactive authentication. Anonymous Registry installation, reviewed-tarball integrity matching, strict types, ESM/SSR-safe imports, CSS bundling and Chromium behavior checks passed. See [the release record](NPM-RELEASE-0.1.0.md) and [raw consumer results](testing/npm-publication/registry-results.json).
+Version **0.2.0** is published on the public npm Registry for the core and both adapters. The maintainer explicitly authorized this publication and completed npm's interactive authentication. Anonymous Registry installation, reviewed-tarball integrity matching, strict types, ESM/SSR-safe imports, CSS bundling and Chromium behavior checks passed. See [the release record](NPM-RELEASE-0.2.0.md) and [raw consumer results](testing/npm-publication/registry-results.json).
 
 This does not authorize another version or create a GitHub Release. Every future release still requires core architecture / L0–L7 acceptance and an explicit maintainer decision. Branding or packaging success alone cannot approve a framework release.
 
@@ -8,9 +8,9 @@ This does not authorize another version or create a GitHub Release. Every future
 
 | Package | Role | Published version |
 | --- | --- | --- |
-| [animatter](https://www.npmjs.com/package/animatter) | Independent core, types and optional CSS | 0.1.0 |
-| [@animatter/react](https://www.npmjs.com/package/@animatter/react) | React lifecycle adapter | 0.1.0 |
-| [@animatter/vue](https://www.npmjs.com/package/@animatter/vue) | Vue lifecycle adapter | 0.1.0 |
+| [animatter](https://www.npmjs.com/package/animatter) | Independent core, types and optional CSS | 0.2.0 |
+| [@animatter/react](https://www.npmjs.com/package/@animatter/react) | React lifecycle adapter | 0.2.0 |
+| [@animatter/vue](https://www.npmjs.com/package/@animatter/vue) | Vue lifecycle adapter | 0.2.0 |
 
 The authenticated npm account was `shownalan`; `npm org ls animatter` confirmed its Owner role. GitHub ownership alone does not grant npm publishing rights. `@animatter/core` remains an unused naming proposal, not a fourth delivered package. Existing imports and adapter peers intentionally use `animatter`.
 
@@ -26,7 +26,7 @@ npm install animatter @animatter/react react react-dom
 npm install animatter @animatter/vue vue
 ```
 
-The latter two commands are optional integrations. Append `@0.1.0` to the Animatter package names to pin this release. The application owns its framework dependencies; see [compatibility](PACKAGE-COMPATIBILITY.md) for declared peer ranges and actually tested versions.
+The latter two commands are optional integrations. The commands above intentionally omit versions, so npm selects the current `latest` release. Append `@0.2.0` to the Animatter package names when an application needs to pin this release. The application owns its framework dependencies; see [compatibility](PACKAGE-COMPATIBILITY.md) for declared peer ranges and actually tested versions.
 
 Contributors clone the source, use Node 24.22.1 / npm 11.9.0 for the verified local environment, and run:
 
@@ -70,7 +70,7 @@ The maintainer completes login and any operation-specific 2FA on npm's official 
 After separately approving a new version, replace `X.Y.Z` below with that exact version, rebuild/review the artifacts and publish core first, then adapters:
 
 ```sh
-# Future approved versions only; 0.1.0 already exists and cannot be overwritten.
+# Future approved versions only; 0.2.0 already exists and cannot be overwritten.
 RELEASE_VERSION=X.Y.Z
 npm publish "./artifacts/packages/animatter-${RELEASE_VERSION}.tgz" --access public --registry=https://registry.npmjs.org
 npm publish "./artifacts/packages/animatter-react-${RELEASE_VERSION}.tgz" --access public --registry=https://registry.npmjs.org

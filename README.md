@@ -99,7 +99,7 @@ Native browser APIs include Pointer Events, ResizeObserver, MutationObserver, ma
 
 ## Installation
 
-Install from npm without cloning or building this repository. The core and both adapters are published at **0.1.0** and verified through anonymous public Registry installation.
+Install from npm without cloning or building this repository. The core and both adapters are published at **0.2.0** and verified through anonymous public Registry installation.
 
 | Package | Purpose |
 | --- | --- |
@@ -115,7 +115,7 @@ npm install animatter @animatter/react react react-dom
 npm install animatter @animatter/vue vue
 ```
 
-Append `@0.2.0` to pin the release (for example `npm install animatter@0.2.0`). Until 0.2.0 is published, the pinned form does not resolve; the unversioned commands above install the latest published version. Adapters share the same `animatter` core; the application owns its React/Vue dependencies. Manage updates through package.json, your lockfile and npm. Source development and local demos are covered under [API and Documentation](#api-and-documentation); see the [npm release verification](docs/NPM-RELEASE-0.1.0.md).
+The unversioned commands above install npm's current `latest` release. Append `@0.2.0` when pinning a release (for example `npm install animatter@0.2.0`). Adapters share the same `animatter` core; the application owns its React/Vue dependencies. Manage updates through package.json, your lockfile and npm. Source development and local demos are covered under [API and Documentation](#api-and-documentation); see the [npm release verification](docs/NPM-RELEASE-0.2.0.md).
 
 The same version is also available through [GitHub Packages](docs/GITHUB-PACKAGES.md) as `@alanshown/animatter`, `@alanshown/animatter-react` and `@alanshown/animatter-vue`. These public packages require GitHub authentication and scope configuration; keep the core and adapters in the same package family. The npm commands above remain the simplest installation path.
 
@@ -255,7 +255,7 @@ This is a lightweight UI solver: rectangular contacts, finite-depth planes, proc
 
 ## Roadmap
 
-0.1.0 provides the shared runtime, both modes, adapters, extension protocols and six studies. Next: broader browser/device validation, richer renderer examples, worker/broadphase experiments and a stable 1.0 API. See [ROADMAP.md](ROADMAP.md).
+0.2.0 provides the shared runtime, both modes, adapters, advanced modules and verified install paths. Next: broader browser/device validation, richer renderer examples, worker/broadphase experiments and a stable 1.0 API. See [ROADMAP.md](ROADMAP.md).
 
 **Future releases must pass core architecture and L0–L7 interaction acceptance before publication. The first npm release covers only the documented verification scope; packaging success does not establish cross-browser, physical-device or complete feature acceptance. APIs may change during 0.x.**
 

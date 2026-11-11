@@ -2,9 +2,17 @@
 
 All changes follow Semantic Versioning. During 0.x, public APIs may change; document migrations and do not infer 1.0 stability.
 
+## 0.2.0 - 2026-11-11
+
+Published to the public npm Registry for `animatter`, `@animatter/react` and `@animatter/vue`. Public installs resolve the unversioned package names to the 0.2.0 `latest` tag and the core exposes the `animatter/particles` subpath.
+
+- Advanced interaction layer: world-scheduled systems, liquid dock and kinetic typography, Animatter Lab scene schema, rope and soft-body constraints, particle fields and text-shape attraction, metaball rendering, actor behaviours, and obstacle-aware A* path planning.
+- React and Vue adapters track the `animatter ^0.2.0` core peer contract.
+- Quality gates cover strict types, lint, 93 unit tests, package contents, ESM/SSR and browser subpaths, Chromium implementation and demo behaviour, branding, local tarball consumers and anonymous public Registry consumers.
+
 ## Unreleased
 
-No additional package version has been published after 0.1.0. Documentation updates after publication do not overwrite immutable Registry artifacts.
+Documentation updates after publication do not overwrite immutable Registry artifacts.
 
 ### v0.3 (local branch, not published)
 

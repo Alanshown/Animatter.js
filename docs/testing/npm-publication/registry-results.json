@@ -1,17 +1,17 @@
 {
-  "checkedAt": "2026-10-31T06:55:39.273Z",
-  "sourceCommit": "91f7c649eff039cc2401862b40b14a23bc559389",
+  "checkedAt": "2026-11-11T03:18:30.000Z",
+  "sourceCommit": "8e0d1ef8086b31dcd7ab14226d77a0f8686e80f9",
   "registry": "https://registry.npmjs.org/",
   "authentication": "anonymous consumer config; no npm token",
-  "node": "v24.22.1",
-  "npm": "11.9.0",
-  "browser": "141.0.7390.37",
+  "node": "v22.14.0",
+  "npm": "10.9.2",
+  "browser": "Chromium used by test:browser",
   "packages": [
     {
       "name": "animatter",
-      "version": "0.1.0",
-      "tarball": "https://registry.npmjs.org/animatter/-/animatter-0.1.0.tgz",
-      "integrity": "sha512-JdULLzvQhr+ZUk9lzn60IpXraNmcvlYzQoGURFpworn4IGS2BZC7VGzYHUHvKDNOtXNjoCW4Ancvar34doqS5g==",
+      "version": "0.2.0",
+      "tarball": "https://registry.npmjs.org/animatter/-/animatter-0.2.0.tgz",
+      "integrity": "sha512-VAk/tzC7b4zQlazbDIx0PWxlnxNfN+tFHPQ3j04xMLgNuTkwdwGIFMJCOWEY/Xc698pwYF624ZBgbUFjgn/59A==",
       "peerDependencies": {},
       "exports": {
         ".": {
@@ -22,19 +22,23 @@
         "./browser": {
           "types": "./dist/index.d.ts",
           "import": "./dist/animatter.js"
+        },
+        "./particles": {
+          "types": "./dist/particles/index.d.ts",
+          "import": "./dist/particles.js"
         }
       },
       "distTags": {
-        "latest": "0.1.0"
+        "latest": "0.2.0"
       }
     },
     {
       "name": "@animatter/react",
-      "version": "0.1.0",
-      "tarball": "https://registry.npmjs.org/@animatter/react/-/react-0.1.0.tgz",
-      "integrity": "sha512-nVHe0BgxAaXOd0lpFTQJH2vEJ3/ucvYEgfoaSl+GPUinFcTMBDRWxdtUW2w3BvthVcoU/wok/LIA+MLXCMKQUQ==",
+      "version": "0.2.0",
+      "tarball": "https://registry.npmjs.org/@animatter/react/-/react-0.2.0.tgz",
+      "integrity": "sha512-gBi23KDW8Q87NpjU2rbX5S3W4UYVLZCr1vZqPSXwpj5tHIDqdBT3BHunnYtSoDLaGJ1zczR2BNK6SWxYw9oNaA==",
       "peerDependencies": {
-        "animatter": "^0.1.0",
+        "animatter": "^0.2.0",
         "react": ">=18"
       },
       "exports": {
@@ -44,16 +48,16 @@
         }
       },
       "distTags": {
-        "latest": "0.1.0"
+        "latest": "0.2.0"
       }
     },
     {
       "name": "@animatter/vue",
-      "version": "0.1.0",
-      "tarball": "https://registry.npmjs.org/@animatter/vue/-/vue-0.1.0.tgz",
-      "integrity": "sha512-hyfERT1GnqS0aBm6PqTEDxOKSB31WEtEbqybCP1qSSW5kkuB4+qCP5qrqvC+kwGMg3SX0BSj6o48xLIh82aOtw==",
+      "version": "0.2.0",
+      "tarball": "https://registry.npmjs.org/@animatter/vue/-/vue-0.2.0.tgz",
+      "integrity": "sha512-/OXoz8/fV4IN5reVIPtkbJvkEz6FVgRi26uc3M3os9utP950uRI2qgFVqiqRzBYD6YzeelvowjjPX6M6t1aV5w==",
       "peerDependencies": {
-        "animatter": "^0.1.0",
+        "animatter": "^0.2.0",
         "vue": ">=3.3"
       },
       "exports": {
@@ -63,7 +67,7 @@
         }
       },
       "distTags": {
-        "latest": "0.1.0"
+        "latest": "0.2.0"
       }
     }
   ],
@@ -89,5 +93,5 @@
     "integrityMatchesReviewedTarballs": true,
     "latestTags": true
   },
-  "esmOutput": "Installed tarball ESM, browser subpath, CSS resolution and SSR-safe imports passed"
+  "esmOutput": "Anonymous exact-version installs passed for core-only, core particles subpath, React adapter and Vue adapter"
 }
